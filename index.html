@@ -152,6 +152,14 @@
             pointer-events: auto;
         }
         
+        /* Fix: Ensure exit button is not clickable when invisible */
+        #exit-scenic-btn {
+            pointer-events: none;
+        }
+        .scenic-mode #exit-scenic-btn {
+            pointer-events: auto;
+        }
+        
         .header-btn {
             padding: 0.5rem;
             color: #8B7355;
@@ -160,15 +168,94 @@
         }
         .header-btn:hover { opacity: 1; }
         .header-btn:active { transform: scale(0.9); }
+
+        /* Tutorial Styles */
+        .tutorial-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(44, 62, 80, 0.85);
+            z-index: 60;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.4s ease;
+        }
+        .tutorial-active .tutorial-overlay {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        .tutorial-highlight {
+            position: relative;
+            z-index: 70 !important;
+            box-shadow: 0 0 0 4px #D4AF37, 0 0 40px rgba(0,0,0,0.5) !important;
+            transition: all 0.3s ease;
+            background-color: #FFF; /* Ensure no transparency issues */
+        }
+        /* Special handling for glass card transparency in highlight mode */
+        .glass-card.tutorial-highlight {
+            background: #FFF; 
+        }
+        .tutorial-card {
+            position: fixed;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 90%;
+            max-width: 360px;
+            background: #FFF;
+            border: 1px solid #D4AF37;
+            border-radius: 1rem;
+            padding: 1.5rem;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+            z-index: 80;
+            transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+            opacity: 0;
+            pointer-events: none;
+        }
+        .tutorial-active .tutorial-card {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        .tutorial-card.position-bottom { bottom: 2rem; }
+        .tutorial-card.position-top { top: 2rem; }
+        .tutorial-card.position-center { top: 50%; transform: translate(-50%, -50%); }
+
+        .dot-indicator {
+            width: 8px; height: 8px; border-radius: 50%; background: #E2E8F0; transition: all 0.3s;
+        }
+        .dot-indicator.active {
+            background: #D4AF37; width: 20px; border-radius: 4px;
+        }
     </style>
 </head>
 <body class="flex flex-col items-center p-4 overflow-x-hidden">
 
+    <!-- AUDIO PLAYER (Hidden) -->
+    <!-- Primary Source: Vocaroo Link provided -->
+    <!-- Fallback Source: Google Sound Library (Forest) in case Vocaroo expires/fails -->
+    <audio id="bgmAudio" loop preload="auto">
+        <source src="https://media1.vocaroo.com/mp3/1n3mqKg0ASP4" type="audio/mp3">
+        <source src="https://actions.google.com/sounds/v1/ambiences/forest_morning.ogg" type="audio/ogg">
+        Your browser does not support the audio element.
+    </audio>
+
     <div class="bg-overlay"></div>
+
+    <!-- Tutorial Overlay -->
+    <div id="tutorial-overlay" class="tutorial-overlay"></div>
+    <div id="tutorial-card" class="tutorial-card position-center">
+        <h3 id="tut-title" class="text-xl font-bold text-[#2C3E50] mb-2 font-serif tracking-widest"></h3>
+        <p id="tut-desc" class="text-sm text-[#64748B] mb-6 leading-relaxed"></p>
+        <div class="flex items-center justify-between">
+            <div id="tut-dots" class="flex gap-1.5"></div>
+            <div class="flex gap-2">
+                <button id="tut-skip" class="text-gray-400 text-sm px-4 py-3 hover:text-gray-600 transition-colors">跳過</button>
+                <button id="tut-next" class="bg-[#2C3E50] text-white px-5 py-2 rounded-lg text-sm shadow-lg tracking-widest active:scale-95 transition-transform">下一步</button>
+            </div>
+        </div>
+    </div>
 
     <!-- Scenic Mode Return Hint -->
     <div id="scenic-return-hint" class="fixed inset-0 z-[100] flex flex-col items-center justify-end pb-12 pointer-events-none">
-        <button id="exit-scenic-btn" class="bg-white/20 backdrop-blur-md border border-white/40 text-white px-8 py-3 rounded-full text-sm tracking-[0.3em] shadow-2xl active:scale-95 transition-transform pointer-events-auto">
+        <button id="exit-scenic-btn" class="bg-white/20 backdrop-blur-md border border-white/40 text-white px-8 py-3 rounded-full text-sm tracking-[0.3em] shadow-2xl active:scale-95 transition-transform">
             點擊返回收集冊
         </button>
     </div>
@@ -192,6 +279,11 @@
                         <path d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                     </svg>
                 </button>
+                <button id="help-btn" class="header-btn" title="遊戲說明">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <path d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                </button>
             </div>
             
             <div class="inline-flex flex-col items-center">
@@ -203,7 +295,7 @@
         </header>
 
         <main class="flex-1 px-2 flex flex-col items-center relative game-ui">
-            <div id="spin-area" class="w-full flex justify-between items-center px-4 mb-4 mt-2">
+            <div id="spin-area" class="w-full flex justify-between items-center px-4 mb-4 mt-2 bg-white/50 backdrop-blur rounded-lg py-1 transition-all">
                 <div class="text-xs text-[#64748B] tracking-wide">
                     達成連線：<span id="total-lines" class="font-bold text-[#D4AF37]">0</span>
                 </div>
@@ -220,7 +312,7 @@
                 </div>
             </div>
 
-            <div class="w-full flex justify-between items-end px-4 mb-2">
+            <div class="w-full flex justify-between items-end px-4 mb-2 mt-2">
                 <span class="text-sm text-[#4A5568] font-medium tracking-wider">我的回憶拼圖</span>
                 <div class="flex items-baseline gap-1">
                     <span id="progress-text" class="text-2xl font-serif text-[#D4AF37] font-bold">0</span>
@@ -239,9 +331,9 @@
             </div>
         </main>
 
-        <div class="fixed bottom-8 left-0 right-0 z-30 px-6 flex justify-center fixed-action-btn">
+        <div id="main-action-area" class="fixed bottom-8 left-0 right-0 z-30 px-6 flex justify-center fixed-action-btn">
             <button id="open-missions-btn" class="w-full max-w-md relative group overflow-hidden rounded-full shadow-2xl transition-transform active:scale-95 border border-white/20">
-                <div class="absolute inset-0 gold-shimmer opacity-90"></div>
+                <div class="absolute inset-0 gold-shimmer opacity-90 pointer-events-none"></div>
                 <div class="relative py-4 flex items-center justify-center gap-3 text-white">
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
                         <path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
@@ -297,6 +389,12 @@
                     <button id="close-mission-btn" class="text-gray-400 p-2 bg-gray-50 rounded-full">
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
                     </button>
+                </div>
+
+                <!-- Tabs -->
+                <div class="flex border-b border-gray-100 bg-white shrink-0">
+                    <button id="tab-missions" class="flex-1 py-3 text-sm font-bold text-[#2C3E50] border-b-2 border-[#2C3E50] transition-colors">當前任務</button>
+                    <button id="tab-guide" class="flex-1 py-3 text-sm font-medium text-gray-400 border-b-2 border-transparent hover:text-[#2C3E50] transition-colors">收集圖鑑</button>
                 </div>
 
                 <!-- Category Selector -->
@@ -365,20 +463,37 @@
             constructor() {
                 this.ctx = new (window.AudioContext || window.webkitAudioContext)();
                 this.enabled = false;
-                // Using a reliable nature sound from Pixabay (or placeholder if offline)
-                this.bgmAudio = new Audio('https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=forest-lullaby-110624.mp3'); 
-                this.bgmAudio.loop = true;
-                this.bgmAudio.volume = 0.3;
-                this.bgmAudio.preload = 'auto';
+                
+                // Get audio element from DOM or fallback
+                this.bgmAudio = document.getElementById('bgmAudio');
+                if (this.bgmAudio) {
+                    this.bgmAudio.volume = 0.3;
+                    
+                    // Add listener to catch errors
+                    this.bgmAudio.addEventListener('error', (e) => {
+                        console.log("Audio Error:", e);
+                        // If Vocaroo fails (primary source), it will try the second source automatically if defined in HTML.
+                        // But let's log it.
+                    });
+                }
             }
 
             toggle() {
                 this.enabled = !this.enabled;
                 if (this.enabled) {
                     if (this.ctx.state === 'suspended') this.ctx.resume();
-                    this.bgmAudio.play().catch(e => console.log("BGM play failed (interaction required first)", e));
+                    if (this.bgmAudio) {
+                        const playPromise = this.bgmAudio.play();
+                        if (playPromise !== undefined) {
+                            playPromise.catch(error => {
+                                console.log("Play failed, likely interaction needed or bad source:", error);
+                            });
+                        }
+                    }
                 } else {
-                    this.bgmAudio.pause();
+                    if (this.bgmAudio) {
+                        this.bgmAudio.pause();
+                    }
                 }
                 return this.enabled;
             }
@@ -446,7 +561,107 @@
             }
         }
 
+        // --- Tutorial Manager Class ---
+        class TutorialManager {
+            constructor() {
+                this.steps = [
+                    { id: 'welcome', target: null, title: '歡迎來到愛上喜翁', desc: '這是一場專屬於您的山林探險。收集美好回憶，完成連線即可兌換驚喜好禮！', pos: 'center' },
+                    { id: 'grid', target: 'grid-card', title: '回憶地圖', desc: '這是您的賓果卡。每一個數字都代表一段獨特的回憶或任務。', pos: 'bottom' },
+                    { id: 'mission', target: 'open-missions-btn', title: '探險手冊', desc: '點擊此處查看任務清單。完成任務可獲得幸運號碼，解鎖地圖上的格子。', pos: 'top' },
+                    { id: 'lines', target: 'spin-area', title: '連線獎勵', desc: '當連成直線、橫線或斜線時，您將獲得幸運轉盤的機會！', pos: 'bottom' },
+                    { id: 'scenic', target: 'toggle-scenic-btn', title: '靜享山林', desc: '想專心欣賞風景嗎？點擊眼睛圖示可暫時隱藏所有介面。', pos: 'bottom' }
+                ];
+                this.currentStep = 0;
+                this.isActive = false;
+                
+                // Elements
+                this.overlay = document.getElementById('tutorial-overlay');
+                this.card = document.getElementById('tutorial-card');
+                this.title = document.getElementById('tut-title');
+                this.desc = document.getElementById('tut-desc');
+                this.dotsContainer = document.getElementById('tut-dots');
+                this.btnNext = document.getElementById('tut-next');
+                this.btnSkip = document.getElementById('tut-skip');
+
+                this.btnNext.onclick = () => this.next();
+                this.btnSkip.onclick = () => this.end();
+            }
+
+            start() {
+                this.isActive = true;
+                this.currentStep = 0;
+                document.body.classList.add('tutorial-active');
+                this.renderStep();
+                soundManager.playClick();
+            }
+
+            end() {
+                this.isActive = false;
+                document.body.classList.remove('tutorial-active');
+                this.clearHighlight();
+                localStorage.setItem('love_hsiung_tutorial_seen', 'true');
+                soundManager.playClick(); // Feedback for skip
+            }
+
+            next() {
+                soundManager.playClick();
+                if (this.currentStep < this.steps.length - 1) {
+                    this.currentStep++;
+                    this.renderStep();
+                } else {
+                    this.end();
+                }
+            }
+
+            clearHighlight() {
+                document.querySelectorAll('.tutorial-highlight').forEach(el => {
+                    el.classList.remove('tutorial-highlight');
+                });
+                // Fix specific z-index override for the button container
+                const actionArea = document.getElementById('main-action-area');
+                if (actionArea) actionArea.style.zIndex = '';
+            }
+
+            renderStep() {
+                this.clearHighlight();
+                const step = this.steps[this.currentStep];
+                
+                // Content
+                this.title.innerText = step.title;
+                this.desc.innerText = step.desc;
+                this.btnNext.innerText = this.currentStep === this.steps.length - 1 ? '開始探險' : '下一步';
+
+                // Position Card
+                this.card.className = `tutorial-card position-${step.pos}`;
+
+                // Highlight Target
+                if (step.target) {
+                    const el = document.getElementById(step.target);
+                    if (el) {
+                        el.classList.add('tutorial-highlight');
+                        // Special handling for the bottom fixed button parent
+                        if (step.target === 'open-missions-btn') {
+                             document.getElementById('main-action-area').style.zIndex = '70';
+                        }
+                        el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    }
+                }
+
+                // Render Dots
+                this.dotsContainer.innerHTML = this.steps.map((_, i) => 
+                    `<div class="dot-indicator ${i === this.currentStep ? 'active' : ''}"></div>`
+                ).join('');
+            }
+
+            checkFirstTime() {
+                if (!localStorage.getItem('love_hsiung_tutorial_seen')) {
+                    setTimeout(() => this.start(), 800);
+                }
+            }
+        }
+
         const soundManager = new SoundManager();
+        const tutorialManager = new TutorialManager();
 
         const CATEGORIES = {
             photo: { label: '山林寫真', icon: '📸', color: 'bg-blue-50 text-blue-700', border: 'border-blue-200' },
@@ -470,7 +685,7 @@
 
         const CONFIG = { gridSize: 25, storageKey: 'love_hsiung_bingo_v6_fixed' };
 
-        let state = { grid: [], markedIndices: [], completedMissions: [], isSelectionMode: false, claimedLines: 0, currentFilter: 'all' };
+        let state = { grid: [], markedIndices: [], completedMissions: [], isSelectionMode: false, claimedLines: 0, currentFilter: 'all', currentView: 'missions' };
         let currentMission = null;
 
         const els = {
@@ -497,6 +712,7 @@
             luckyNumberContainer: document.getElementById('lucky-number-container'),
             toggleScenic: document.getElementById('toggle-scenic-btn'),
             toggleSound: document.getElementById('toggle-sound-btn'),
+            btnHelp: document.getElementById('help-btn'),
             exitScenic: document.getElementById('exit-scenic-btn')
         };
 
@@ -507,8 +723,11 @@
             if (saved) {
                 state = JSON.parse(saved);
                 if (!state.currentFilter) state.currentFilter = 'all';
+                if (!state.currentView) state.currentView = 'missions';
                 renderGrid();
                 updateStats();
+                // Check tutorial for returning users who haven't finished it
+                tutorialManager.checkFirstTime(); 
             } else {
                 openModal(els.modalSetup);
             }
@@ -534,6 +753,25 @@
 
         function renderMissionList() {
             els.missionList.innerHTML = '';
+
+            const isGuide = state.currentView === 'guide';
+            const tabMissions = document.getElementById('tab-missions');
+            const tabGuide = document.getElementById('tab-guide');
+            
+            // Tab Visuals
+            if (tabMissions && tabGuide) {
+                tabMissions.className = !isGuide 
+                    ? 'flex-1 py-3 text-sm font-bold text-[#2C3E50] border-b-2 border-[#2C3E50] transition-colors bg-white' 
+                    : 'flex-1 py-3 text-sm font-medium text-gray-400 border-b-2 border-transparent hover:text-[#2C3E50] transition-colors bg-gray-50';
+                tabGuide.className = isGuide 
+                    ? 'flex-1 py-3 text-sm font-bold text-[#2C3E50] border-b-2 border-[#2C3E50] transition-colors bg-white' 
+                    : 'flex-1 py-3 text-sm font-medium text-gray-400 border-b-2 border-transparent hover:text-[#2C3E50] transition-colors bg-gray-50';
+            }
+            
+            // Update Filter Visuals
+            els.categoryFilter.querySelectorAll('.category-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.category === state.currentFilter);
+            });
             
             const filtered = state.currentFilter === 'all' 
                 ? MEMORY_LIST 
@@ -549,50 +787,85 @@
                 return;
             }
 
-            filtered.forEach(m => {
-                const isDone = state.completedMissions.includes(m.id);
-                const cat = CATEGORIES[m.category] || CATEGORIES.secret;
-                const stars = '★'.repeat(m.difficulty) + '☆'.repeat(Math.max(0, 3 - m.difficulty));
+            if (isGuide) {
+                // GUIDE MODE
+                const grid = document.createElement('div');
+                grid.className = 'grid grid-cols-2 gap-3';
                 
-                const card = document.createElement('div');
-                card.className = `p-4 rounded-xl border-2 transition-all relative overflow-hidden bg-white ${isDone ? 'border-gray-100 opacity-60' : 'border-gray-50 shadow-sm active:scale-95'}`;
-                
-                card.innerHTML = `
-                    <div class="flex flex-col gap-3 pointer-events-none">
-                        <div class="flex justify-between items-start">
-                            <span class="px-2 py-0.5 rounded text-[10px] font-bold tracking-widest ${cat.color} ${cat.border} border uppercase flex items-center gap-1">
-                                ${cat.icon} ${cat.label}
-                            </span>
-                            <span class="text-[#D4AF37] text-xs">${stars}</span>
-                        </div>
-                        <div class="flex items-center gap-4">
-                            <div class="w-12 h-12 flex items-center justify-center bg-gray-50 rounded-full text-2xl shrink-0">${m.icon}</div>
-                            <div class="flex-1 min-w-0">
-                                <h4 class="text-[#2C3E50] font-bold text-base truncate">${m.title}</h4>
-                                <p class="text-[11px] text-gray-400 mt-1 line-clamp-2">${m.hint}</p>
-                            </div>
-                            <div class="px-4 py-2 rounded-lg text-xs font-bold shrink-0 ${isDone ? 'text-green-600 bg-green-50' : 'bg-[#2C3E50] text-white'}">
-                                ${isDone ? '✓ 完成' : '驗證'}
-                            </div>
-                        </div>
-                    </div>
-                `;
-                
-                if (!isDone) {
-                    card.classList.remove('pointer-events-none');
-                    card.onclick = (e) => {
-                        e.stopPropagation();
-                        soundManager.playClick();
-                        openInputModal(m);
-                    };
-                }
-                els.missionList.appendChild(card);
-            });
+                filtered.forEach(m => {
+                    const isCollected = state.completedMissions.includes(m.id);
+                    const cat = CATEGORIES[m.category] || CATEGORIES.secret;
+                    
+                    const item = document.createElement('div');
+                    // Guide Item Style
+                    const baseClass = "p-3 rounded-xl border flex flex-col gap-2 relative overflow-hidden transition-all";
+                    const statusClass = isCollected 
+                        ? "bg-white border-[#D4AF37] shadow-sm" 
+                        : "bg-gray-100 border-gray-200 opacity-60 grayscale";
 
-            // Update filter button visuals
-            els.categoryFilter.querySelectorAll('.category-btn').forEach(btn => {
-                btn.classList.toggle('active', btn.dataset.category === state.currentFilter);
-            });
+                    item.className = `${baseClass} ${statusClass}`;
+                    
+                    item.innerHTML = `
+                        <div class="flex justify-between items-start">
+                            <span class="text-2xl">${m.icon}</span>
+                            ${isCollected 
+                                ? '<span class="text-[#D4AF37] text-xs font-bold">★ GET</span>' 
+                                : '<span class="text-gray-400 text-xs font-bold tracking-widest">LOCKED</span>'}
+                        </div>
+                        <div>
+                            <h4 class="text-[#2C3E50] font-bold text-sm truncate">${m.title}</h4>
+                            <div class="flex items-center gap-1 mt-1">
+                                 <span class="text-[10px] px-1.5 py-0.5 rounded bg-gray-100 text-gray-500">${cat.label}</span>
+                                 <span class="text-[#D4AF37] text-[10px]">${'★'.repeat(m.difficulty)}</span>
+                            </div>
+                        </div>
+                    `;
+                    grid.appendChild(item);
+                });
+                els.missionList.appendChild(grid);
+
+            } else {
+                // MISSIONS MODE
+                filtered.forEach(m => {
+                    const isDone = state.completedMissions.includes(m.id);
+                    const cat = CATEGORIES[m.category] || CATEGORIES.secret;
+                    const stars = '★'.repeat(m.difficulty) + '☆'.repeat(Math.max(0, 3 - m.difficulty));
+                    
+                    const card = document.createElement('div');
+                    card.className = `p-4 rounded-xl border-2 transition-all relative overflow-hidden bg-white ${isDone ? 'border-gray-100 opacity-60' : 'border-gray-50 shadow-sm active:scale-95'}`;
+                    
+                    card.innerHTML = `
+                        <div class="flex flex-col gap-3 pointer-events-none">
+                            <div class="flex justify-between items-start">
+                                <span class="px-2 py-0.5 rounded text-[10px] font-bold tracking-widest ${cat.color} ${cat.border} border uppercase flex items-center gap-1">
+                                    ${cat.icon} ${cat.label}
+                                </span>
+                                <span class="text-[#D4AF37] text-xs">${stars}</span>
+                            </div>
+                            <div class="flex items-center gap-4">
+                                <div class="w-12 h-12 flex items-center justify-center bg-gray-50 rounded-full text-2xl shrink-0">${m.icon}</div>
+                                <div class="flex-1 min-w-0">
+                                    <h4 class="text-[#2C3E50] font-bold text-base truncate">${m.title}</h4>
+                                    <p class="text-[11px] text-gray-400 mt-1 line-clamp-2">${m.hint}</p>
+                                </div>
+                                <div class="px-4 py-2 rounded-lg text-xs font-bold shrink-0 ${isDone ? 'text-green-600 bg-green-50' : 'bg-[#2C3E50] text-white'}">
+                                    ${isDone ? '✓ 完成' : '驗證'}
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    
+                    if (!isDone) {
+                        card.classList.remove('pointer-events-none');
+                        card.onclick = (e) => {
+                            e.stopPropagation();
+                            soundManager.playClick();
+                            openInputModal(m);
+                        };
+                    }
+                    els.missionList.appendChild(card);
+                });
+            }
         }
 
         function openModal(modal) {
@@ -669,6 +942,8 @@
             closeModal(els.modalManual);
             confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
             soundManager.playSuccess();
+            // Start tutorial for new users
+            tutorialManager.checkFirstTime();
         }
 
         // --- Manual Setup Logic ---
@@ -784,12 +1059,28 @@
             document.getElementById('icon-sound-on').classList.toggle('hidden', !isEnabled);
             soundManager.playClick();
         };
+        
+        els.btnHelp.onclick = () => {
+            tutorialManager.start();
+        }
 
         // --- Mission & Action Logic ---
         document.getElementById('open-missions-btn').onclick = () => {
             soundManager.playClick();
             renderMissionList();
             openModal(els.modalMissions);
+        };
+
+        // Tab Event Listeners
+        document.getElementById('tab-missions').onclick = () => {
+            soundManager.playClick();
+            state.currentView = 'missions';
+            renderMissionList();
+        };
+        document.getElementById('tab-guide').onclick = () => {
+            soundManager.playClick();
+            state.currentView = 'guide';
+            renderMissionList();
         };
 
         els.categoryFilter.onclick = (e) => {
@@ -880,3 +1171,4 @@
     </script>
 </body>
 </html>
+--- END OF FILE index.html ---
