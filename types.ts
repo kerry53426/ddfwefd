@@ -1,0 +1,1 @@
+// Types no longer needed for vanilla JS

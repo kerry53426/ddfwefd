@@ -1,0 +1,1 @@
+// Constants moved to index.html

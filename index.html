@@ -1,0 +1,882 @@
+
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>愛上喜翁 | 山林拾光收集冊</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@300;500;700&family=Playfair+Display:ital@0;1&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+    <style>
+        :root {
+            --color-mountain: #2C3E50;
+            --color-gold: #B8860B;
+            --color-gold-light: #D4AF37;
+            --glass-bg: rgba(255, 255, 255, 0.95);
+            --glass-border: rgba(255, 255, 255, 0.8);
+        }
+
+        body {
+            font-family: 'Noto Serif TC', serif;
+            color: var(--color-mountain);
+            -webkit-font-smoothing: antialiased;
+            min-height: 100vh;
+            background-image: url('https://i.ibb.co/23KWDLjy/597488410-25468436916138867-3479504377125617703-n.jpg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            background-repeat: no-repeat;
+            background-color: #F8FAFC;
+            transition: background-color 0.8s ease;
+        }
+
+        .bg-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%; z-index: -1;
+            background: rgba(248, 250, 252, 0.5);
+            backdrop-filter: blur(3px);
+            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .scenic-mode .bg-overlay {
+            background: rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(0px);
+        }
+
+        .glass-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 10px 40px -10px rgba(31, 38, 135, 0.15);
+        }
+
+        .memory-frame {
+            aspect-ratio: 1;
+            background: rgba(255, 255, 255, 0.65);
+            border: 1px solid rgba(44, 62, 80, 0.1);
+            transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+            position: relative;
+            overflow: hidden;
+            touch-action: manipulation;
+        }
+
+        .memory-frame.collected {
+            background: #FFF;
+            border: 1px solid var(--color-gold);
+            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.25);
+            transform: scale(1.02);
+        }
+        
+        .selection-mode .memory-frame:not(.collected) {
+            cursor: pointer;
+            border: 2px dashed var(--color-gold);
+            animation: pulse-gold 2s infinite;
+            background: rgba(255, 255, 255, 0.95);
+            z-index: 10;
+        }
+
+        @keyframes pulse-gold {
+            0% { border-color: rgba(184, 134, 11, 0.4); box-shadow: 0 0 0 0 rgba(184, 134, 11, 0.2); }
+            50% { border-color: rgba(184, 134, 11, 1); box-shadow: 0 0 15px 4px rgba(184, 134, 11, 0.3); }
+            100% { border-color: rgba(184, 134, 11, 0.4); box-shadow: 0 0 0 0 rgba(184, 134, 11, 0.2); }
+        }
+
+        .gold-shimmer {
+            background: linear-gradient(110deg, #B8860B 8%, #F0E68C 18%, #B8860B 33%);
+            background-size: 200% 100%;
+            animation: shimmer 4s linear infinite;
+        }
+        @keyframes shimmer { to { background-position-x: -200%; } }
+
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+        /* Animation Classes */
+        .modal-enter { transform: translateY(100%); transition: transform 0.5s cubic-bezier(0.23, 1, 0.32, 1); }
+        .modal-enter-active { transform: translateY(0); }
+
+        /* Manual Input Grid */
+        .manual-input-cell {
+            aspect-ratio: 1;
+            text-align: center;
+            font-size: 1.25rem;
+            font-family: 'Noto Serif TC', serif;
+            border: 1px solid #E2E8F0;
+            border-radius: 0.5rem;
+            background: #FFF;
+            transition: all 0.2s;
+        }
+        .manual-input-cell:focus {
+            outline: none;
+            border-color: var(--color-gold);
+            box-shadow: 0 0 0 2px rgba(184, 134, 11, 0.1);
+        }
+        .manual-input-cell.duplicate {
+            border-color: #EF4444;
+            background-color: #FEF2F2;
+            color: #EF4444;
+        }
+
+        /* Category Button active state */
+        .category-btn.active {
+            background-color: var(--color-gold);
+            color: white;
+            border-color: var(--color-gold);
+            box-shadow: 0 4px 12px rgba(184, 134, 11, 0.3);
+        }
+
+        /* Scenic Mode Transitions */
+        .game-ui {
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+        .scenic-mode .game-ui {
+            opacity: 0;
+            pointer-events: none;
+            transform: translateY(20px);
+        }
+        .scenic-mode .fixed-action-btn {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        #scenic-return-hint {
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.5s ease;
+        }
+        .scenic-mode #scenic-return-hint {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        
+        .header-btn {
+            padding: 0.5rem;
+            color: #8B7355;
+            opacity: 0.6;
+            transition: all 0.2s;
+        }
+        .header-btn:hover { opacity: 1; }
+        .header-btn:active { transform: scale(0.9); }
+    </style>
+</head>
+<body class="flex flex-col items-center p-4 overflow-x-hidden">
+
+    <div class="bg-overlay"></div>
+
+    <!-- Scenic Mode Return Hint -->
+    <div id="scenic-return-hint" class="fixed inset-0 z-[100] flex flex-col items-center justify-end pb-12 pointer-events-none">
+        <button id="exit-scenic-btn" class="bg-white/20 backdrop-blur-md border border-white/40 text-white px-8 py-3 rounded-full text-sm tracking-[0.3em] shadow-2xl active:scale-95 transition-transform pointer-events-auto">
+            點擊返回收集冊
+        </button>
+    </div>
+
+    <div id="app" class="relative z-10 w-full max-w-md flex flex-col min-h-[90vh]">
+        
+        <header class="pt-8 pb-4 text-center relative game-ui">
+            <div class="absolute top-8 right-0 flex gap-2">
+                <button id="toggle-sound-btn" class="header-btn" title="音樂開關">
+                    <svg id="icon-sound-off" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <path d="M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" clip-rule="evenodd" />
+                        <path d="M17 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2" />
+                    </svg>
+                    <svg id="icon-sound-on" class="hidden" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <path d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
+                    </svg>
+                </button>
+                <button id="toggle-scenic-btn" class="header-btn" title="觀賞背景">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                        <path d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                    </svg>
+                </button>
+            </div>
+            
+            <div class="inline-flex flex-col items-center">
+                <span class="text-[#8B7355] text-xs tracking-[0.3em] uppercase mb-2 font-medium">Love Hsiung</span>
+                <h1 class="text-4xl font-medium text-[#2C3E50] tracking-widest mb-1 drop-shadow-sm">愛上喜翁</h1>
+                <div class="h-[1px] w-12 bg-[#D4AF37] my-3"></div>
+                <h2 class="text-xl text-[#4A5568] tracking-[0.15em] font-light">山林拾光收集冊</h2>
+            </div>
+        </header>
+
+        <main class="flex-1 px-2 flex flex-col items-center relative game-ui">
+            <div id="spin-area" class="w-full flex justify-between items-center px-4 mb-4 mt-2">
+                <div class="text-xs text-[#64748B] tracking-wide">
+                    達成連線：<span id="total-lines" class="font-bold text-[#D4AF37]">0</span>
+                </div>
+                
+                <button id="enter-wheel-btn" class="hidden flex items-center gap-2 bg-gradient-to-r from-[#2C3E50] to-[#1A252F] text-white px-4 py-2 rounded-full shadow-lg border border-[#D4AF37]/50 active:scale-95 transition-all">
+                    <span class="text-lg">🎡</span>
+                    <span class="text-xs tracking-widest font-bold">幸運轉盤 x<span id="spins-available">0</span></span>
+                </button>
+            </div>
+
+            <div id="selection-banner" class="hidden w-full mb-6 animate-bounce z-20 pointer-events-none text-center">
+                <div class="bg-gradient-to-r from-[#B8860B] to-[#D4AF37] text-white py-3 px-6 rounded-full shadow-xl text-sm tracking-widest font-bold border border-white/30 inline-block pointer-events-auto">
+                    ✨ 黃金時刻：請點擊任一賓果格 ✨
+                </div>
+            </div>
+
+            <div class="w-full flex justify-between items-end px-4 mb-2">
+                <span class="text-sm text-[#4A5568] font-medium tracking-wider">我的回憶拼圖</span>
+                <div class="flex items-baseline gap-1">
+                    <span id="progress-text" class="text-2xl font-serif text-[#D4AF37] font-bold">0</span>
+                    <span class="text-sm text-[#64748B]">/ 25</span>
+                </div>
+            </div>
+
+            <div class="glass-card p-4 rounded-2xl w-full shadow-lg transition-transform duration-500" id="grid-card">
+                <div id="grid-container" class="grid grid-cols-5 gap-2 w-full"></div>
+            </div>
+
+            <div class="mt-8 text-center px-6 pb-24">
+                <p class="text-sm text-[#4A5568] font-medium leading-loose italic tracking-wide">
+                    「每一步足跡，<br/>都是寫給大自然的情書。」
+                </p>
+            </div>
+        </main>
+
+        <div class="fixed bottom-8 left-0 right-0 z-30 px-6 flex justify-center fixed-action-btn">
+            <button id="open-missions-btn" class="w-full max-w-md relative group overflow-hidden rounded-full shadow-2xl transition-transform active:scale-95 border border-white/20">
+                <div class="absolute inset-0 gold-shimmer opacity-90"></div>
+                <div class="relative py-4 flex items-center justify-center gap-3 text-white">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
+                    </svg>
+                    <span class="text-lg tracking-[0.2em] font-medium">開啟探險手冊</span>
+                </div>
+            </button>
+        </div>
+
+        <!-- MODALS -->
+        <div id="setup-modal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-[#2C3E50]/80 backdrop-blur-md transition-opacity duration-300 opacity-0">
+            <div class="bg-white/95 w-full max-w-sm rounded-3xl p-6 shadow-2xl border border-white/60">
+                <div class="text-center mb-6">
+                    <h3 class="text-2xl text-[#2C3E50] tracking-widest font-medium mb-2">準備您的探險地圖</h3>
+                    <p class="text-xs text-[#64748B] tracking-wider">請選擇賓果卡片數字的產生方式</p>
+                </div>
+                <div class="flex flex-col gap-4">
+                    <button id="btn-setup-random" class="w-full py-4 bg-[#2C3E50] text-white rounded-xl shadow-lg active:scale-95 transition-all">隨機生成</button>
+                    <button id="btn-setup-manual" class="w-full py-4 border-2 border-[#2C3E50] text-[#2C3E50] rounded-xl shadow-sm active:scale-95 transition-all font-medium">手動填寫</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="manual-setup-modal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-[#2C3E50]/90 backdrop-blur-lg transition-opacity duration-300 opacity-0">
+            <div class="bg-[#FDFBF7] w-full max-w-md rounded-3xl p-6 shadow-2xl border border-white/50 flex flex-col h-[90vh] sm:h-auto">
+                <div class="text-center mb-6 shrink-0">
+                    <h3 class="text-2xl text-[#2C3E50] tracking-widest font-medium">編排回憶地圖</h3>
+                    <p class="text-xs text-[#8B7355] mt-1">請在 1-25 的空格中填入您心儀的幸運數字</p>
+                </div>
+                
+                <div id="manual-input-grid" class="grid grid-cols-5 gap-2 flex-1 overflow-y-auto py-2 no-scrollbar">
+                    <!-- 25 Inputs will be generated here -->
+                </div>
+
+                <div class="mt-6 flex flex-col gap-3 shrink-0">
+                    <div id="manual-validation-msg" class="text-center text-xs text-red-500 h-4 font-medium"></div>
+                    <div class="flex gap-2">
+                        <button id="btn-manual-autofill" class="flex-1 py-3 bg-white border border-[#D4AF37] text-[#B8860B] rounded-xl text-sm font-medium shadow-sm active:scale-95 transition-all">隨機補完</button>
+                        <button id="btn-manual-clear" class="px-4 py-3 bg-gray-100 text-gray-500 rounded-xl text-sm active:scale-95 transition-all">清空</button>
+                    </div>
+                    <button id="btn-manual-confirm" class="w-full py-4 bg-[#2C3E50] text-white rounded-xl shadow-lg active:scale-95 transition-all font-bold tracking-[0.2em] disabled:opacity-50 disabled:cursor-not-allowed">開始山林冒險</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="mission-modal" class="fixed inset-0 z-40 hidden flex items-end sm:items-center justify-center sm:p-4 bg-[#2C3E50]/40 backdrop-blur-sm transition-all duration-300 opacity-0">
+            <div id="mission-content" class="bg-[#FCFCFC] w-full max-w-sm h-[80vh] sm:h-auto sm:max-h-[85vh] sm:rounded-2xl rounded-t-3xl p-0 shadow-2xl modal-enter border border-white/60 flex flex-col overflow-hidden">
+                <div class="p-6 pb-4 border-b border-gray-100 flex justify-between items-center bg-white shrink-0">
+                    <div>
+                        <h3 class="text-2xl text-[#2C3E50] tracking-widest font-medium">探險任務</h3>
+                        <p class="text-xs text-[#8B96A0] mt-1 tracking-wider">完成任務，解鎖回憶拼圖</p>
+                    </div>
+                    <button id="close-mission-btn" class="text-gray-400 p-2 bg-gray-50 rounded-full">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                    </button>
+                </div>
+
+                <!-- Category Selector -->
+                <div class="bg-white border-b border-gray-50 px-4 py-3 overflow-x-auto no-scrollbar shrink-0">
+                    <div class="flex gap-2 min-w-max" id="category-filter-container">
+                        <button class="category-btn active px-4 py-2 rounded-full border border-gray-200 text-xs font-medium tracking-widest transition-all" data-category="all">全部</button>
+                        <button class="category-btn px-4 py-2 rounded-full border border-gray-200 text-xs font-medium tracking-widest transition-all" data-category="photo">山林寫真</button>
+                        <button class="category-btn px-4 py-2 rounded-full border border-gray-200 text-xs font-medium tracking-widest transition-all" data-category="food">原味饗宴</button>
+                        <button class="category-btn px-4 py-2 rounded-full border border-gray-200 text-xs font-medium tracking-widest transition-all" data-category="social">雲端分享</button>
+                        <button class="category-btn px-4 py-2 rounded-full border border-gray-200 text-xs font-medium tracking-widest transition-all" data-category="secret">秘境探索</button>
+                    </div>
+                </div>
+
+                <div class="flex-1 overflow-y-auto p-4 space-y-4 no-scrollbar bg-[#F9FAFB]" id="mission-list-container">
+                    <!-- Missions render here -->
+                </div>
+            </div>
+        </div>
+
+        <div id="input-modal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-[#2C3E50]/60 backdrop-blur-md transition-all duration-300 opacity-0">
+            <div class="bg-white w-full max-w-xs rounded-2xl p-6 shadow-2xl border border-white/50">
+                <div class="text-center mb-6">
+                    <span id="input-icon" class="text-4xl mb-4 block animate-bounce"></span>
+                    <h3 id="input-title" class="text-xl text-[#2C3E50] mb-2 font-medium tracking-wide"></h3>
+                    <p id="input-hint" class="text-xs text-[#64748B] leading-relaxed font-light"></p>
+                </div>
+                <div class="mb-4" id="staff-pin-container">
+                    <label class="block text-xs text-gray-400 mb-1 text-center">工作人員通行碼</label>
+                    <input type="password" id="staff-pin-input" maxlength="4" placeholder="****" class="w-full text-center text-xl tracking-[0.5em] py-2 border-b border-[#E2E8F0] focus:outline-none">
+                </div>
+                <div class="mb-6" id="lucky-number-container">
+                    <label class="block text-xs text-gray-400 mb-1 text-center">填寫號碼 (1-25)</label>
+                    <input type="number" id="passcode-input" placeholder="--" class="w-full text-center text-3xl py-2 border-b-2 border-[#E2E8F0] focus:outline-none focus:border-[#D4AF37]">
+                </div>
+                <div class="flex gap-3">
+                    <button id="cancel-input-btn" class="flex-1 py-3 text-gray-400 text-sm font-medium">取消</button>
+                    <button id="submit-input-btn" class="flex-1 bg-[#2C3E50] text-white py-3 rounded-lg text-sm tracking-widest shadow-md active:scale-95 transition-all">確認</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="result-modal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-6 bg-[#2C3E50]/90 backdrop-blur-md transition-opacity duration-300 opacity-0">
+            <div class="text-center text-white w-full max-w-xs">
+                <div id="reveal-animation" class="mb-8 h-40 flex flex-col items-center justify-center">
+                    <div class="w-20 h-20 border border-[#D4AF37]/30 rounded-full flex items-center justify-center animate-spin">
+                        <div class="w-16 h-16 border border-[#D4AF37]/60 rounded-full animate-ping"></div>
+                    </div>
+                </div>
+                <div id="result-content" class="hidden">
+                    <h2 id="result-title" class="text-2xl tracking-widest mb-6 font-medium">尋獲拾光！</h2>
+                    <div class="mx-auto w-32 h-40 bg-[#FDFBF7] p-2 shadow-2xl transform rotate-2 mb-8 flex flex-col items-center justify-center">
+                         <span class="text-[#D4AF37] text-xs uppercase mb-1">No.</span>
+                         <span id="result-number-display" class="text-6xl text-[#2C3E50] font-serif"></span>
+                    </div>
+                    <button id="close-result-btn" class="px-10 py-3 border border-[#D4AF37] text-[#D4AF37] rounded-full text-sm">收下回憶</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const SECURITY = { STAFF_PIN: '1688' };
+
+        // --- Sound Manager Class ---
+        class SoundManager {
+            constructor() {
+                this.ctx = new (window.AudioContext || window.webkitAudioContext)();
+                this.enabled = false;
+                // Using a reliable nature sound from Pixabay (or placeholder if offline)
+                this.bgmAudio = new Audio('https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=forest-lullaby-110624.mp3'); 
+                this.bgmAudio.loop = true;
+                this.bgmAudio.volume = 0.3;
+                this.bgmAudio.preload = 'auto';
+            }
+
+            toggle() {
+                this.enabled = !this.enabled;
+                if (this.enabled) {
+                    if (this.ctx.state === 'suspended') this.ctx.resume();
+                    this.bgmAudio.play().catch(e => console.log("BGM play failed (interaction required first)", e));
+                } else {
+                    this.bgmAudio.pause();
+                }
+                return this.enabled;
+            }
+
+            // Synthesized SFX to avoid file dependencies
+            playClick() {
+                if (!this.enabled) return;
+                try {
+                    const osc = this.ctx.createOscillator();
+                    const gain = this.ctx.createGain();
+                    osc.connect(gain);
+                    gain.connect(this.ctx.destination);
+                    
+                    osc.frequency.setValueAtTime(800, this.ctx.currentTime);
+                    gain.gain.setValueAtTime(0.05, this.ctx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + 0.1);
+                    
+                    osc.start();
+                    osc.stop(this.ctx.currentTime + 0.1);
+                } catch(e) {}
+            }
+
+            playSuccess() {
+                if (!this.enabled) return;
+                try {
+                    // C Major Chord Arpeggio
+                    [523.25, 659.25, 783.99, 1046.50].forEach((freq, i) => {
+                        const osc = this.ctx.createOscillator();
+                        const gain = this.ctx.createGain();
+                        osc.connect(gain);
+                        gain.connect(this.ctx.destination);
+                        
+                        osc.frequency.value = freq;
+                        const now = this.ctx.currentTime;
+                        const delay = i * 0.08;
+                        
+                        gain.gain.setValueAtTime(0, now + delay);
+                        gain.gain.linearRampToValueAtTime(0.1, now + delay + 0.05);
+                        gain.gain.exponentialRampToValueAtTime(0.001, now + delay + 1.2);
+                        
+                        osc.start(now + delay);
+                        osc.stop(now + delay + 1.2);
+                    });
+                } catch(e) {}
+            }
+
+            playReveal() {
+                if (!this.enabled) return;
+                try {
+                    const osc = this.ctx.createOscillator();
+                    const gain = this.ctx.createGain();
+                    osc.connect(gain);
+                    gain.connect(this.ctx.destination);
+                    
+                    const now = this.ctx.currentTime;
+                    osc.frequency.setValueAtTime(400, now);
+                    osc.frequency.exponentialRampToValueAtTime(1200, now + 0.6);
+                    
+                    gain.gain.setValueAtTime(0.05, now);
+                    gain.gain.linearRampToValueAtTime(0, now + 0.6);
+                    
+                    osc.start();
+                    osc.stop(now + 0.6);
+                } catch(e) {}
+            }
+        }
+
+        const soundManager = new SoundManager();
+
+        const CATEGORIES = {
+            photo: { label: '山林寫真', icon: '📸', color: 'bg-blue-50 text-blue-700', border: 'border-blue-200' },
+            food: { label: '原味饗宴', icon: '🍽️', color: 'bg-orange-50 text-orange-700', border: 'border-orange-200' },
+            social: { label: '雲端分享', icon: '📱', color: 'bg-purple-50 text-purple-700', border: 'border-purple-200' },
+            secret: { label: '秘境探索', icon: '🤫', color: 'bg-amber-50 text-amber-800', border: 'border-amber-200' }
+        };
+
+        const MEMORY_LIST = [
+            { id: 'p1', category: 'photo', title: '與雲海合影', difficulty: 1, type: 'code_draw', hint: '在觀景台拍下最美瞬間，輸入告示牌代碼。', icon: '🏔️' },
+            { id: 'p2', category: 'photo', title: '五指山取景', difficulty: 2, type: 'code_draw', hint: '找到最佳拍攝點，輸入木架代碼。', icon: '🎨' },
+            { id: 'p3', category: 'photo', title: '森之呼吸', difficulty: 1, type: 'code_draw', hint: '在指定紅檜木旁拍照，輸入樹牌代碼。', icon: '🌲' },
+            { id: 'f1', category: 'food', title: '晚餐：光盤行動', difficulty: 2, type: 'staff_number', hint: '感謝大自然餽贈，完食後請管家確認。', icon: '🥩' },
+            { id: 'f2', category: 'food', title: '在地山菜品味', difficulty: 1, type: 'staff_number', hint: '說出三樣晚餐食材，請管家確認。', icon: '🥬' },
+            { id: 's1', category: 'social', title: 'IG 限動分享', difficulty: 1, type: 'staff_number', hint: '發布限動並標記 @愛上喜翁，出示給管家。', icon: '📱' },
+            { id: 's2', category: 'social', title: 'Google 五星評論', difficulty: 2, type: 'staff_number', hint: '分享您的旅宿心得，出示給櫃檯管家。', icon: '⭐' },
+            { id: 'h1', category: 'secret', title: '尋找守護神', difficulty: 3, type: 'code_draw', hint: '在森林深處尋找古老的圖騰，輸入底座標記。', icon: '🏺' },
+            { id: 'h2', category: 'secret', title: '星空觀測', difficulty: 2, type: 'staff_number', hint: '於夜間找到指定星座並向管家描述。', icon: '✨' },
+            { id: 'gold1', category: 'secret', title: '🌟 營主黃金挑戰', difficulty: 3, type: 'user_choice', hint: '完成高難度隱藏任務，獲得「自選填字」權利！', icon: '🏆', isSpecial: true }
+        ];
+
+        const CONFIG = { gridSize: 25, storageKey: 'love_hsiung_bingo_v6_fixed' };
+
+        let state = { grid: [], markedIndices: [], completedMissions: [], isSelectionMode: false, claimedLines: 0, currentFilter: 'all' };
+        let currentMission = null;
+
+        const els = {
+            grid: document.getElementById('grid-container'),
+            progress: document.getElementById('progress-text'),
+            totalLines: document.getElementById('total-lines'),
+            modalMissions: document.getElementById('mission-modal'),
+            missionContent: document.getElementById('mission-content'),
+            missionList: document.getElementById('mission-list-container'),
+            categoryFilter: document.getElementById('category-filter-container'),
+            modalInput: document.getElementById('input-modal'),
+            modalResult: document.getElementById('result-modal'),
+            modalSetup: document.getElementById('setup-modal'),
+            modalManual: document.getElementById('manual-setup-modal'),
+            manualGrid: document.getElementById('manual-input-grid'),
+            manualConfirm: document.getElementById('btn-manual-confirm'),
+            manualValidation: document.getElementById('manual-validation-msg'),
+            inputIcon: document.getElementById('input-icon'),
+            inputTitle: document.getElementById('input-title'),
+            inputHint: document.getElementById('input-hint'),
+            inputField: document.getElementById('passcode-input'),
+            staffPinField: document.getElementById('staff-pin-input'),
+            staffPinContainer: document.getElementById('staff-pin-container'),
+            luckyNumberContainer: document.getElementById('lucky-number-container'),
+            toggleScenic: document.getElementById('toggle-scenic-btn'),
+            toggleSound: document.getElementById('toggle-sound-btn'),
+            exitScenic: document.getElementById('exit-scenic-btn')
+        };
+
+        function saveState() { localStorage.setItem(CONFIG.storageKey, JSON.stringify(state)); }
+        
+        function loadState() {
+            const saved = localStorage.getItem(CONFIG.storageKey);
+            if (saved) {
+                state = JSON.parse(saved);
+                if (!state.currentFilter) state.currentFilter = 'all';
+                renderGrid();
+                updateStats();
+            } else {
+                openModal(els.modalSetup);
+            }
+        }
+
+        function renderGrid() {
+            els.grid.innerHTML = '';
+            state.grid.forEach((num, index) => {
+                const isMarked = state.markedIndices.includes(index);
+                const div = document.createElement('div');
+                div.className = `memory-frame rounded-lg flex items-center justify-center relative select-none ${isMarked ? 'collected' : ''}`;
+                
+                if (isMarked) {
+                    div.innerHTML = `<span class="text-xl text-[#2C3E50] font-bold z-10 font-serif">${num}</span><div class="absolute bottom-1 right-1 opacity-20"><svg width="12" height="12" viewBox="0 0 24 24" fill="#D4AF37"><path d="M12 1l3.22 6.63L23 8.75l-5 4.87L19.18 21 12 17.27 4.82 21 6 13.62 1 8.75l7.78-1.12L12 1z"/></svg></div>`;
+                } else {
+                    div.innerHTML = `<span class="text-lg text-gray-300 font-serif">${num}</span>`;
+                    if (state.isSelectionMode) div.onclick = () => handleUserSelection(index);
+                }
+                els.grid.appendChild(div);
+            });
+            document.getElementById('selection-banner').classList.toggle('hidden', !state.isSelectionMode);
+        }
+
+        function renderMissionList() {
+            els.missionList.innerHTML = '';
+            
+            const filtered = state.currentFilter === 'all' 
+                ? MEMORY_LIST 
+                : MEMORY_LIST.filter(m => m.category === state.currentFilter);
+
+            if (filtered.length === 0) {
+                els.missionList.innerHTML = `
+                    <div class="flex flex-col items-center justify-center py-12 text-gray-400">
+                        <div class="text-4xl mb-4">🌿</div>
+                        <p class="text-sm font-light tracking-widest">此區域目前無可進行的任務</p>
+                    </div>
+                `;
+                return;
+            }
+
+            filtered.forEach(m => {
+                const isDone = state.completedMissions.includes(m.id);
+                const cat = CATEGORIES[m.category] || CATEGORIES.secret;
+                const stars = '★'.repeat(m.difficulty) + '☆'.repeat(Math.max(0, 3 - m.difficulty));
+                
+                const card = document.createElement('div');
+                card.className = `p-4 rounded-xl border-2 transition-all relative overflow-hidden bg-white ${isDone ? 'border-gray-100 opacity-60' : 'border-gray-50 shadow-sm active:scale-95'}`;
+                
+                card.innerHTML = `
+                    <div class="flex flex-col gap-3 pointer-events-none">
+                        <div class="flex justify-between items-start">
+                            <span class="px-2 py-0.5 rounded text-[10px] font-bold tracking-widest ${cat.color} ${cat.border} border uppercase flex items-center gap-1">
+                                ${cat.icon} ${cat.label}
+                            </span>
+                            <span class="text-[#D4AF37] text-xs">${stars}</span>
+                        </div>
+                        <div class="flex items-center gap-4">
+                            <div class="w-12 h-12 flex items-center justify-center bg-gray-50 rounded-full text-2xl shrink-0">${m.icon}</div>
+                            <div class="flex-1 min-w-0">
+                                <h4 class="text-[#2C3E50] font-bold text-base truncate">${m.title}</h4>
+                                <p class="text-[11px] text-gray-400 mt-1 line-clamp-2">${m.hint}</p>
+                            </div>
+                            <div class="px-4 py-2 rounded-lg text-xs font-bold shrink-0 ${isDone ? 'text-green-600 bg-green-50' : 'bg-[#2C3E50] text-white'}">
+                                ${isDone ? '✓ 完成' : '驗證'}
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                if (!isDone) {
+                    card.classList.remove('pointer-events-none');
+                    card.onclick = (e) => {
+                        e.stopPropagation();
+                        soundManager.playClick();
+                        openInputModal(m);
+                    };
+                }
+                els.missionList.appendChild(card);
+            });
+
+            // Update filter button visuals
+            els.categoryFilter.querySelectorAll('.category-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.category === state.currentFilter);
+            });
+        }
+
+        function openModal(modal) {
+            modal.classList.remove('hidden');
+            const content = modal.querySelector('.modal-enter');
+            setTimeout(() => {
+                modal.classList.remove('opacity-0');
+                if (content) content.classList.add('modal-enter-active');
+            }, 10);
+        }
+
+        function closeModal(modal) {
+            const content = modal.querySelector('.modal-enter');
+            modal.classList.add('opacity-0');
+            if (content) content.classList.remove('modal-enter-active');
+            setTimeout(() => modal.classList.add('hidden'), 300);
+        }
+
+        function openInputModal(m) {
+            currentMission = m;
+            els.inputIcon.innerText = m.icon;
+            els.inputTitle.innerText = m.title;
+            els.inputHint.innerText = m.hint;
+            els.staffPinField.value = '';
+            els.inputField.value = '';
+
+            const needsPin = m.type === 'staff_number' || m.type === 'user_choice';
+            els.staffPinContainer.classList.toggle('hidden', !needsPin);
+            els.luckyNumberContainer.classList.toggle('hidden', m.type === 'user_choice');
+            
+            openModal(els.modalInput);
+        }
+
+        function updateStats() {
+            els.progress.innerText = state.markedIndices.length;
+            const lines = calculateLines();
+            els.totalLines.innerText = lines;
+            const spins = Math.max(0, lines - (state.claimedLines || 0));
+            document.getElementById('spins-available').innerText = spins;
+            document.getElementById('enter-wheel-btn').classList.toggle('hidden', spins <= 0);
+        }
+
+        function calculateLines() {
+            const patterns = [
+                [0,1,2,3,4], [5,6,7,8,9], [10,11,12,13,14], [15,16,17,18,19], [20,21,22,23,24],
+                [0,5,10,15,20], [1,6,11,16,21], [2,7,12,17,22], [3,8,13,18,23], [4,9,14,19,24],
+                [0,6,12,18,24], [4,8,12,16,20]
+            ];
+            return patterns.filter(p => p.every(i => state.markedIndices.includes(i))).length;
+        }
+
+        // --- Setup Logic ---
+        document.getElementById('btn-setup-random').onclick = () => {
+            soundManager.playClick();
+            state.grid = Array.from({length: 25}, (_, i) => i + 1).sort(() => Math.random() - 0.5);
+            completeSetup();
+        };
+
+        document.getElementById('btn-setup-manual').onclick = () => {
+            soundManager.playClick();
+            closeModal(els.modalSetup);
+            initManualGrid();
+            openModal(els.modalManual);
+        };
+
+        function completeSetup() {
+            state.markedIndices = [];
+            state.completedMissions = [];
+            state.claimedLines = 0;
+            saveState();
+            renderGrid();
+            updateStats();
+            closeModal(els.modalSetup);
+            closeModal(els.modalManual);
+            confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
+            soundManager.playSuccess();
+        }
+
+        // --- Manual Setup Logic ---
+        function initManualGrid() {
+            els.manualGrid.innerHTML = '';
+            for (let i = 0; i < 25; i++) {
+                const input = document.createElement('input');
+                input.type = 'number';
+                input.inputMode = 'numeric';
+                input.className = 'manual-input-cell';
+                input.placeholder = '-';
+                input.dataset.index = i;
+                input.oninput = (e) => handleManualInput(e.target);
+                input.onkeydown = (e) => handleManualKeyDown(e);
+                els.manualGrid.appendChild(input);
+            }
+            validateManualGrid();
+        }
+
+        function handleManualInput(input) {
+            const val = input.value;
+            if (val.length > 2) input.value = val.slice(0, 2);
+            
+            // Auto focus next
+            if (val.length >= 1 && parseInt(val) >= 1 && parseInt(val) <= 25) {
+                const next = input.nextElementSibling;
+                if (next) next.focus();
+            }
+            validateManualGrid();
+        }
+
+        function handleManualKeyDown(e) {
+            if (e.key === 'Backspace' && !e.target.value) {
+                const prev = e.target.previousElementSibling;
+                if (prev) prev.focus();
+            }
+        }
+
+        function validateManualGrid() {
+            const inputs = Array.from(els.manualGrid.querySelectorAll('input'));
+            const values = inputs.map(i => i.value ? parseInt(i.value) : null);
+            let duplicates = [];
+            let outOfRange = false;
+
+            values.forEach((v, idx) => {
+                inputs[idx].classList.remove('duplicate');
+                if (v !== null) {
+                    if (v < 1 || v > 25) outOfRange = true;
+                    if (values.filter(x => x === v).length > 1) {
+                        duplicates.push(v);
+                        inputs[idx].classList.add('duplicate');
+                    }
+                }
+            });
+
+            const uniqueValues = new Set(values.filter(v => v !== null));
+            const isComplete = uniqueValues.size === 25 && !outOfRange;
+
+            els.manualConfirm.disabled = !isComplete;
+            
+            if (duplicates.length > 0) {
+                els.manualValidation.innerText = '數字不能重複！';
+            } else if (outOfRange) {
+                els.manualValidation.innerText = '數字必須在 1-25 之間';
+            } else {
+                els.manualValidation.innerText = '';
+            }
+        }
+
+        document.getElementById('btn-manual-autofill').onclick = () => {
+            soundManager.playClick();
+            const inputs = Array.from(els.manualGrid.querySelectorAll('input'));
+            const currentValues = new Set(inputs.map(i => i.value ? parseInt(i.value) : null).filter(v => v !== null));
+            const available = Array.from({length: 25}, (_, i) => i + 1).filter(v => !currentValues.has(v));
+            
+            available.sort(() => Math.random() - 0.5);
+
+            inputs.forEach(input => {
+                if (!input.value || input.classList.contains('duplicate')) {
+                    if (available.length > 0) {
+                        input.value = available.pop();
+                    }
+                }
+            });
+            validateManualGrid();
+        };
+
+        document.getElementById('btn-manual-clear').onclick = () => {
+            soundManager.playClick();
+            els.manualGrid.querySelectorAll('input').forEach(i => i.value = '');
+            validateManualGrid();
+        };
+
+        els.manualConfirm.onclick = () => {
+            soundManager.playClick();
+            const values = Array.from(els.manualGrid.querySelectorAll('input')).map(i => parseInt(i.value));
+            state.grid = values;
+            completeSetup();
+        };
+
+        // --- Scenic & Sound Logic ---
+        function toggleScenicMode(enable) {
+            document.body.classList.toggle('scenic-mode', enable);
+            soundManager.playClick();
+        }
+
+        els.toggleScenic.onclick = () => toggleScenicMode(true);
+        els.exitScenic.onclick = () => toggleScenicMode(false);
+        
+        els.toggleSound.onclick = () => {
+            const isEnabled = soundManager.toggle();
+            document.getElementById('icon-sound-off').classList.toggle('hidden', isEnabled);
+            document.getElementById('icon-sound-on').classList.toggle('hidden', !isEnabled);
+            soundManager.playClick();
+        };
+
+        // --- Mission & Action Logic ---
+        document.getElementById('open-missions-btn').onclick = () => {
+            soundManager.playClick();
+            renderMissionList();
+            openModal(els.modalMissions);
+        };
+
+        els.categoryFilter.onclick = (e) => {
+            const btn = e.target.closest('.category-btn');
+            if (btn) {
+                soundManager.playClick();
+                state.currentFilter = btn.dataset.category;
+                renderMissionList();
+            }
+        };
+
+        document.getElementById('close-mission-btn').onclick = () => {
+            // soundManager.playClick(); // optional: sound on close
+            closeModal(els.modalMissions);
+        };
+        
+        document.getElementById('cancel-input-btn').onclick = () => {
+            // soundManager.playClick();
+            closeModal(els.modalInput);
+        };
+
+        document.getElementById('submit-input-btn').onclick = () => {
+            soundManager.playClick();
+            const needsPin = currentMission.type === 'staff_number' || currentMission.type === 'user_choice';
+            if (needsPin && els.staffPinField.value !== SECURITY.STAFF_PIN) {
+                alert("通行碼錯誤！"); return;
+            }
+
+            if (currentMission.type === 'user_choice') {
+                closeModal(els.modalInput);
+                closeModal(els.modalMissions);
+                state.isSelectionMode = true;
+                saveState(); renderGrid();
+                confetti({ particleCount: 50, spread: 70, origin: { y: 0.8 } });
+                soundManager.playSuccess();
+                return;
+            }
+
+            const num = parseInt(els.inputField.value);
+            if (!num || num < 1 || num > 25) { alert("請輸入 1-25 之間的數字"); return; }
+            
+            closeModal(els.modalInput);
+            closeModal(els.modalMissions);
+            
+            openModal(els.modalResult);
+            document.getElementById('reveal-animation').classList.remove('hidden');
+            document.getElementById('result-content').classList.add('hidden');
+            
+            soundManager.playReveal();
+
+            setTimeout(() => {
+                const idx = state.grid.indexOf(num);
+                const isNew = idx !== -1 && !state.markedIndices.includes(idx);
+                
+                document.getElementById('reveal-animation').classList.add('hidden');
+                document.getElementById('result-content').classList.remove('hidden');
+                document.getElementById('result-number-display').innerText = num;
+                document.getElementById('result-title').innerText = isNew ? "尋獲拾光！" : "重複的回憶";
+                
+                if (isNew) {
+                    state.markedIndices.push(idx);
+                    state.completedMissions.push(currentMission.id);
+                    saveState(); renderGrid(); updateStats();
+                    confetti({ particleCount: 150, spread: 80, origin: { y: 0.6 } });
+                    soundManager.playSuccess();
+                }
+            }, 1500);
+        };
+
+        document.getElementById('close-result-btn').onclick = () => {
+            soundManager.playClick();
+            closeModal(els.modalResult);
+        };
+
+        function handleUserSelection(idx) {
+            soundManager.playClick();
+            if (confirm(`確定在位置 ${idx+1} 填入號碼 ${state.grid[idx]} 嗎？`)) {
+                state.markedIndices.push(idx);
+                state.completedMissions.push(currentMission.id);
+                state.isSelectionMode = false;
+                saveState(); renderGrid(); updateStats();
+                confetti({ particleCount: 100, spread: 70, origin: { y: 0.8 } });
+                soundManager.playSuccess();
+            }
+        }
+
+        loadState();
+    </script>
+</body>
+</html>
