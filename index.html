@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>愛上喜翁 | 山林拾光收集冊</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@300;500;700&family=Playfair+Display:ital@0;1&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@300;500;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
     <style>
@@ -14,8 +14,9 @@
             --color-mountain: #2C3E50;
             --color-gold: #B8860B;
             --color-gold-light: #D4AF37;
-            --glass-bg: rgba(255, 255, 255, 0.95);
-            --glass-border: rgba(255, 255, 255, 0.8);
+            /* Improved Glass Vars */
+            --glass-bg: rgba(255, 255, 255, 0.85);
+            --glass-border: rgba(255, 255, 255, 0.6);
         }
 
         body {
@@ -28,68 +29,163 @@
             background-position: center;
             background-attachment: fixed;
             background-repeat: no-repeat;
-            background-color: #F8FAFC;
+            background-color: #1a202c; /* Fallback dark color */
             transition: background-color 0.8s ease;
         }
 
+        /* 1. Background Contrast: Dark Overlay */
         .bg-overlay {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%; z-index: -1;
-            background: rgba(248, 250, 252, 0.5);
-            backdrop-filter: blur(3px);
+            background: rgba(0, 0, 0, 0.35); /* Darkened for luxury contrast */
+            backdrop-filter: blur(2px);
             transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .scenic-mode .bg-overlay {
-            background: rgba(0, 0, 0, 0.1);
+            background: rgba(0, 0, 0, 0);
             backdrop-filter: blur(0px);
         }
 
+        /* 2. Luxury Glass Container */
         .glass-card {
             background: var(--glass-bg);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
+            backdrop-filter: blur(20px); /* Stronger blur */
+            -webkit-backdrop-filter: blur(20px);
             border: 1px solid var(--glass-border);
-            box-shadow: 0 10px 40px -10px rgba(31, 38, 135, 0.15);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.4); /* Deeper shadow */
+            border-radius: 1.5rem; /* rounded-3xl */
         }
 
+        /* 3. Grid Cells Polish - Polaroid / Aged Paper Style */
         .memory-frame {
             aspect-ratio: 1;
-            background: rgba(255, 255, 255, 0.65);
-            border: 1px solid rgba(44, 62, 80, 0.1);
-            transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+            /* Paper/Card Look */
+            background-color: #FDFBF7; /* Cream/Off-white */
+            border: 4px solid #FFFFFF; /* Polaroid Frame */
+            border-radius: 0.25rem; /* rounded-sm */
+            
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
             position: relative;
             overflow: hidden;
             touch-action: manipulation;
+            /* Shadow-md */
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
         }
 
-        .memory-frame.collected {
-            background: #FFF;
-            border: 1px solid var(--color-gold);
-            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.25);
-            transform: scale(1.02);
-        }
-        
-        .selection-mode .memory-frame:not(.collected) {
-            cursor: pointer;
-            border: 2px dashed var(--color-gold);
-            animation: pulse-gold 2s infinite;
-            background: rgba(255, 255, 255, 0.95);
+        /* Interactive State (Hover/Active) */
+        .memory-frame:not(.collected):active,
+        .memory-frame:not(.collected):hover {
+            transform: translateY(-4px); /* Lift up */
+            /* Shadow-xl */
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
             z-index: 10;
         }
 
-        @keyframes pulse-gold {
-            0% { border-color: rgba(184, 134, 11, 0.4); box-shadow: 0 0 0 0 rgba(184, 134, 11, 0.2); }
-            50% { border-color: rgba(184, 134, 11, 1); box-shadow: 0 0 15px 4px rgba(184, 134, 11, 0.3); }
-            100% { border-color: rgba(184, 134, 11, 0.4); box-shadow: 0 0 0 0 rgba(184, 134, 11, 0.2); }
+        /* --- PURE CSS "WUFENG STARRY NIGHT" STYLE --- */
+        .memory-frame.collected {
+            /* Base Sky Gradient */
+            background: linear-gradient(to bottom, #1e1b4b, #312e81); /* Indigo-950 to Indigo-900 */
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            box-shadow: inset 0 0 15px rgba(0,0,0,0.8);
+            z-index: 5;
         }
 
-        .gold-shimmer {
-            background: linear-gradient(110deg, #B8860B 8%, #F0E68C 18%, #B8860B 33%);
-            background-size: 200% 100%;
-            animation: shimmer 4s linear infinite;
+        /* Layer 1: Stars (Using box-shadow trick) */
+        .memory-frame.collected::before {
+            content: "";
+            position: absolute;
+            top: 5%; left: 5%;
+            width: 2px; height: 2px;
+            background: white;
+            border-radius: 50%;
+            /* Creating multiple stars via shadow offsets */
+            box-shadow: 
+                10px 15px 0 0 white, 
+                35px 5px 0 -0.5px rgba(255,255,255,0.8), 
+                50px 25px 0 0 white, 
+                5px 40px 0 -0.5px rgba(255,255,255,0.6),
+                45px 50px 0 0 white,
+                25px 30px 0 -0.5px rgba(255,255,255,0.7);
+            opacity: 0.7;
+            animation: starry-twinkle 4s infinite ease-in-out alternate;
+            z-index: 1;
         }
-        @keyframes shimmer { to { background-position-x: -200%; } }
+
+        /* Layer 2: Mountains (Using Clip Path) */
+        .memory-frame.collected::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 40%; /* Height of mountains */
+            background: #020617; /* Slate-950 (Near Black) */
+            /* Jagged Mountain Silhouette */
+            clip-path: polygon(0% 100%, 0% 40%, 20% 70%, 45% 20%, 70% 60%, 100% 10%, 100% 100%);
+            z-index: 2;
+            opacity: 0.9;
+        }
+
+        /* Layer 3: Foreground Number (Firefly/Moon) */
+        .memory-frame.collected span {
+            position: relative;
+            z-index: 10; /* Above mountains */
+            color: #FDE047; /* Yellow-300 */
+            font-family: 'Playfair Display', serif; /* Elegant font */
+            text-shadow: 0 0 10px #F59E0B, 0 0 20px #D97706; /* Amber Glow */
+            animation: firefly-breathe 3s infinite ease-in-out alternate;
+        }
+
+        @keyframes starry-twinkle {
+            0% { opacity: 0.3; transform: scale(0.8); }
+            100% { opacity: 0.9; transform: scale(1.1); }
+        }
+
+        @keyframes firefly-breathe {
+            0% { transform: scale(1); opacity: 0.85; text-shadow: 0 0 10px #F59E0B; }
+            100% { transform: scale(1.1); opacity: 1; text-shadow: 0 0 25px #FBBF24, 0 0 5px #FFF; }
+        }
+
+        .selection-mode .memory-frame:not(.collected) {
+            cursor: pointer;
+            border-color: var(--color-gold);
+            animation: pulse-paper 2s infinite;
+            z-index: 10;
+        }
+
+        @keyframes pulse-paper {
+            0% { transform: scale(1); box-shadow: 0 4px 6px -1px rgba(184, 134, 11, 0.2); }
+            50% { transform: scale(1.02); box-shadow: 0 10px 15px -3px rgba(184, 134, 11, 0.4); }
+            100% { transform: scale(1); box-shadow: 0 4px 6px -1px rgba(184, 134, 11, 0.2); }
+        }
+
+        /* Mission Complete Animation */
+        @keyframes slide-out-right {
+            0% { transform: translateX(0); opacity: 1; }
+            100% { transform: translateX(50px); opacity: 0; }
+        }
+        .mission-complete-anim {
+            animation: slide-out-right 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+            pointer-events: none;
+        }
+
+        /* 4. Premium Gold Gradient Button */
+        .btn-gold-gradient {
+            background: linear-gradient(to right, #BF953F, #FCF6BA, #B38728);
+            background-size: 200% auto;
+            transition: all 0.5s ease;
+        }
+        .btn-gold-gradient:hover {
+            background-position: right center;
+            transform: scale(1.05);
+            box-shadow: 0 0 25px rgba(212,175,55,0.6);
+        }
+        .btn-gold-gradient:active {
+            transform: scale(0.98);
+        }
 
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
@@ -160,14 +256,88 @@
             pointer-events: auto;
         }
         
+        /* Updated Header Btn color for dark background */
         .header-btn {
             padding: 0.5rem;
-            color: #8B7355;
-            opacity: 0.6;
+            color: rgba(255, 255, 255, 0.8);
             transition: all 0.2s;
         }
-        .header-btn:hover { opacity: 1; }
+        .header-btn:hover { color: #D4AF37; opacity: 1; }
         .header-btn:active { transform: scale(0.9); }
+        
+        /* Music Track Item Active State */
+        .track-item.active {
+            border-color: #D4AF37;
+            background-color: rgba(212, 175, 55, 0.1);
+        }
+        .track-item.active .track-icon {
+            transform: scale(1.1);
+        }
+
+        /* Wheel Styles */
+        .wheel-container {
+            position: relative;
+            width: 250px;
+            height: 250px;
+            margin: 0 auto;
+        }
+        .wheel {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 6px solid #D4AF37;
+            background: conic-gradient(
+                #FFFFFF 0deg 60deg,
+                #FDFBF7 60deg 120deg,
+                #FFFFFF 120deg 180deg,
+                #FDFBF7 180deg 240deg,
+                #FFFFFF 240deg 300deg,
+                #FDFBF7 300deg 360deg
+            );
+            transition: transform 4s cubic-bezier(0.17, 0.67, 0.12, 0.99);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+        /* Wheel Lines */
+        .wheel::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: 
+                linear-gradient(0deg, transparent 49.5%, #E2E8F0 49.5%, #E2E8F0 50.5%, transparent 50.5%),
+                linear-gradient(60deg, transparent 49.5%, #E2E8F0 49.5%, #E2E8F0 50.5%, transparent 50.5%),
+                linear-gradient(120deg, transparent 49.5%, #E2E8F0 49.5%, #E2E8F0 50.5%, transparent 50.5%);
+            border-radius: 50%;
+        }
+        .wheel-pointer {
+            position: absolute;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0; 
+            height: 0; 
+            border-left: 12px solid transparent;
+            border-right: 12px solid transparent;
+            border-top: 24px solid #2C3E50;
+            z-index: 20;
+            filter: drop-shadow(0 2px 2px rgba(0,0,0,0.3));
+        }
+        .wheel-center {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 40px; height: 40px;
+            background: white;
+            border: 4px solid #D4AF37;
+            border-radius: 50%;
+            z-index: 10;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
 
         /* Tutorial Styles */
         .tutorial-overlay {
@@ -224,20 +394,100 @@
         .dot-indicator.active {
             background: #D4AF37; width: 20px; border-radius: 4px;
         }
+        
+        /* --- NEW Reveal Modal Styles --- */
+        
+        /* 1. Sunburst Rays */
+        .sunburst-rays {
+            background: repeating-conic-gradient(
+                from 0deg, 
+                rgba(212, 175, 55, 0.4) 0deg 10deg, 
+                transparent 10deg 20deg
+            );
+            animation: rotate-slow 20s linear infinite;
+            mask-image: radial-gradient(circle, black 0%, transparent 70%);
+            -webkit-mask-image: radial-gradient(circle, black 0%, transparent 70%);
+        }
+        @keyframes rotate-slow {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        /* 2. Premium Paper Texture */
+        .paper-texture {
+            background-color: #FDFBF7;
+            /* Subtle noise pattern SVG data URI */
+            background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.6' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100' height='100' filter='url(%23noise)' opacity='0.08'/%3E%3C/svg%3E");
+            box-shadow: inset 0 0 40px rgba(0,0,0,0.05), 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            border: 1px solid #D4AF37;
+        }
+
+        /* 3. Floating Animation */
+        @keyframes float-card {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-8px); }
+        }
+        .animate-float {
+            animation: float-card 6s ease-in-out infinite;
+        }
+
+        /* 4. Stamp & Bounce Effect */
+        @keyframes stamp-in-bounce {
+            0% { transform: scale(3); opacity: 0; }
+            50% { transform: scale(0.9); opacity: 1; }
+            70% { transform: scale(1.05); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        .stamp-reveal {
+            animation: stamp-in-bounce 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
+
+        /* 5. Fade In & Scale Up for Card */
+        @keyframes scale-in-fade {
+            0% { transform: scale(0.8); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        .card-enter-anim {
+            animation: scale-in-fade 0.8s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+        }
+
+        /* Splash Screen */
+        #splash-screen {
+            position: fixed;
+            inset: 0;
+            z-index: 9999;
+            background: #1a2a6c;
+            background: linear-gradient(to bottom, #1a2a6c, #2C3E50);
+            display: flex;
+            flex-col: column;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.8s ease;
+        }
     </style>
 </head>
 <body class="flex flex-col items-center p-4 overflow-x-hidden">
 
-    <!-- AUDIO PLAYER (Hidden) -->
-    <!-- Primary Source: Vocaroo Link provided -->
-    <!-- Fallback Source: Google Sound Library (Forest) in case Vocaroo expires/fails -->
-    <audio id="bgmAudio" loop preload="auto">
-        <source src="https://media1.vocaroo.com/mp3/1n3mqKg0ASP4" type="audio/mp3">
-        <source src="https://actions.google.com/sounds/v1/ambiences/forest_morning.ogg" type="audio/ogg">
-        Your browser does not support the audio element.
+    <div class="bg-overlay"></div>
+
+    <!-- AUDIO SYSTEM -->
+    <audio id="bgm-audio" loop preload="auto" playsinline style="position:absolute; width:0; height:0; opacity:0; pointer-events:none;">
     </audio>
 
-    <div class="bg-overlay"></div>
+    <!-- SPLASH SCREEN -->
+    <div id="splash-screen">
+        <div class="text-center p-8 space-y-6 max-w-md animate-fade-in">
+            <h1 class="text-5xl font-bold text-[#D4AF37] tracking-widest mb-2 font-serif drop-shadow-lg">愛上喜翁</h1>
+            <p class="text-xl text-white/90 tracking-wider font-light border-b border-white/20 pb-4 inline-block">山林拾光收集冊</p>
+            <div class="text-sm text-gray-300 leading-relaxed mt-4">
+                <p>開啟音樂，享受沉浸式山林體驗</p>
+            </div>
+            <button id="splash-start-btn" class="mt-8 px-10 py-4 bg-[#D4AF37] hover:bg-[#F0E68C] text-[#1a2a6c] rounded-full font-bold tracking-widest shadow-[0_0_30px_rgba(212,175,55,0.4)] transition-all active:scale-95 text-lg">
+                🌲 開始體驗
+            </button>
+            <p id="audio-status" class="text-xs text-gray-500 mt-4 min-h-[20px]">🎵 音樂準備就緒</p>
+        </div>
+    </div>
 
     <!-- Tutorial Overlay -->
     <div id="tutorial-overlay" class="tutorial-overlay"></div>
@@ -260,10 +510,35 @@
         </button>
     </div>
 
+    <!-- Lucky Wheel Modal -->
+    <div id="wheel-modal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-[#2C3E50]/80 backdrop-blur-md transition-opacity duration-300 opacity-0">
+        <div class="bg-white/95 w-full max-w-sm rounded-3xl p-6 shadow-2xl border border-white/60 modal-enter flex flex-col items-center">
+            <h3 class="text-2xl text-[#2C3E50] tracking-widest font-medium mb-2">幸運轉盤</h3>
+            <p class="text-xs text-[#64748B] tracking-wider mb-6">消耗一次連線機會，抽取驚喜好禮！</p>
+            <div class="wheel-container mb-8">
+                <div class="wheel-pointer"></div>
+                <div id="wheel-element" class="wheel"></div>
+                <div class="wheel-center">🌟</div>
+            </div>
+            <div id="wheel-result-msg" class="text-[#D4AF37] font-bold text-lg h-8 mb-4"></div>
+            <div class="flex gap-3 w-full">
+                <button id="close-wheel-btn" class="flex-1 py-3 text-gray-400 text-sm font-medium">稍後再轉</button>
+                <button id="start-spin-btn" class="flex-1 bg-gradient-to-r from-[#B8860B] to-[#D4AF37] text-white py-3 rounded-lg text-sm tracking-widest shadow-md active:scale-95 transition-all font-bold">開始抽獎</button>
+            </div>
+        </div>
+    </div>
+
     <div id="app" class="relative z-10 w-full max-w-md flex flex-col min-h-[90vh]">
         
         <header class="pt-8 pb-4 text-center relative game-ui">
             <div class="absolute top-8 right-0 flex gap-2">
+                <button id="music-menu-btn" class="header-btn" title="切換背景音樂">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <path d="M9 18V5l12-2v13" stroke-linecap="round" stroke-linejoin="round"/>
+                        <circle cx="6" cy="18" r="3" stroke-linecap="round" stroke-linejoin="round"/>
+                        <circle cx="18" cy="16" r="3" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </button>
                 <button id="toggle-sound-btn" class="header-btn" title="音樂開關">
                     <svg id="icon-sound-off" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
                         <path d="M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" clip-rule="evenodd" />
@@ -287,19 +562,18 @@
             </div>
             
             <div class="inline-flex flex-col items-center">
-                <span class="text-[#8B7355] text-xs tracking-[0.3em] uppercase mb-2 font-medium">Love Hsiung</span>
-                <h1 class="text-4xl font-medium text-[#2C3E50] tracking-widest mb-1 drop-shadow-sm">愛上喜翁</h1>
+                <span class="text-[#D4AF37] text-xs tracking-[0.3em] uppercase mb-2 font-medium drop-shadow">Love Hsiung</span>
+                <h1 class="text-4xl font-medium text-white tracking-widest mb-1 drop-shadow-lg font-serif">愛上喜翁</h1>
                 <div class="h-[1px] w-12 bg-[#D4AF37] my-3"></div>
-                <h2 class="text-xl text-[#4A5568] tracking-[0.15em] font-light">山林拾光收集冊</h2>
+                <h2 class="text-xl text-gray-200 tracking-[0.15em] font-light drop-shadow-md">山林拾光收集冊</h2>
             </div>
         </header>
 
         <main class="flex-1 px-2 flex flex-col items-center relative game-ui">
-            <div id="spin-area" class="w-full flex justify-between items-center px-4 mb-4 mt-2 bg-white/50 backdrop-blur rounded-lg py-1 transition-all">
-                <div class="text-xs text-[#64748B] tracking-wide">
-                    達成連線：<span id="total-lines" class="font-bold text-[#D4AF37]">0</span>
+            <div id="spin-area" class="w-full flex justify-between items-center px-4 mb-4 mt-2 bg-white/10 backdrop-blur rounded-lg py-2 transition-all border border-white/20">
+                <div class="text-xs text-gray-100 tracking-wide">
+                    達成連線：<span id="total-lines" class="font-bold text-[#D4AF37] text-sm">0</span>
                 </div>
-                
                 <button id="enter-wheel-btn" class="hidden flex items-center gap-2 bg-gradient-to-r from-[#2C3E50] to-[#1A252F] text-white px-4 py-2 rounded-full shadow-lg border border-[#D4AF37]/50 active:scale-95 transition-all">
                     <span class="text-lg">🎡</span>
                     <span class="text-xs tracking-widest font-bold">幸運轉盤 x<span id="spins-available">0</span></span>
@@ -312,38 +586,49 @@
                 </div>
             </div>
 
-            <div class="w-full flex justify-between items-end px-4 mb-2 mt-2">
-                <span class="text-sm text-[#4A5568] font-medium tracking-wider">我的回憶拼圖</span>
+            <div class="w-full flex justify-between items-end px-4 mb-3 mt-1">
+                <span class="text-sm text-white font-medium tracking-wider drop-shadow-md">我的回憶拼圖</span>
                 <div class="flex items-baseline gap-1">
-                    <span id="progress-text" class="text-2xl font-serif text-[#D4AF37] font-bold">0</span>
-                    <span class="text-sm text-[#64748B]">/ 25</span>
+                    <span id="progress-text" class="text-2xl font-serif text-[#FCD34D] font-bold drop-shadow-sm">0</span>
+                    <span class="text-sm text-gray-300">/ 25</span>
                 </div>
             </div>
 
-            <div class="glass-card p-4 rounded-2xl w-full shadow-lg transition-transform duration-500" id="grid-card">
+            <div class="glass-card p-4 rounded-[1.5rem] w-full shadow-2xl transition-transform duration-500" id="grid-card">
                 <div id="grid-container" class="grid grid-cols-5 gap-2 w-full"></div>
             </div>
 
             <div class="mt-8 text-center px-6 pb-24">
-                <p class="text-sm text-[#4A5568] font-medium leading-loose italic tracking-wide">
+                <p class="text-sm text-white/80 font-medium leading-loose italic tracking-wide drop-shadow-sm">
                     「每一步足跡，<br/>都是寫給大自然的情書。」
                 </p>
             </div>
         </main>
 
         <div id="main-action-area" class="fixed bottom-8 left-0 right-0 z-30 px-6 flex justify-center fixed-action-btn">
-            <button id="open-missions-btn" class="w-full max-w-md relative group overflow-hidden rounded-full shadow-2xl transition-transform active:scale-95 border border-white/20">
-                <div class="absolute inset-0 gold-shimmer opacity-90 pointer-events-none"></div>
-                <div class="relative py-4 flex items-center justify-center gap-3 text-white">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <button id="open-missions-btn" class="w-full max-w-md btn-gold-gradient rounded-full shadow-2xl active:scale-95 border-2 border-white/20">
+                <div class="relative py-4 flex items-center justify-center gap-3 text-[#2C3E50]">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
                     </svg>
-                    <span class="text-lg tracking-[0.2em] font-medium">開啟探險手冊</span>
+                    <span class="text-lg tracking-[0.2em] font-bold">開啟探險手冊</span>
                 </div>
             </button>
         </div>
 
         <!-- MODALS -->
+        <div id="music-modal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-[#2C3E50]/60 backdrop-blur-md transition-all duration-300 opacity-0">
+            <div class="bg-white/95 w-full max-w-xs rounded-2xl p-6 shadow-2xl border border-white/50 modal-enter">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-lg text-[#2C3E50] font-medium tracking-wide">選擇氛圍音樂</h3>
+                    <button id="close-music-btn" class="text-gray-400 p-1 hover:text-[#2C3E50]">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                    </button>
+                </div>
+                <div id="track-list" class="space-y-3"></div>
+            </div>
+        </div>
+
         <div id="setup-modal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-[#2C3E50]/80 backdrop-blur-md transition-opacity duration-300 opacity-0">
             <div class="bg-white/95 w-full max-w-sm rounded-3xl p-6 shadow-2xl border border-white/60">
                 <div class="text-center mb-6">
@@ -351,7 +636,7 @@
                     <p class="text-xs text-[#64748B] tracking-wider">請選擇賓果卡片數字的產生方式</p>
                 </div>
                 <div class="flex flex-col gap-4">
-                    <button id="btn-setup-random" class="w-full py-4 bg-[#2C3E50] text-white rounded-xl shadow-lg active:scale-95 transition-all">隨機生成</button>
+                    <button id="btn-setup-random" class="w-full py-4 bg-[#2C3E50] text-white rounded-xl shadow-lg active:scale-95 transition-all">隨機生成 (1-30)</button>
                     <button id="btn-setup-manual" class="w-full py-4 border-2 border-[#2C3E50] text-[#2C3E50] rounded-xl shadow-sm active:scale-95 transition-all font-medium">手動填寫</button>
                 </div>
             </div>
@@ -361,13 +646,9 @@
             <div class="bg-[#FDFBF7] w-full max-w-md rounded-3xl p-6 shadow-2xl border border-white/50 flex flex-col h-[90vh] sm:h-auto">
                 <div class="text-center mb-6 shrink-0">
                     <h3 class="text-2xl text-[#2C3E50] tracking-widest font-medium">編排回憶地圖</h3>
-                    <p class="text-xs text-[#8B7355] mt-1">請在 1-25 的空格中填入您心儀的幸運數字</p>
+                    <p class="text-xs text-[#8B7355] mt-1">請在 1-30 的空格中填入您心儀的幸運數字</p>
                 </div>
-                
-                <div id="manual-input-grid" class="grid grid-cols-5 gap-2 flex-1 overflow-y-auto py-2 no-scrollbar">
-                    <!-- 25 Inputs will be generated here -->
-                </div>
-
+                <div id="manual-input-grid" class="grid grid-cols-5 gap-2 flex-1 overflow-y-auto py-2 no-scrollbar"></div>
                 <div class="mt-6 flex flex-col gap-3 shrink-0">
                     <div id="manual-validation-msg" class="text-center text-xs text-red-500 h-4 font-medium"></div>
                     <div class="flex gap-2">
@@ -390,27 +671,21 @@
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
                     </button>
                 </div>
-
-                <!-- Tabs -->
                 <div class="flex border-b border-gray-100 bg-white shrink-0">
                     <button id="tab-missions" class="flex-1 py-3 text-sm font-bold text-[#2C3E50] border-b-2 border-[#2C3E50] transition-colors">當前任務</button>
                     <button id="tab-guide" class="flex-1 py-3 text-sm font-medium text-gray-400 border-b-2 border-transparent hover:text-[#2C3E50] transition-colors">收集圖鑑</button>
                 </div>
-
-                <!-- Category Selector -->
                 <div class="bg-white border-b border-gray-50 px-4 py-3 overflow-x-auto no-scrollbar shrink-0">
                     <div class="flex gap-2 min-w-max" id="category-filter-container">
                         <button class="category-btn active px-4 py-2 rounded-full border border-gray-200 text-xs font-medium tracking-widest transition-all" data-category="all">全部</button>
+                        <button class="category-btn px-4 py-2 rounded-full border border-gray-200 text-xs font-medium tracking-widest transition-all" data-category="cloud">雲上生活</button>
                         <button class="category-btn px-4 py-2 rounded-full border border-gray-200 text-xs font-medium tracking-widest transition-all" data-category="photo">山林寫真</button>
-                        <button class="category-btn px-4 py-2 rounded-full border border-gray-200 text-xs font-medium tracking-widest transition-all" data-category="food">原味饗宴</button>
-                        <button class="category-btn px-4 py-2 rounded-full border border-gray-200 text-xs font-medium tracking-widest transition-all" data-category="social">雲端分享</button>
-                        <button class="category-btn px-4 py-2 rounded-full border border-gray-200 text-xs font-medium tracking-widest transition-all" data-category="secret">秘境探索</button>
+                        <button class="category-btn px-4 py-2 rounded-full border border-gray-200 text-xs font-medium tracking-widest transition-all" data-category="explore">秘密探索</button>
+                        <button class="category-btn px-4 py-2 rounded-full border border-gray-200 text-xs font-medium tracking-widest transition-all" data-category="social">營火微光</button>
+                        <button class="category-btn px-4 py-2 rounded-full border border-gray-200 text-xs font-medium tracking-widest transition-all" data-category="soul">靈魂對話</button>
                     </div>
                 </div>
-
-                <div class="flex-1 overflow-y-auto p-4 space-y-4 no-scrollbar bg-[#F9FAFB]" id="mission-list-container">
-                    <!-- Missions render here -->
-                </div>
+                <div class="flex-1 overflow-y-auto p-4 space-y-4 no-scrollbar bg-[#F9FAFB]" id="mission-list-container"></div>
             </div>
         </div>
 
@@ -425,10 +700,6 @@
                     <label class="block text-xs text-gray-400 mb-1 text-center">工作人員通行碼</label>
                     <input type="password" id="staff-pin-input" maxlength="4" placeholder="****" class="w-full text-center text-xl tracking-[0.5em] py-2 border-b border-[#E2E8F0] focus:outline-none">
                 </div>
-                <div class="mb-6" id="lucky-number-container">
-                    <label class="block text-xs text-gray-400 mb-1 text-center">填寫號碼 (1-25)</label>
-                    <input type="number" id="passcode-input" placeholder="--" class="w-full text-center text-3xl py-2 border-b-2 border-[#E2E8F0] focus:outline-none focus:border-[#D4AF37]">
-                </div>
                 <div class="flex gap-3">
                     <button id="cancel-input-btn" class="flex-1 py-3 text-gray-400 text-sm font-medium">取消</button>
                     <button id="submit-input-btn" class="flex-1 bg-[#2C3E50] text-white py-3 rounded-lg text-sm tracking-widest shadow-md active:scale-95 transition-all">確認</button>
@@ -436,23 +707,46 @@
             </div>
         </div>
 
-        <div id="result-modal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-6 bg-[#2C3E50]/90 backdrop-blur-md transition-opacity duration-300 opacity-0">
-            <div class="text-center text-white w-full max-w-xs">
-                <div id="reveal-animation" class="mb-8 h-40 flex flex-col items-center justify-center">
-                    <div class="w-20 h-20 border border-[#D4AF37]/30 rounded-full flex items-center justify-center animate-spin">
-                        <div class="w-16 h-16 border border-[#D4AF37]/60 rounded-full animate-ping"></div>
-                    </div>
-                </div>
-                <div id="result-content" class="hidden">
-                    <h2 id="result-title" class="text-2xl tracking-widest mb-6 font-medium">尋獲拾光！</h2>
-                    <div class="mx-auto w-32 h-40 bg-[#FDFBF7] p-2 shadow-2xl transform rotate-2 mb-8 flex flex-col items-center justify-center">
-                         <span class="text-[#D4AF37] text-xs uppercase mb-1">No.</span>
-                         <span id="result-number-display" class="text-6xl text-[#2C3E50] font-serif"></span>
-                    </div>
-                    <button id="close-result-btn" class="px-10 py-3 border border-[#D4AF37] text-[#D4AF37] rounded-full text-sm">收下回憶</button>
-                </div>
-            </div>
+        <!-- NEW RESULT MODAL (Luxurious Redesign) -->
+        <div id="result-modal" class="fixed inset-0 z-50 hidden">
+             <!-- 1. Background Image -->
+             <div class="absolute inset-0 bg-cover bg-center" style="background-image: url('https://images.unsplash.com/photo-1470252649378-9c29740c9fa8?q=80&w=2070&auto=format&fit=crop');"></div>
+             <!-- 2. Dark Overlay -->
+             <div class="absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity duration-1000" id="result-bg-overlay"></div>
+             <!-- 3. Sunburst Container -->
+             <div class="absolute inset-0 flex items-center justify-center overflow-hidden pointer-events-none">
+                  <div id="burst-rays" class="sunburst-rays w-[200vmax] h-[200vmax] opacity-0 transition-opacity duration-700"></div> 
+             </div>
+             <!-- 4. Main Content -->
+             <div class="relative z-10 w-full h-full flex flex-col items-center justify-center p-6">
+                  <!-- The Card -->
+                  <div id="result-card" class="paper-texture w-64 aspect-[3/4] p-6 shadow-2xl relative flex flex-col items-center justify-center text-center opacity-0 transform scale-90 transition-none animate-float rounded-sm">
+                       <!-- Inner decorative border -->
+                       <div class="absolute inset-2 border border-[#D4AF37]/30 pointer-events-none"></div>
+                       <!-- Content Wrapper -->
+                       <div class="z-10 flex flex-col items-center gap-6 w-full">
+                           <!-- Flavor Text -->
+                           <div id="result-context-text" class="text-[#5C4033] text-sm font-serif italic font-medium leading-loose opacity-0 transition-opacity duration-700"></div>
+                           <!-- The Number -->
+                           <div class="flex flex-col items-center w-full">
+                               <span class="text-[#B8860B] text-[10px] uppercase tracking-[0.2em] mb-1 opacity-60">Memory No.</span>
+                               <span id="result-number-display" class="text-7xl text-[#B8860B] font-serif font-bold opacity-0 transform scale-150 transition-none drop-shadow-md break-all leading-tight"></span>
+                           </div>
+                       </div>
+                       <!-- Decor Corner -->
+                       <div class="absolute bottom-2 right-2 text-[#D4AF37]/20 text-4xl">❧</div>
+                       <div class="absolute top-2 left-2 text-[#D4AF37]/20 text-4xl transform rotate-180">❧</div>
+                  </div>
+                  <!-- Title & Button Container (Fade in last) -->
+                  <div id="result-actions" class="mt-10 flex flex-col items-center opacity-0 transition-opacity duration-700">
+                      <h2 class="text-white/90 text-sm tracking-[0.4em] uppercase mb-6 font-light drop-shadow-lg">尋獲拾光</h2>
+                      <button id="close-result-btn" class="px-12 py-3 border border-[#D4AF37] text-[#D4AF37] hover:bg-[#D4AF37] hover:text-[#2C3E50] rounded-full text-sm transition-all duration-300 backdrop-blur-sm bg-black/20">
+                          收下回憶
+                      </button>
+                  </div>
+             </div>
         </div>
+
     </div>
 
     <script>
@@ -461,79 +755,82 @@
         // --- Sound Manager Class ---
         class SoundManager {
             constructor() {
+                this.bgmAudio = document.getElementById('bgm-audio');
+                this.bgmAudio.volume = 0.5;
+                this.isEnabled = false;
                 this.ctx = new (window.AudioContext || window.webkitAudioContext)();
-                this.enabled = false;
                 
-                // Get audio element from DOM or fallback
-                this.bgmAudio = document.getElementById('bgmAudio');
-                if (this.bgmAudio) {
-                    this.bgmAudio.volume = 0.3;
-                    
-                    // Add listener to catch errors
-                    this.bgmAudio.addEventListener('error', (e) => {
-                        console.log("Audio Error:", e);
-                        // If Vocaroo fails (primary source), it will try the second source automatically if defined in HTML.
-                        // But let's log it.
-                    });
+                this.playlist = [
+                    { id: 'forest', name: '晨間森林', icon: '🌲', url: 'https://cdn.pixabay.com/audio/2022/05/27/audio_1808fbf07a.mp3' }
+                ];
+                
+                const savedTrack = localStorage.getItem('love_hsiung_track_index');
+                this.currentTrackIndex = savedTrack ? parseInt(savedTrack) : 0;
+                if (this.currentTrackIndex >= this.playlist.length) this.currentTrackIndex = 0;
+                
+                this.bgmAudio.src = this.playlist[this.currentTrackIndex].url;
+            }
+
+            enable() {
+                this.isEnabled = true;
+                this.bgmAudio.muted = false;
+                this.bgmAudio.volume = 0.5;
+                const playPromise = this.bgmAudio.play();
+                if (playPromise !== undefined) {
+                    playPromise.catch(error => console.warn("BGM Play failed.", error));
                 }
+            }
+
+            disable() {
+                this.isEnabled = false;
+                this.bgmAudio.pause();
             }
 
             toggle() {
-                this.enabled = !this.enabled;
-                if (this.enabled) {
-                    if (this.ctx.state === 'suspended') this.ctx.resume();
-                    if (this.bgmAudio) {
-                        const playPromise = this.bgmAudio.play();
-                        if (playPromise !== undefined) {
-                            playPromise.catch(error => {
-                                console.log("Play failed, likely interaction needed or bad source:", error);
-                            });
-                        }
-                    }
-                } else {
-                    if (this.bgmAudio) {
-                        this.bgmAudio.pause();
-                    }
-                }
-                return this.enabled;
+                if (this.isEnabled) this.disable();
+                else this.enable();
+                return this.isEnabled;
+            }
+            
+            setTrack(index) {
+                if (index < 0 || index >= this.playlist.length) return;
+                this.currentTrackIndex = index;
+                localStorage.setItem('love_hsiung_track_index', index);
+                this.bgmAudio.src = this.playlist[index].url;
+                if (this.isEnabled) this.bgmAudio.play().catch(e => console.log(e));
+                document.dispatchEvent(new CustomEvent('trackChanged', { detail: { index: index } }));
             }
 
-            // Synthesized SFX to avoid file dependencies
             playClick() {
-                if (!this.enabled) return;
+                if (!this.isEnabled) return;
                 try {
+                    if (this.ctx.state === 'suspended') this.ctx.resume();
                     const osc = this.ctx.createOscillator();
                     const gain = this.ctx.createGain();
                     osc.connect(gain);
                     gain.connect(this.ctx.destination);
-                    
                     osc.frequency.setValueAtTime(800, this.ctx.currentTime);
                     gain.gain.setValueAtTime(0.05, this.ctx.currentTime);
                     gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + 0.1);
-                    
                     osc.start();
                     osc.stop(this.ctx.currentTime + 0.1);
                 } catch(e) {}
             }
 
             playSuccess() {
-                if (!this.enabled) return;
+                if (!this.isEnabled) return;
                 try {
-                    // C Major Chord Arpeggio
+                    const now = this.ctx.currentTime;
                     [523.25, 659.25, 783.99, 1046.50].forEach((freq, i) => {
                         const osc = this.ctx.createOscillator();
                         const gain = this.ctx.createGain();
                         osc.connect(gain);
                         gain.connect(this.ctx.destination);
-                        
                         osc.frequency.value = freq;
-                        const now = this.ctx.currentTime;
                         const delay = i * 0.08;
-                        
                         gain.gain.setValueAtTime(0, now + delay);
                         gain.gain.linearRampToValueAtTime(0.1, now + delay + 0.05);
                         gain.gain.exponentialRampToValueAtTime(0.001, now + delay + 1.2);
-                        
                         osc.start(now + delay);
                         osc.stop(now + delay + 1.2);
                     });
@@ -541,20 +838,17 @@
             }
 
             playReveal() {
-                if (!this.enabled) return;
+                if (!this.isEnabled) return;
                 try {
                     const osc = this.ctx.createOscillator();
                     const gain = this.ctx.createGain();
                     osc.connect(gain);
                     gain.connect(this.ctx.destination);
-                    
                     const now = this.ctx.currentTime;
                     osc.frequency.setValueAtTime(400, now);
                     osc.frequency.exponentialRampToValueAtTime(1200, now + 0.6);
-                    
                     gain.gain.setValueAtTime(0.05, now);
                     gain.gain.linearRampToValueAtTime(0, now + 0.6);
-                    
                     osc.start();
                     osc.stop(now + 0.6);
                 } catch(e) {}
@@ -567,14 +861,13 @@
                 this.steps = [
                     { id: 'welcome', target: null, title: '歡迎來到愛上喜翁', desc: '這是一場專屬於您的山林探險。收集美好回憶，完成連線即可兌換驚喜好禮！', pos: 'center' },
                     { id: 'grid', target: 'grid-card', title: '回憶地圖', desc: '這是您的賓果卡。每一個數字都代表一段獨特的回憶或任務。', pos: 'bottom' },
-                    { id: 'mission', target: 'open-missions-btn', title: '探險手冊', desc: '點擊此處查看任務清單。完成任務可獲得幸運號碼，解鎖地圖上的格子。', pos: 'top' },
-                    { id: 'lines', target: 'spin-area', title: '連線獎勵', desc: '當連成直線、橫線或斜線時，您將獲得幸運轉盤的機會！', pos: 'bottom' },
+                    { id: 'mission', target: 'open-missions-btn', title: '探險手冊', desc: '點擊此處查看任務清單。完成任務可獲得隨機號碼，點亮您的地圖。', pos: 'top' },
+                    { id: 'music', target: 'music-menu-btn', title: '森林樂章', desc: '點擊此處可切換背景音樂，包含蟲鳴、營火等大自然聲音，提升露營氛圍。', pos: 'bottom' },
                     { id: 'scenic', target: 'toggle-scenic-btn', title: '靜享山林', desc: '想專心欣賞風景嗎？點擊眼睛圖示可暫時隱藏所有介面。', pos: 'bottom' }
                 ];
                 this.currentStep = 0;
                 this.isActive = false;
                 
-                // Elements
                 this.overlay = document.getElementById('tutorial-overlay');
                 this.card = document.getElementById('tutorial-card');
                 this.title = document.getElementById('tut-title');
@@ -600,7 +893,7 @@
                 document.body.classList.remove('tutorial-active');
                 this.clearHighlight();
                 localStorage.setItem('love_hsiung_tutorial_seen', 'true');
-                soundManager.playClick(); // Feedback for skip
+                soundManager.playClick();
             }
 
             next() {
@@ -617,7 +910,6 @@
                 document.querySelectorAll('.tutorial-highlight').forEach(el => {
                     el.classList.remove('tutorial-highlight');
                 });
-                // Fix specific z-index override for the button container
                 const actionArea = document.getElementById('main-action-area');
                 if (actionArea) actionArea.style.zIndex = '';
             }
@@ -625,29 +917,21 @@
             renderStep() {
                 this.clearHighlight();
                 const step = this.steps[this.currentStep];
-                
-                // Content
                 this.title.innerText = step.title;
                 this.desc.innerText = step.desc;
                 this.btnNext.innerText = this.currentStep === this.steps.length - 1 ? '開始探險' : '下一步';
-
-                // Position Card
                 this.card.className = `tutorial-card position-${step.pos}`;
 
-                // Highlight Target
                 if (step.target) {
                     const el = document.getElementById(step.target);
                     if (el) {
                         el.classList.add('tutorial-highlight');
-                        // Special handling for the bottom fixed button parent
                         if (step.target === 'open-missions-btn') {
                              document.getElementById('main-action-area').style.zIndex = '70';
                         }
                         el.scrollIntoView({ behavior: 'smooth', block: 'center' });
                     }
                 }
-
-                // Render Dots
                 this.dotsContainer.innerHTML = this.steps.map((_, i) => 
                     `<div class="dot-indicator ${i === this.currentStep ? 'active' : ''}"></div>`
                 ).join('');
@@ -664,26 +948,236 @@
         const tutorialManager = new TutorialManager();
 
         const CATEGORIES = {
-            photo: { label: '山林寫真', icon: '📸', color: 'bg-blue-50 text-blue-700', border: 'border-blue-200' },
-            food: { label: '原味饗宴', icon: '🍽️', color: 'bg-orange-50 text-orange-700', border: 'border-orange-200' },
-            social: { label: '雲端分享', icon: '📱', color: 'bg-purple-50 text-purple-700', border: 'border-purple-200' },
-            secret: { label: '秘境探索', icon: '🤫', color: 'bg-amber-50 text-amber-800', border: 'border-amber-200' }
+            cloud: { label: '雲上生活', icon: '☁️', color: 'bg-sky-50 text-sky-700', border: 'border-sky-200' },
+            photo: { label: '山林寫真', icon: '📸', color: 'bg-indigo-50 text-indigo-700', border: 'border-indigo-200' },
+            explore: { label: '秘密探索', icon: '🗺️', color: 'bg-emerald-50 text-emerald-700', border: 'border-emerald-200' },
+            social: { label: '營火微光', icon: '🔥', color: 'bg-orange-50 text-orange-700', border: 'border-orange-200' },
+            soul: { label: '靈魂對話', icon: '🌲', color: 'bg-purple-50 text-purple-700', border: 'border-purple-200' }
         };
 
         const MEMORY_LIST = [
-            { id: 'p1', category: 'photo', title: '與雲海合影', difficulty: 1, type: 'code_draw', hint: '在觀景台拍下最美瞬間，輸入告示牌代碼。', icon: '🏔️' },
-            { id: 'p2', category: 'photo', title: '五指山取景', difficulty: 2, type: 'code_draw', hint: '找到最佳拍攝點，輸入木架代碼。', icon: '🎨' },
-            { id: 'p3', category: 'photo', title: '森之呼吸', difficulty: 1, type: 'code_draw', hint: '在指定紅檜木旁拍照，輸入樹牌代碼。', icon: '🌲' },
-            { id: 'f1', category: 'food', title: '晚餐：光盤行動', difficulty: 2, type: 'staff_number', hint: '感謝大自然餽贈，完食後請管家確認。', icon: '🥩' },
-            { id: 'f2', category: 'food', title: '在地山菜品味', difficulty: 1, type: 'staff_number', hint: '說出三樣晚餐食材，請管家確認。', icon: '🥬' },
-            { id: 's1', category: 'social', title: 'IG 限動分享', difficulty: 1, type: 'staff_number', hint: '發布限動並標記 @愛上喜翁，出示給管家。', icon: '📱' },
-            { id: 's2', category: 'social', title: 'Google 五星評論', difficulty: 2, type: 'staff_number', hint: '分享您的旅宿心得，出示給櫃檯管家。', icon: '⭐' },
-            { id: 'h1', category: 'secret', title: '尋找守護神', difficulty: 3, type: 'code_draw', hint: '在森林深處尋找古老的圖騰，輸入底座標記。', icon: '🏺' },
-            { id: 'h2', category: 'secret', title: '星空觀測', difficulty: 2, type: 'staff_number', hint: '於夜間找到指定星座並向管家描述。', icon: '✨' },
-            { id: 'gold1', category: 'secret', title: '🌟 營主黃金挑戰', difficulty: 3, type: 'user_choice', hint: '完成高難度隱藏任務，獲得「自選填字」權利！', icon: '🏆', isSpecial: true }
+            // ==========================================
+            // ☁️ 第一章：雲上生活 (Cloud Life)
+            // ==========================================
+            { 
+                id: 'food_dinner', 
+                category: 'cloud',
+                title: '🍽️ 晚餐：光盤行動 (★★)', 
+                type: 'staff_number', 
+                difficulty: 2, 
+                success_text: '感謝你對大地的溫柔，這份珍惜化為了...' 
+            },
+            { 
+                id: 'food_breakfast', 
+                category: 'cloud',
+                title: '🥣 早餐：活力滿滿 (★)', 
+                type: 'staff_number', 
+                difficulty: 1, 
+                success_text: '晨光喚醒了味蕾，這份活力化為了...' 
+            },
+            { 
+                id: 'activity_archery', 
+                category: 'cloud',
+                title: '🏹 獵人射箭體驗 (★★★)', 
+                type: 'staff_number', 
+                difficulty: 3, 
+                success_text: '如鷹一般的專注眼神，被山林銘記為...' 
+            },
+            { 
+                id: 'gold_boss', 
+                category: 'cloud',
+                title: '🌟 黃金任務：營主大挑戰 (★★★)', 
+                type: 'user_choice', 
+                difficulty: 3, 
+                success_text: '你觸動了山神的奇蹟，這份榮耀化為了...' 
+            },
+            { 
+                id: 'life_chill', 
+                category: 'cloud',
+                title: '🍹 在天幕下喝杯茶 (★)', 
+                type: 'code_draw', 
+                difficulty: 1, 
+                success_text: '茶香與風共舞，這份悠閒化為了...' 
+            },
+
+            // ==========================================
+            // 📸 第二章：山林寫真 (Mountain Photography)
+            // ==========================================
+            { 
+                id: 'view_cloud', 
+                category: 'photo',
+                title: '📸 雲海觀景台合照 (★★)', 
+                type: 'code_draw', 
+                difficulty: 2, 
+                success_text: '你收藏了雲海的呼吸，這片刻永恆化為了...' 
+            },
+            { 
+                id: 'photo_dew', 
+                category: 'photo',
+                title: '💧 拍下清晨的露珠 (★★)', 
+                type: 'code_draw', 
+                difficulty: 2, 
+                success_text: '晶瑩剔透的晨光，這份純淨化為了...' 
+            },
+            { 
+                id: 'photo_flower', 
+                category: 'photo',
+                title: '🌸 拍下營區最美的花 (★)', 
+                type: 'code_draw', 
+                difficulty: 1, 
+                success_text: '花朵因你的注視而綻放，這份美麗化為了...' 
+            },
+            { 
+                id: 'photo_smile', 
+                category: 'photo',
+                title: '😊 拍一張最燦爛的笑容 (★)', 
+                type: 'code_draw', 
+                difficulty: 1, 
+                success_text: '笑容是世界上最美的風景，這份快樂化為了...' 
+            },
+            { 
+                id: 'photo_group', 
+                category: 'photo',
+                title: '👥 邀請路人幫拍合照 (★★)', 
+                type: 'code_draw', 
+                difficulty: 2, 
+                success_text: '定格了相聚的緣分，這張照片化為了...' 
+            },
+
+            // ==========================================
+            // 🗺️ 第三章：秘密探索 (Secret Exploration)
+            // ==========================================
+            { 
+                id: 'explore_star', 
+                category: 'explore',
+                title: '🌌 找到夜空中最亮那顆星 (★)', 
+                type: 'code_draw', 
+                difficulty: 1, 
+                success_text: '星光穿越光年而來，只為點亮你的...' 
+            },
+            { 
+                id: 'explore_bird', 
+                category: 'explore',
+                title: '🐦 錄下一段鳥叫聲 (★)', 
+                type: 'code_draw', 
+                difficulty: 1, 
+                success_text: '森林歌手為你獻唱，這首旋律化為了...' 
+            },
+            { 
+                id: 'explore_barefoot', 
+                category: 'explore',
+                title: '🦶 赤腳踩在草地上 (★)', 
+                type: 'code_draw', 
+                difficulty: 1, 
+                success_text: '大地電流穿透腳心，這份連結化為了...' 
+            },
+            { 
+                id: 'explore_tree', 
+                category: 'explore',
+                title: '🌳 擁抱一棵大樹 10 秒 (★★★)', 
+                type: 'code_draw', 
+                difficulty: 3, 
+                success_text: '老樹傳遞了百年的智慧，這份力量化為了...' 
+            },
+            { 
+                id: 'explore_insect', 
+                category: 'explore',
+                title: '🐞 觀察一隻小昆蟲 (★)', 
+                type: 'code_draw', 
+                difficulty: 1, 
+                success_text: '微小的生命也有大大的世界，這份觀察化為了...' 
+            },
+
+            // ==========================================
+            // 🔥 第四章：營火微光 (Campfire Glimmer)
+            // ==========================================
+            { 
+                id: 'social_hi', 
+                category: 'social',
+                title: '👋 跟隔壁帳篷打招呼 (★)', 
+                type: 'user_choice', 
+                difficulty: 1, 
+                success_text: '微笑是最好的語言，這份友誼化為了...' 
+            },
+            { 
+                id: 'social_staff', 
+                category: 'social',
+                title: '❤️ 跟工作人員說聲辛苦了 (★★)', 
+                type: 'staff_number', 
+                difficulty: 2, 
+                success_text: '你的體貼溫暖了人心，這份善意化為了...' 
+            },
+            { 
+                id: 'social_snack', 
+                category: 'social',
+                title: '🍪 分享零食給新朋友 (★★)', 
+                type: 'user_choice', 
+                difficulty: 2, 
+                success_text: '分享讓快樂加倍，這份慷慨化為了...' 
+            },
+            { 
+                id: 'social_highfive', 
+                category: 'social',
+                title: '✋ 跟管家擊掌 High Five (★)', 
+                type: 'staff_number', 
+                difficulty: 1, 
+                success_text: '清脆的掌聲響徹山林，這份熱情化為了...' 
+            },
+            { 
+                id: 'social_cheers', 
+                category: 'social',
+                title: '🍻 舉杯慶祝這一刻 (★)', 
+                type: 'user_choice', 
+                difficulty: 1, 
+                success_text: '乾杯的聲音是快樂的樂章，這份慶祝化為了...' 
+            },
+
+            // ==========================================
+            // 🌲 第五章：靈魂對話 (Soul Dialogue)
+            // ==========================================
+            { 
+                id: 'deep_shout', 
+                category: 'soul',
+                title: '🌲 對著大山喊出煩惱 (★★)', 
+                type: 'code_draw', 
+                difficulty: 2, 
+                success_text: '山谷接納了你的秘密，回音化為了祝福...' 
+            },
+            { 
+                id: 'deep_letter', 
+                category: 'soul',
+                title: '✍️ 寫給明年自己的一句話 (★★★)', 
+                type: 'user_choice', 
+                difficulty: 3, 
+                success_text: '時光膠囊已封存，這份期許化為了...' 
+            },
+            { 
+                id: 'deep_meditate', 
+                category: 'soul',
+                title: '🧘 在樹下閉眼發呆 (★)', 
+                type: 'code_draw', 
+                difficulty: 1, 
+                success_text: '在寧靜中找回了頻率，這份平靜化為了...' 
+            },
+            { 
+                id: 'deep_secret', 
+                category: 'soul',
+                title: '🤫 跟旅伴分享一個秘密 (★★★)', 
+                type: 'user_choice', 
+                difficulty: 3, 
+                success_text: '信任是靈魂的擁抱，這份親密化為了...' 
+            },
+            { 
+                id: 'deep_thank', 
+                category: 'soul',
+                title: '🙏 在心裡感謝一個人 (★)', 
+                type: 'code_draw', 
+                difficulty: 1, 
+                success_text: '感恩的心會發光，這份謝意化為了...' 
+            }
         ];
 
-        const CONFIG = { gridSize: 25, storageKey: 'love_hsiung_bingo_v6_fixed' };
+        const CONFIG = { gridSize: 25, numberRange: 30, storageKey: 'love_hsiung_bingo_v10_final' };
 
         let state = { grid: [], markedIndices: [], completedMissions: [], isSelectionMode: false, claimedLines: 0, currentFilter: 'all', currentView: 'missions' };
         let currentMission = null;
@@ -709,11 +1203,23 @@
             inputField: document.getElementById('passcode-input'),
             staffPinField: document.getElementById('staff-pin-input'),
             staffPinContainer: document.getElementById('staff-pin-container'),
-            luckyNumberContainer: document.getElementById('lucky-number-container'),
             toggleScenic: document.getElementById('toggle-scenic-btn'),
             toggleSound: document.getElementById('toggle-sound-btn'),
             btnHelp: document.getElementById('help-btn'),
-            exitScenic: document.getElementById('exit-scenic-btn')
+            exitScenic: document.getElementById('exit-scenic-btn'),
+            splashScreen: document.getElementById('splash-screen'),
+            splashStartBtn: document.getElementById('splash-start-btn'),
+            audioStatus: document.getElementById('audio-status'),
+            musicMenuBtn: document.getElementById('music-menu-btn'),
+            modalMusic: document.getElementById('music-modal'),
+            closeMusicBtn: document.getElementById('close-music-btn'),
+            trackList: document.getElementById('track-list'),
+            enterWheelBtn: document.getElementById('enter-wheel-btn'),
+            modalWheel: document.getElementById('wheel-modal'),
+            startSpinBtn: document.getElementById('start-spin-btn'),
+            closeWheelBtn: document.getElementById('close-wheel-btn'),
+            wheelElement: document.getElementById('wheel-element'),
+            wheelResultMsg: document.getElementById('wheel-result-msg')
         };
 
         function saveState() { localStorage.setItem(CONFIG.storageKey, JSON.stringify(state)); }
@@ -726,10 +1232,6 @@
                 if (!state.currentView) state.currentView = 'missions';
                 renderGrid();
                 updateStats();
-                // Check tutorial for returning users who haven't finished it
-                tutorialManager.checkFirstTime(); 
-            } else {
-                openModal(els.modalSetup);
             }
         }
 
@@ -738,12 +1240,12 @@
             state.grid.forEach((num, index) => {
                 const isMarked = state.markedIndices.includes(index);
                 const div = document.createElement('div');
-                div.className = `memory-frame rounded-lg flex items-center justify-center relative select-none ${isMarked ? 'collected' : ''}`;
+                div.className = `memory-frame flex items-center justify-center relative select-none ${isMarked ? 'collected' : ''}`;
                 
                 if (isMarked) {
-                    div.innerHTML = `<span class="text-xl text-[#2C3E50] font-bold z-10 font-serif">${num}</span><div class="absolute bottom-1 right-1 opacity-20"><svg width="12" height="12" viewBox="0 0 24 24" fill="#D4AF37"><path d="M12 1l3.22 6.63L23 8.75l-5 4.87L19.18 21 12 17.27 4.82 21 6 13.62 1 8.75l7.78-1.12L12 1z"/></svg></div>`;
+                    div.innerHTML = `<span class="text-3xl font-serif font-bold firefly-glow z-10 relative">${num}</span>`;
                 } else {
-                    div.innerHTML = `<span class="text-lg text-gray-300 font-serif">${num}</span>`;
+                    div.innerHTML = `<span class="text-2xl text-[#5C4033] font-serif font-bold">${num}</span>`;
                     if (state.isSelectionMode) div.onclick = () => handleUserSelection(index);
                 }
                 els.grid.appendChild(div);
@@ -753,12 +1255,10 @@
 
         function renderMissionList() {
             els.missionList.innerHTML = '';
-
             const isGuide = state.currentView === 'guide';
             const tabMissions = document.getElementById('tab-missions');
             const tabGuide = document.getElementById('tab-guide');
             
-            // Tab Visuals
             if (tabMissions && tabGuide) {
                 tabMissions.className = !isGuide 
                     ? 'flex-1 py-3 text-sm font-bold text-[#2C3E50] border-b-2 border-[#2C3E50] transition-colors bg-white' 
@@ -768,14 +1268,13 @@
                     : 'flex-1 py-3 text-sm font-medium text-gray-400 border-b-2 border-transparent hover:text-[#2C3E50] transition-colors bg-gray-50';
             }
             
-            // Update Filter Visuals
             els.categoryFilter.querySelectorAll('.category-btn').forEach(btn => {
-                btn.classList.toggle('active', btn.dataset.category === state.currentFilter);
+                btn.classList.toggle('active', btn.dataset.category == state.currentFilter);
             });
             
             const filtered = state.currentFilter === 'all' 
                 ? MEMORY_LIST 
-                : MEMORY_LIST.filter(m => m.category === state.currentFilter);
+                : MEMORY_LIST.filter(m => m.category == state.currentFilter);
 
             if (filtered.length === 0) {
                 els.missionList.innerHTML = `
@@ -788,34 +1287,37 @@
             }
 
             if (isGuide) {
-                // GUIDE MODE
                 const grid = document.createElement('div');
                 grid.className = 'grid grid-cols-2 gap-3';
-                
-                filtered.forEach(m => {
-                    const isCollected = state.completedMissions.includes(m.id);
-                    const cat = CATEGORIES[m.category] || CATEGORIES.secret;
-                    
-                    const item = document.createElement('div');
-                    // Guide Item Style
-                    const baseClass = "p-3 rounded-xl border flex flex-col gap-2 relative overflow-hidden transition-all";
-                    const statusClass = isCollected 
-                        ? "bg-white border-[#D4AF37] shadow-sm" 
-                        : "bg-gray-100 border-gray-200 opacity-60 grayscale";
+                let lastCategory = '';
 
-                    item.className = `${baseClass} ${statusClass}`;
-                    
+                filtered.forEach(m => {
+                    // Inject Header if All View and Category Changes
+                    if (state.currentFilter === 'all' && m.category !== lastCategory) {
+                        lastCategory = m.category;
+                        const catConfig = CATEGORIES[m.category];
+                        const header = document.createElement('div');
+                        header.className = 'col-span-full mt-4 mb-2';
+                        header.innerHTML = `
+                            <h3 class="text-[#B8860B] font-bold text-sm tracking-widest border-b border-[#D4AF37]/30 pb-1 flex items-center gap-2">
+                                <span>${catConfig.icon}</span>
+                                <span>${catConfig.label}</span>
+                            </h3>
+                        `;
+                        grid.appendChild(header);
+                    }
+
+                    const isCollected = state.completedMissions.includes(m.id);
+                    const item = document.createElement('div');
+                    item.className = `p-3 rounded-xl border flex flex-col gap-2 relative overflow-hidden transition-all ${isCollected ? "bg-white border-[#D4AF37] shadow-sm" : "bg-gray-100 border-gray-200 opacity-60 grayscale"}`;
                     item.innerHTML = `
                         <div class="flex justify-between items-start">
-                            <span class="text-2xl">${m.icon}</span>
-                            ${isCollected 
-                                ? '<span class="text-[#D4AF37] text-xs font-bold">★ GET</span>' 
-                                : '<span class="text-gray-400 text-xs font-bold tracking-widest">LOCKED</span>'}
+                            <span class="text-2xl">🌟</span>
+                            ${isCollected ? '<span class="text-[#D4AF37] text-xs font-bold">★ GET</span>' : '<span class="text-gray-400 text-xs font-bold tracking-widest">LOCKED</span>'}
                         </div>
                         <div>
                             <h4 class="text-[#2C3E50] font-bold text-sm truncate">${m.title}</h4>
                             <div class="flex items-center gap-1 mt-1">
-                                 <span class="text-[10px] px-1.5 py-0.5 rounded bg-gray-100 text-gray-500">${cat.label}</span>
                                  <span class="text-[#D4AF37] text-[10px]">${'★'.repeat(m.difficulty)}</span>
                             </div>
                         </div>
@@ -823,30 +1325,45 @@
                     grid.appendChild(item);
                 });
                 els.missionList.appendChild(grid);
-
             } else {
-                // MISSIONS MODE
+                let lastCategory = '';
+                
                 filtered.forEach(m => {
+                    // Inject Header if All View
+                    if (state.currentFilter === 'all' && m.category !== lastCategory) {
+                        lastCategory = m.category;
+                        const catConfig = CATEGORIES[m.category];
+                        const header = document.createElement('div');
+                        header.className = 'mt-6 mb-3 first:mt-0';
+                        header.innerHTML = `
+                            <h3 class="text-[#B8860B] font-bold text-sm tracking-widest border-b border-[#D4AF37]/30 pb-1 flex items-center gap-2">
+                                <span>${catConfig.icon}</span>
+                                <span>${catConfig.label}</span>
+                            </h3>
+                        `;
+                        els.missionList.appendChild(header);
+                    }
+
                     const isDone = state.completedMissions.includes(m.id);
-                    const cat = CATEGORIES[m.category] || CATEGORIES.secret;
-                    const stars = '★'.repeat(m.difficulty) + '☆'.repeat(Math.max(0, 3 - m.difficulty));
+                    const stars = '★'.repeat(m.difficulty);
+                    const cat = CATEGORIES[m.category];
                     
                     const card = document.createElement('div');
                     card.className = `p-4 rounded-xl border-2 transition-all relative overflow-hidden bg-white ${isDone ? 'border-gray-100 opacity-60' : 'border-gray-50 shadow-sm active:scale-95'}`;
+                    card.dataset.missionId = m.id;
                     
                     card.innerHTML = `
                         <div class="flex flex-col gap-3 pointer-events-none">
                             <div class="flex justify-between items-start">
                                 <span class="px-2 py-0.5 rounded text-[10px] font-bold tracking-widest ${cat.color} ${cat.border} border uppercase flex items-center gap-1">
-                                    ${cat.icon} ${cat.label}
+                                    ${cat.label}
                                 </span>
                                 <span class="text-[#D4AF37] text-xs">${stars}</span>
                             </div>
                             <div class="flex items-center gap-4">
-                                <div class="w-12 h-12 flex items-center justify-center bg-gray-50 rounded-full text-2xl shrink-0">${m.icon}</div>
+                                <div class="w-12 h-12 flex items-center justify-center bg-gray-50 rounded-full text-2xl shrink-0">🌟</div>
                                 <div class="flex-1 min-w-0">
                                     <h4 class="text-[#2C3E50] font-bold text-base truncate">${m.title}</h4>
-                                    <p class="text-[11px] text-gray-400 mt-1 line-clamp-2">${m.hint}</p>
                                 </div>
                                 <div class="px-4 py-2 rounded-lg text-xs font-bold shrink-0 ${isDone ? 'text-green-600 bg-green-50' : 'bg-[#2C3E50] text-white'}">
                                     ${isDone ? '✓ 完成' : '驗證'}
@@ -854,7 +1371,6 @@
                             </div>
                         </div>
                     `;
-                    
                     if (!isDone) {
                         card.classList.remove('pointer-events-none');
                         card.onclick = (e) => {
@@ -883,19 +1399,39 @@
             if (content) content.classList.remove('modal-enter-active');
             setTimeout(() => modal.classList.add('hidden'), 300);
         }
+        
+        function renderTrackList() {
+            els.trackList.innerHTML = '';
+            soundManager.playlist.forEach((track, index) => {
+                const isActive = index === soundManager.currentTrackIndex;
+                const btn = document.createElement('button');
+                btn.className = `track-item w-full flex items-center gap-4 p-3 rounded-xl border border-transparent transition-all hover:bg-gray-50 ${isActive ? 'active' : ''}`;
+                btn.innerHTML = `
+                    <div class="track-icon w-10 h-10 flex items-center justify-center bg-white rounded-full shadow-sm text-lg transition-transform">${track.icon}</div>
+                    <div class="flex-1 text-left">
+                        <div class="text-[#2C3E50] font-medium text-sm tracking-wide">${track.name}</div>
+                        ${isActive ? '<div class="text-[10px] text-[#D4AF37] font-bold mt-0.5 animate-pulse">正在播放</div>' : ''}
+                    </div>
+                `;
+                btn.onclick = () => {
+                    soundManager.setTrack(index);
+                    soundManager.playClick();
+                };
+                els.trackList.appendChild(btn);
+            });
+        }
+        document.addEventListener('trackChanged', renderTrackList);
+        els.musicMenuBtn.onclick = () => { soundManager.playClick(); renderTrackList(); openModal(els.modalMusic); }
+        els.closeMusicBtn.onclick = () => closeModal(els.modalMusic);
 
         function openInputModal(m) {
             currentMission = m;
-            els.inputIcon.innerText = m.icon;
+            els.inputIcon.innerText = '🌟';
             els.inputTitle.innerText = m.title;
-            els.inputHint.innerText = m.hint;
+            els.inputHint.innerText = '完成任務後，請工作人員輸入通行碼，或自行驗證。';
             els.staffPinField.value = '';
-            els.inputField.value = '';
-
-            const needsPin = m.type === 'staff_number' || m.type === 'user_choice';
+            const needsPin = m.type === 'staff_number';
             els.staffPinContainer.classList.toggle('hidden', !needsPin);
-            els.luckyNumberContainer.classList.toggle('hidden', m.type === 'user_choice');
-            
             openModal(els.modalInput);
         }
 
@@ -917,10 +1453,58 @@
             return patterns.filter(p => p.every(i => state.markedIndices.includes(i))).length;
         }
 
-        // --- Setup Logic ---
+        els.enterWheelBtn.onclick = () => {
+            soundManager.playClick();
+            if (Math.max(0, calculateLines() - (state.claimedLines || 0)) > 0) openModal(els.modalWheel);
+            else alert("目前沒有可用的轉盤機會！");
+        };
+        els.closeWheelBtn.onclick = () => closeModal(els.modalWheel);
+
+        let isSpinning = false;
+        els.startSpinBtn.onclick = () => {
+            if(isSpinning) return;
+            const spins = Math.max(0, calculateLines() - (state.claimedLines || 0));
+            if (spins <= 0) return;
+            isSpinning = true;
+            els.startSpinBtn.disabled = true;
+            els.startSpinBtn.classList.add('opacity-50', 'cursor-not-allowed');
+            soundManager.playClick();
+            const segments = ['神秘小禮物', '飲品兌換券', '營火棉花糖', '拍立得一張', '晚餐加菜', '下次住宿9折'];
+            const prizeIndex = Math.floor(Math.random() * segments.length);
+            const extraSpins = 5 * 360;
+            const randomAngle = Math.floor(Math.random() * 360);
+            const totalRotation = extraSpins + randomAngle;
+            els.wheelElement.style.transition = 'transform 4s cubic-bezier(0.17, 0.67, 0.12, 0.99)';
+            els.wheelElement.style.transform = `rotate(${totalRotation}deg)`;
+            setTimeout(() => {
+                isSpinning = false;
+                state.claimedLines = (state.claimedLines || 0) + 1;
+                saveState();
+                updateStats();
+                els.wheelResultMsg.innerText = `🎉 恭喜獲得：${segments[Math.floor(((360 - (randomAngle % 360)) % 360) / (360/segments.length))]}`;
+                soundManager.playSuccess();
+                confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 }, zIndex: 9999 });
+            }, 4000);
+        };
+
+        els.splashStartBtn.onclick = () => {
+            els.audioStatus.innerText = "🎵 音樂啟動中...";
+            soundManager.enable();
+            els.splashScreen.style.opacity = '0';
+            setTimeout(() => {
+                els.splashScreen.remove();
+                document.getElementById('icon-sound-off').classList.add('hidden');
+                document.getElementById('icon-sound-on').classList.remove('hidden');
+                const saved = localStorage.getItem(CONFIG.storageKey);
+                if (!saved) openModal(els.modalSetup);
+                else tutorialManager.checkFirstTime();
+            }, 800);
+        };
+
         document.getElementById('btn-setup-random').onclick = () => {
             soundManager.playClick();
-            state.grid = Array.from({length: 25}, (_, i) => i + 1).sort(() => Math.random() - 0.5);
+            const pool = Array.from({length: CONFIG.numberRange}, (_, i) => i + 1);
+            state.grid = pool.sort(() => Math.random() - 0.5).slice(0, 25);
             completeSetup();
         };
 
@@ -942,11 +1526,9 @@
             closeModal(els.modalManual);
             confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
             soundManager.playSuccess();
-            // Start tutorial for new users
             tutorialManager.checkFirstTime();
         }
 
-        // --- Manual Setup Logic ---
         function initManualGrid() {
             els.manualGrid.innerHTML = '';
             for (let i = 0; i < 25; i++) {
@@ -966,9 +1548,7 @@
         function handleManualInput(input) {
             const val = input.value;
             if (val.length > 2) input.value = val.slice(0, 2);
-            
-            // Auto focus next
-            if (val.length >= 1 && parseInt(val) >= 1 && parseInt(val) <= 25) {
+            if (val.length >= 1 && parseInt(val) >= 1 && parseInt(val) <= CONFIG.numberRange) {
                 const next = input.nextElementSibling;
                 if (next) next.focus();
             }
@@ -987,45 +1567,33 @@
             const values = inputs.map(i => i.value ? parseInt(i.value) : null);
             let duplicates = [];
             let outOfRange = false;
-
             values.forEach((v, idx) => {
                 inputs[idx].classList.remove('duplicate');
                 if (v !== null) {
-                    if (v < 1 || v > 25) outOfRange = true;
+                    if (v < 1 || v > CONFIG.numberRange) outOfRange = true;
                     if (values.filter(x => x === v).length > 1) {
                         duplicates.push(v);
                         inputs[idx].classList.add('duplicate');
                     }
                 }
             });
-
             const uniqueValues = new Set(values.filter(v => v !== null));
             const isComplete = uniqueValues.size === 25 && !outOfRange;
-
             els.manualConfirm.disabled = !isComplete;
-            
-            if (duplicates.length > 0) {
-                els.manualValidation.innerText = '數字不能重複！';
-            } else if (outOfRange) {
-                els.manualValidation.innerText = '數字必須在 1-25 之間';
-            } else {
-                els.manualValidation.innerText = '';
-            }
+            if (duplicates.length > 0) els.manualValidation.innerText = '數字不能重複！';
+            else if (outOfRange) els.manualValidation.innerText = `數字必須在 1-${CONFIG.numberRange} 之間`;
+            else els.manualValidation.innerText = '';
         }
 
         document.getElementById('btn-manual-autofill').onclick = () => {
             soundManager.playClick();
             const inputs = Array.from(els.manualGrid.querySelectorAll('input'));
             const currentValues = new Set(inputs.map(i => i.value ? parseInt(i.value) : null).filter(v => v !== null));
-            const available = Array.from({length: 25}, (_, i) => i + 1).filter(v => !currentValues.has(v));
-            
+            const available = Array.from({length: CONFIG.numberRange}, (_, i) => i + 1).filter(v => !currentValues.has(v));
             available.sort(() => Math.random() - 0.5);
-
             inputs.forEach(input => {
                 if (!input.value || input.classList.contains('duplicate')) {
-                    if (available.length > 0) {
-                        input.value = available.pop();
-                    }
+                    if (available.length > 0) input.value = available.pop();
                 }
             });
             validateManualGrid();
@@ -1039,120 +1607,141 @@
 
         els.manualConfirm.onclick = () => {
             soundManager.playClick();
-            const values = Array.from(els.manualGrid.querySelectorAll('input')).map(i => parseInt(i.value));
-            state.grid = values;
+            state.grid = Array.from(els.manualGrid.querySelectorAll('input')).map(i => parseInt(i.value));
             completeSetup();
         };
 
-        // --- Scenic & Sound Logic ---
         function toggleScenicMode(enable) {
             document.body.classList.toggle('scenic-mode', enable);
             soundManager.playClick();
         }
-
         els.toggleScenic.onclick = () => toggleScenicMode(true);
         els.exitScenic.onclick = () => toggleScenicMode(false);
-        
         els.toggleSound.onclick = () => {
             const isEnabled = soundManager.toggle();
             document.getElementById('icon-sound-off').classList.toggle('hidden', isEnabled);
             document.getElementById('icon-sound-on').classList.toggle('hidden', !isEnabled);
             soundManager.playClick();
         };
-        
-        els.btnHelp.onclick = () => {
-            tutorialManager.start();
-        }
-
-        // --- Mission & Action Logic ---
-        document.getElementById('open-missions-btn').onclick = () => {
-            soundManager.playClick();
-            renderMissionList();
-            openModal(els.modalMissions);
-        };
-
-        // Tab Event Listeners
-        document.getElementById('tab-missions').onclick = () => {
-            soundManager.playClick();
-            state.currentView = 'missions';
-            renderMissionList();
-        };
-        document.getElementById('tab-guide').onclick = () => {
-            soundManager.playClick();
-            state.currentView = 'guide';
-            renderMissionList();
-        };
-
-        els.categoryFilter.onclick = (e) => {
-            const btn = e.target.closest('.category-btn');
-            if (btn) {
-                soundManager.playClick();
-                state.currentFilter = btn.dataset.category;
-                renderMissionList();
-            }
-        };
-
-        document.getElementById('close-mission-btn').onclick = () => {
-            // soundManager.playClick(); // optional: sound on close
-            closeModal(els.modalMissions);
-        };
-        
-        document.getElementById('cancel-input-btn').onclick = () => {
-            // soundManager.playClick();
-            closeModal(els.modalInput);
-        };
+        els.btnHelp.onclick = () => tutorialManager.start();
+        document.getElementById('open-missions-btn').onclick = () => { soundManager.playClick(); renderMissionList(); openModal(els.modalMissions); };
+        document.getElementById('tab-missions').onclick = () => { soundManager.playClick(); state.currentView = 'missions'; renderMissionList(); };
+        document.getElementById('tab-guide').onclick = () => { soundManager.playClick(); state.currentView = 'guide'; renderMissionList(); };
+        els.categoryFilter.onclick = (e) => { const btn = e.target.closest('.category-btn'); if (btn) { soundManager.playClick(); state.currentFilter = btn.dataset.category; renderMissionList(); } };
+        document.getElementById('close-mission-btn').onclick = () => closeModal(els.modalMissions);
+        document.getElementById('cancel-input-btn').onclick = () => closeModal(els.modalInput);
 
         document.getElementById('submit-input-btn').onclick = () => {
             soundManager.playClick();
-            const needsPin = currentMission.type === 'staff_number' || currentMission.type === 'user_choice';
+            const needsPin = currentMission.type === 'staff_number';
             if (needsPin && els.staffPinField.value !== SECURITY.STAFF_PIN) {
                 alert("通行碼錯誤！"); return;
             }
 
-            if (currentMission.type === 'user_choice') {
-                closeModal(els.modalInput);
-                closeModal(els.modalMissions);
-                state.isSelectionMode = true;
-                saveState(); renderGrid();
-                confetti({ particleCount: 50, spread: 70, origin: { y: 0.8 } });
-                soundManager.playSuccess();
-                return;
+            // Reward Logic: Generate numbers based on difficulty
+            const count = currentMission.difficulty || 1;
+            const drawnNumbers = [];
+            const pool = Array.from({length: CONFIG.numberRange}, (_, i) => i + 1).sort(() => Math.random() - 0.5);
+            
+            // Pick 'count' unique numbers
+            for (let i = 0; i < count; i++) {
+                drawnNumbers.push(pool[i]);
             }
 
-            const num = parseInt(els.inputField.value);
-            if (!num || num < 1 || num > 25) { alert("請輸入 1-25 之間的數字"); return; }
-            
             closeModal(els.modalInput);
-            closeModal(els.modalMissions);
+            
+            // Apply animation then close mission modal
+            const card = document.querySelector(`[data-mission-id="${currentMission.id}"]`);
+            if (card) card.classList.add('mission-complete-anim');
+            
+            setTimeout(() => {
+                closeModal(els.modalMissions);
+                showResultModal(drawnNumbers);
+            }, 500);
+        };
+
+        function showResultModal(numbers) {
+            const resultCard = document.getElementById('result-card');
+            const resultText = document.getElementById('result-context-text');
+            const resultNumber = document.getElementById('result-number-display');
+            const resultActions = document.getElementById('result-actions');
+            const burstRays = document.getElementById('burst-rays');
+            const closeBtn = document.getElementById('close-result-btn');
+
+            // Reset UI
+            resultCard.classList.remove('card-enter-anim', 'animate-float');
+            resultNumber.classList.remove('stamp-reveal');
+            burstRays.style.opacity = '0';
+            resultCard.style.opacity = '0';
+            resultCard.style.transform = 'scale(0.8)';
+            resultText.style.opacity = '0';
+            resultNumber.style.opacity = '0';
+            resultActions.style.opacity = '0';
+            closeBtn.style.pointerEvents = 'none';
+
+            // Set Content
+            resultText.innerText = currentMission.success_text || "一段美好的山林記憶，已悄悄收藏...";
+            
+            // Formatting for multiple numbers
+            if (numbers.length > 1) {
+                resultNumber.style.fontSize = numbers.length === 3 ? '2.5rem' : '3.5rem';
+                resultNumber.innerText = numbers.map(n => `NO.${n}`).join("\n");
+            } else {
+                resultNumber.style.fontSize = '5rem';
+                resultNumber.innerText = numbers[0];
+            }
             
             openModal(els.modalResult);
-            document.getElementById('reveal-animation').classList.remove('hidden');
-            document.getElementById('result-content').classList.add('hidden');
-            
             soundManager.playReveal();
-
+            
+            // Animations
+            setTimeout(() => burstRays.style.opacity = '1', 100);
             setTimeout(() => {
-                const idx = state.grid.indexOf(num);
-                const isNew = idx !== -1 && !state.markedIndices.includes(idx);
+                resultCard.classList.add('card-enter-anim');
+                setTimeout(() => resultCard.classList.add('animate-float'), 800);
+            }, 500);
+            setTimeout(() => resultText.style.opacity = '1', 800);
+            
+            // Process Results Logic
+            setTimeout(() => {
+                resultNumber.style.opacity = '1';
+                resultNumber.classList.add('stamp-reveal');
                 
-                document.getElementById('reveal-animation').classList.add('hidden');
-                document.getElementById('result-content').classList.remove('hidden');
-                document.getElementById('result-number-display').innerText = num;
-                document.getElementById('result-title').innerText = isNew ? "尋獲拾光！" : "重複的回憶";
+                let foundMatch = false;
+                numbers.forEach(num => {
+                    const idx = state.grid.indexOf(num);
+                    if (idx !== -1 && !state.markedIndices.includes(idx)) {
+                        state.markedIndices.push(idx);
+                        foundMatch = true;
+                    }
+                });
                 
-                if (isNew) {
-                    state.markedIndices.push(idx);
+                if (!state.completedMissions.includes(currentMission.id)) {
                     state.completedMissions.push(currentMission.id);
-                    saveState(); renderGrid(); updateStats();
-                    confetti({ particleCount: 150, spread: 80, origin: { y: 0.6 } });
-                    soundManager.playSuccess();
+                }
+                
+                saveState();
+                renderGrid();
+                updateStats();
+                
+                if (foundMatch) {
+                    setTimeout(() => {
+                        confetti({ particleCount: 150, spread: 80, origin: { y: 0.6 }, colors: ['#D4AF37', '#FDFBF7'] });
+                        soundManager.playSuccess();
+                    }, 100);
                 }
             }, 1500);
-        };
+
+            setTimeout(() => {
+                resultActions.style.opacity = '1';
+                closeBtn.style.pointerEvents = 'auto';
+            }, 2200);
+        }
 
         document.getElementById('close-result-btn').onclick = () => {
             soundManager.playClick();
             closeModal(els.modalResult);
+            setTimeout(() => document.getElementById('burst-rays').style.opacity = '0', 300);
         };
 
         function handleUserSelection(idx) {
@@ -1171,4 +1760,3 @@
     </script>
 </body>
 </html>
---- END OF FILE index.html ---
