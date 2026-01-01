@@ -13,7 +13,6 @@
             --color-mountain: #2C3E50;
             --color-gold: #B8860B;
             --color-gold-light: #D4AF37;
-            /* Improved Glass Vars */
             --glass-bg: rgba(255, 255, 255, 0.85);
             --glass-border: rgba(255, 255, 255, 0.6);
         }
@@ -28,15 +27,14 @@
             background-position: center;
             background-attachment: fixed;
             background-repeat: no-repeat;
-            background-color: #1a202c; /* Fallback dark color */
+            background-color: #1a202c;
             transition: background-color 0.8s ease;
         }
 
-        /* 1. Background Contrast: Dark Overlay */
         .bg-overlay {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%; z-index: -1;
-            background: rgba(0, 0, 0, 0.35); /* Darkened for luxury contrast */
+            background: rgba(0, 0, 0, 0.35);
             backdrop-filter: blur(2px);
             transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
         }
@@ -46,45 +44,36 @@
             backdrop-filter: blur(0px);
         }
 
-        /* 2. Luxury Glass Container */
         .glass-card {
             background: var(--glass-bg);
-            backdrop-filter: blur(20px); /* Stronger blur */
+            backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
             border: 1px solid var(--glass-border);
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.4); /* Deeper shadow */
-            border-radius: 1.5rem; /* rounded-3xl */
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.4);
+            border-radius: 1.5rem;
         }
 
-        /* 3. Grid Cells Polish - Polaroid / Aged Paper Style */
         .memory-frame {
             aspect-ratio: 1;
-            /* Paper/Card Look */
-            background-color: #FDFBF7; /* Cream/Off-white */
-            border: 4px solid #FFFFFF; /* Polaroid Frame */
-            border-radius: 0.25rem; /* rounded-sm */
-            
+            background-color: #FDFBF7;
+            border: 4px solid #FFFFFF;
+            border-radius: 0.25rem;
             transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
             position: relative;
             overflow: hidden;
             touch-action: manipulation;
-            /* Shadow-md */
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
         }
 
-        /* Interactive State (Hover/Active) */
         .memory-frame:not(.collected):active,
         .memory-frame:not(.collected):hover {
-            transform: translateY(-4px); /* Lift up */
-            /* Shadow-xl */
+            transform: translateY(-4px);
             box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
             z-index: 10;
         }
 
-        /* --- PURE CSS "WUFENG STARRY NIGHT" STYLE --- */
         .memory-frame.collected {
-            /* Base Sky Gradient */
-            background: linear-gradient(to bottom, #1e1b4b, #312e81); /* Indigo-950 to Indigo-900 */
+            background: linear-gradient(to bottom, #1e1b4b, #312e81);
             position: relative;
             overflow: hidden;
             border: 1px solid rgba(255, 255, 255, 0.25);
@@ -92,12 +81,11 @@
             z-index: 5;
         }
 
-        /* DYNAMIC JS PARTICLE SYSTEM STYLES */
         .particle-star {
             position: absolute;
             background-color: #FFF;
             border-radius: 50%;
-            box-shadow: 0 0 4px rgba(255, 255, 255, 0.8), 0 0 8px rgba(253, 224, 71, 0.6); /* Yellow-300 glow */
+            box-shadow: 0 0 4px rgba(255, 255, 255, 0.8), 0 0 8px rgba(253, 224, 71, 0.6);
             pointer-events: none;
             opacity: 0;
             will-change: opacity, transform;
@@ -110,43 +98,35 @@
             100% { opacity: 0; transform: scale(0.3); }
         }
 
-        /* Layer 2: Mountains (Using Clip Path) */
         .memory-frame.collected::after {
             content: "";
             position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            height: 40%; /* Height of mountains */
-            background: #020617; /* Slate-950 (Near Black) */
-            /* Jagged Mountain Silhouette */
+            bottom: 0; left: 0; width: 100%; height: 40%;
+            background: #020617;
             clip-path: polygon(0% 100%, 0% 40%, 20% 70%, 45% 20%, 70% 60%, 100% 10%, 100% 100%);
             z-index: 2;
             opacity: 0.9;
         }
 
-        /* Layer 3: Foreground Content Styling */
         .memory-frame.collected .cell-content {
             position: relative;
-            z-index: 10; /* Above mountains */
+            z-index: 10;
             animation: firefly-breathe 3s infinite ease-in-out alternate;
         }
         
-        /* Updated Number Styles */
         .bingo-number {
-            color: #8B7355; /* Earthy brown for uncollected */
+            color: #8B7355;
             transition: color 0.3s ease;
         }
         .memory-frame.collected .bingo-number {
-            color: #FDE047; /* Bright Gold for collected */
+            color: #FDE047;
             text-shadow: 0 0 15px rgba(253, 224, 71, 0.6);
         }
         .memory-frame.bingo-line-glow .bingo-number {
-            color: #451a03 !important; /* Dark brown for contrast on gold bg */
+            color: #451a03 !important;
             transform: scale(1.1);
         }
 
-        /* --- BINGO LINE GLOW STYLE --- */
         .memory-frame.bingo-line-glow {
             background: linear-gradient(135deg, #FFD700 0%, #FFF8DC 100%) !important;
             border: 4px solid #FFD700 !important;
@@ -160,7 +140,6 @@
             transform: scale(1.05);
         }
 
-        /* Hide stars and mountains on glow cells */
         .memory-frame.bingo-line-glow::after, 
         .memory-frame.bingo-line-glow .particle-star {
             display: none !important;
@@ -189,7 +168,6 @@
             100% { transform: scale(1); box-shadow: 0 4px 6px -1px rgba(184, 134, 11, 0.2); }
         }
 
-        /* Mission Complete Animation */
         @keyframes slide-out-right {
             0% { transform: translateX(0); opacity: 1; }
             100% { transform: translateX(50px); opacity: 0; }
@@ -199,7 +177,6 @@
             pointer-events: none;
         }
 
-        /* 4. Premium Gold Gradient Button */
         .btn-gold-gradient {
             background: linear-gradient(to right, #BF953F, #FCF6BA, #B38728);
             background-size: 200% auto;
@@ -217,11 +194,9 @@
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
-        /* Animation Classes */
         .modal-enter { transform: translateY(100%); transition: transform 0.5s cubic-bezier(0.23, 1, 0.32, 1); }
         .modal-enter-active { transform: translateY(0); }
 
-        /* Manual Input Grid */
         .manual-input-cell {
             aspect-ratio: 1;
             text-align: center;
@@ -243,113 +218,47 @@
             color: #EF4444;
         }
 
-        /* Category Button active state (Updated to transparent gold) */
         .category-btn {
-            background: rgba(92, 64, 51, 0.05); /* Warm brown low opacity */
-            color: #8B7355;
-            border: 1px solid rgba(92, 64, 51, 0.1);
+            background: rgba(255, 255, 255, 0.05);
+            color: #94A3B8;
+            border: 1px solid rgba(255, 255, 255, 0.1);
             transition: all 0.3s;
+            white-space: nowrap;
         }
         .category-btn.active {
-            background: #5C4033 !important; /* Dark warm brown */
-            color: #FFFBF0 !important; /* Cream text */
+            background: #D4AF37 !important;
+            color: #1a202c !important; 
             font-weight: bold;
-            border: 1px solid #5C4033;
-            box-shadow: 0 4px 6px -1px rgba(92, 64, 51, 0.3);
+            border: 1px solid #D4AF37;
+            box-shadow: 0 0 15px rgba(212,175,55,0.4);
         }
 
-        /* Scenic Mode Transitions */
-        .game-ui {
-            transition: opacity 0.6s ease, transform 0.6s ease;
-        }
-        .scenic-mode .game-ui {
-            opacity: 0;
-            pointer-events: none;
-            transform: translateY(20px);
-        }
-        .scenic-mode .fixed-action-btn {
-            opacity: 0;
-            pointer-events: none;
-        }
-
-        #scenic-return-hint {
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.5s ease;
-        }
-        .scenic-mode #scenic-return-hint {
-            opacity: 1;
-            pointer-events: auto;
-        }
+        .game-ui { transition: opacity 0.6s ease, transform 0.6s ease; }
+        .scenic-mode .game-ui { opacity: 0; pointer-events: none; transform: translateY(20px); }
+        .scenic-mode .fixed-action-btn { opacity: 0; pointer-events: none; }
+        #scenic-return-hint { opacity: 0; pointer-events: none; transition: opacity 0.5s ease; }
+        .scenic-mode #scenic-return-hint { opacity: 1; pointer-events: auto; }
+        #exit-scenic-btn { pointer-events: none; }
+        .scenic-mode #exit-scenic-btn { pointer-events: auto; }
         
-        /* Fix: Ensure exit button is not clickable when invisible */
-        #exit-scenic-btn {
-            pointer-events: none;
-        }
-        .scenic-mode #exit-scenic-btn {
-            pointer-events: auto;
-        }
-        
-        /* Updated Header Btn color for dark background */
-        .header-btn {
-            padding: 0.5rem;
-            color: rgba(255, 255, 255, 0.8);
-            transition: all 0.2s;
-        }
+        .header-btn { padding: 0.5rem; color: rgba(255, 255, 255, 0.8); transition: all 0.2s; }
         .header-btn:hover { color: #D4AF37; opacity: 1; }
         .header-btn:active { transform: scale(0.9); }
         
-        /* Music Track Item Active State */
-        .track-item.active {
-            border-color: #D4AF37;
-            background-color: rgba(212, 175, 55, 0.1);
-        }
-        .track-item.active .track-icon {
-            transform: scale(1.1);
-        }
+        .track-item.active { border-color: #D4AF37; background-color: rgba(212, 175, 55, 0.1); }
+        .track-item.active .track-icon { transform: scale(1.1); }
 
-        /* --- BONFIRE & PINE TOSS STYLES --- */
-        .bonfire-container {
-            position: relative;
-            width: 220px;
-            height: 220px;
-            margin: 0 auto;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        
-        /* Fire Base - Logs */
-        .bonfire-logs {
-            position: absolute;
-            bottom: 20px;
-            width: 120px;
-            height: 30px;
-            background: #5C4033;
-            border-radius: 10px;
-            z-index: 10;
-            box-shadow: inset 0 0 10px rgba(0,0,0,0.8);
-        }
-        .bonfire-logs::before {
-            content: ''; position: absolute; transform: rotate(25deg);
-            width: 100%; height: 100%; background: #4A332A; border-radius: 10px;
-        }
-        .bonfire-logs::after {
-            content: ''; position: absolute; transform: rotate(-25deg);
-            width: 100%; height: 100%; background: #3E2B23; border-radius: 10px;
-        }
+        .bonfire-container { position: relative; width: 220px; height: 220px; margin: 0 auto; display: flex; align-items: center; justify-content: center; }
+        .bonfire-logs { position: absolute; bottom: 20px; width: 120px; height: 30px; background: #5C4033; border-radius: 10px; z-index: 10; box-shadow: inset 0 0 10px rgba(0,0,0,0.8); }
+        .bonfire-logs::before { content: ''; position: absolute; transform: rotate(25deg); width: 100%; height: 100%; background: #4A332A; border-radius: 10px; }
+        .bonfire-logs::after { content: ''; position: absolute; transform: rotate(-25deg); width: 100%; height: 100%; background: #3E2B23; border-radius: 10px; }
 
-        /* Fire Animation */
         .bonfire-flame {
-            position: absolute;
-            bottom: 40px;
-            width: 60px;
-            height: 60px;
+            position: absolute; bottom: 40px; width: 60px; height: 60px;
             border-radius: 50% 0 50% 50%;
             background: radial-gradient(circle at 50% 80%, #FFD700, #FF4500);
             transform: rotate(-45deg) scale(1);
-            filter: blur(5px);
-            opacity: 0.9;
+            filter: blur(5px); opacity: 0.9;
             animation: flame-burn 1.5s infinite ease-in-out alternate;
             z-index: 5;
         }
@@ -364,14 +273,11 @@
             animation-duration: 1.8s; animation-delay: 0.5s;
         }
         
-        /* Core Glow */
         .bonfire-glow {
-            position: absolute;
-            bottom: 20px; left: 50%; transform: translateX(-50%);
+            position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%);
             width: 150px; height: 50px;
             background: radial-gradient(ellipse at center, rgba(255,69,0,0.6), transparent 70%);
-            filter: blur(10px);
-            animation: glow-pulse 2s infinite;
+            filter: blur(10px); animation: glow-pulse 2s infinite;
         }
 
         @keyframes flame-burn {
@@ -384,28 +290,15 @@
             50% { opacity: 0.9; transform: translateX(-50%) scale(1.1); }
         }
 
-        /* Pinecone Toss Animation */
-        .pinecone-projectile {
-            position: absolute;
-            bottom: -50px; left: 50%;
-            font-size: 3rem;
-            z-index: 50;
-            opacity: 0;
-            pointer-events: none;
-        }
-        .animate-toss {
-            animation: toss-arc 0.8s forwards ease-in;
-        }
+        .pinecone-projectile { position: absolute; bottom: -50px; left: 50%; font-size: 3rem; z-index: 50; opacity: 0; pointer-events: none; }
+        .animate-toss { animation: toss-arc 0.8s forwards ease-in; }
         @keyframes toss-arc {
             0% { bottom: -50px; transform: translateX(-50%) scale(1) rotate(0deg); opacity: 1; }
             50% { bottom: 100px; transform: translateX(-50%) scale(0.8) rotate(180deg); opacity: 1; }
             100% { bottom: 60px; transform: translateX(-50%) scale(0.2) rotate(360deg); opacity: 0; }
         }
 
-        /* Flare Up Effect */
-        .bonfire-flare .bonfire-flame {
-            animation: flare-boom 0.6s forwards ease-out;
-        }
+        .bonfire-flare .bonfire-flame { animation: flare-boom 0.6s forwards ease-out; }
         @keyframes flare-boom {
             0% { transform: rotate(-45deg) scale(1); filter: brightness(1) blur(5px); }
             20% { transform: rotate(-45deg) scale(0.5); filter: brightness(2) blur(2px); }
@@ -413,195 +306,150 @@
             100% { transform: rotate(-45deg) scale(1); filter: brightness(1) blur(5px); }
         }
 
-        /* Tutorial Styles */
         .tutorial-overlay {
-            position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(44, 62, 80, 0.85);
-            z-index: 60;
-            opacity: 0;
-            pointer-events: none;
+            position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(44, 62, 80, 0.85); z-index: 60; opacity: 0; pointer-events: none;
             transition: opacity 0.4s ease;
         }
-        .tutorial-active .tutorial-overlay {
-            opacity: 1;
-            pointer-events: auto;
-        }
+        .tutorial-active .tutorial-overlay { opacity: 1; pointer-events: auto; }
         .tutorial-highlight {
-            position: relative;
-            z-index: 70 !important;
+            position: relative; z-index: 70 !important;
             box-shadow: 0 0 0 4px #D4AF37, 0 0 40px rgba(0,0,0,0.5) !important;
-            transition: all 0.3s ease;
-            background-color: #FFF; /* Ensure no transparency issues */
+            transition: all 0.3s ease; background-color: #FFF;
         }
-        /* Special handling for glass card transparency in highlight mode */
-        .glass-card.tutorial-highlight {
-            background: #FFF; 
-        }
+        .glass-card.tutorial-highlight { background: #FFF; }
         .tutorial-card {
-            position: fixed;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 90%;
-            max-width: 360px;
-            background: #FFF;
-            border: 1px solid #D4AF37;
-            border-radius: 1rem;
-            padding: 1.5rem;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.3);
-            z-index: 80;
-            transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
-            opacity: 0;
-            pointer-events: none;
+            position: fixed; left: 50%; transform: translateX(-50%); width: 90%; max-width: 360px;
+            background: #FFF; border: 1px solid #D4AF37; border-radius: 1rem; padding: 1.5rem;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.3); z-index: 80;
+            transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1); opacity: 0; pointer-events: none;
         }
-        .tutorial-active .tutorial-card {
-            opacity: 1;
-            pointer-events: auto;
-        }
+        .tutorial-active .tutorial-card { opacity: 1; pointer-events: auto; }
         .tutorial-card.position-bottom { bottom: 2rem; }
         .tutorial-card.position-top { top: 2rem; }
         .tutorial-card.position-center { top: 50%; transform: translate(-50%, -50%); }
 
-        .dot-indicator {
-            width: 8px; height: 8px; border-radius: 50%; background: #E2E8F0; transition: all 0.3s;
-        }
-        .dot-indicator.active {
-            background: #D4AF37; width: 20px; border-radius: 4px;
-        }
+        .dot-indicator { width: 8px; height: 8px; border-radius: 50%; background: #E2E8F0; transition: all 0.3s; }
+        .dot-indicator.active { background: #D4AF37; width: 20px; border-radius: 4px; }
         
-        /* --- NEW Reveal Modal Styles --- */
-        
-        /* 1. Sunburst Rays */
         .sunburst-rays {
-            background: repeating-conic-gradient(
-                from 0deg, 
-                rgba(212, 175, 55, 0.4) 0deg 10deg, 
-                transparent 10deg 20deg
-            );
+            background: repeating-conic-gradient(from 0deg, rgba(212, 175, 55, 0.4) 0deg 10deg, transparent 10deg 20deg);
             animation: rotate-slow 20s linear infinite;
             mask-image: radial-gradient(circle, black 0%, transparent 70%);
             -webkit-mask-image: radial-gradient(circle, black 0%, transparent 70%);
         }
-        @keyframes rotate-slow {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-        }
+        @keyframes rotate-slow { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
 
-        /* 2. Premium Paper Texture */
         .paper-texture {
             background-color: #FDFBF7;
-            /* Subtle noise pattern SVG data URI */
             background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.6' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100' height='100' filter='url(%23noise)' opacity='0.08'/%3E%3C/svg%3E");
             box-shadow: inset 0 0 40px rgba(0,0,0,0.05), 0 25px 50px -12px rgba(0, 0, 0, 0.5);
             border: 1px solid #D4AF37;
         }
 
-        /* 3. Floating Animation */
-        @keyframes float-card {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-8px); }
-        }
-        .animate-float {
-            animation: float-card 6s ease-in-out infinite;
-        }
+        @keyframes float-card { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+        .animate-float { animation: float-card 6s ease-in-out infinite; }
 
-        /* 4. Stamp & Bounce Effect */
         @keyframes stamp-in-bounce {
             0% { transform: scale(3); opacity: 0; }
             50% { transform: scale(0.9); opacity: 1; }
             70% { transform: scale(1.05); }
             100% { transform: scale(1); opacity: 1; }
         }
-        .stamp-reveal {
-            animation: stamp-in-bounce 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
-        }
+        .stamp-reveal { animation: stamp-in-bounce 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
 
-        /* 5. Fade In & Scale Up for Card */
-        @keyframes scale-in-fade {
-            0% { transform: scale(0.8); opacity: 0; }
-            100% { transform: scale(1); opacity: 1; }
-        }
-        .card-enter-anim {
-            animation: scale-in-fade 0.8s cubic-bezier(0.23, 1, 0.32, 1) forwards;
-        }
+        @keyframes scale-in-fade { 0% { transform: scale(0.8); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+        .card-enter-anim { animation: scale-in-fade 0.8s cubic-bezier(0.23, 1, 0.32, 1) forwards; }
 
-        /* Splash Screen */
         #splash-screen {
-            position: fixed;
-            inset: 0;
-            z-index: 9999;
-            background: #1a2a6c;
+            position: fixed; inset: 0; z-index: 9999;
             background: linear-gradient(to bottom, #1a2a6c, #2C3E50);
-            display: flex;
-            flex-col: column;
-            align-items: center;
-            justify-content: center;
+            display: flex; flex-col: column; align-items: center; justify-content: center;
             transition: opacity 0.8s ease;
         }
 
-        /* --- Mission Modal Styling (Daylight Scrapbook) --- */
         #mission-content {
-            background-color: #FFFBF0 !important; /* Cream Off-White */
-            background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.6' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100' height='100' filter='url(%23noise)' opacity='0.08'/%3E%3C/svg%3E") !important;
-            border: 4px solid #FFFFFF;
-            border-radius: 20px;
-            color: #5C4033; /* Dark Warm Brown */
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-        }
-
-        .tab-btn.active {
-            color: #5C4033; /* Dark Brown */
-            border-bottom: 3px solid #D4AF37;
-            background: rgba(212, 175, 55, 0.1);
+            background-color: #0F172A !important;
+            background-image: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%) !important;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px; color: #F1F5F9;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            transition: background 0.3s;
         }
         
-        .tab-btn {
-            color: #9CA3AF;
+        .tab-btn { color: #94A3B8; border-bottom: 2px solid transparent; }
+        .tab-btn.active { color: #FCD34D; border-bottom: 2px solid #FCD34D; background: rgba(253, 224, 71, 0.05); }
+
+        #mission-grid::-webkit-scrollbar { width: 4px; }
+        #mission-grid::-webkit-scrollbar-track { background: transparent; }
+        #mission-grid::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.2); border-radius: 10px; }
+        
+        .phantom-line { stroke: rgba(255, 255, 255, 0.2); stroke-width: 1; fill: none; stroke-dasharray: 4; }
+        
+        .active-line {
+            stroke: #D4AF37; stroke-width: 2; fill: none;
+            filter: drop-shadow(0 0 3px rgba(253, 224, 71, 0.5));
+            animation: draw-line 1.5s ease-out forwards;
+        }
+        @keyframes draw-line { from { stroke-dashoffset: 1000; stroke-dasharray: 1000; } to { stroke-dashoffset: 0; stroke-dasharray: 1000; } }
+
+        @keyframes fillPulse {
+            0% { opacity: 0.6; filter: drop-shadow(0 0 10px rgba(255, 215, 0, 0.6)); }
+            50% { opacity: 0.9; filter: drop-shadow(0 0 25px rgba(255, 215, 0, 0.9)); }
+            100% { opacity: 0.6; filter: drop-shadow(0 0 10px rgba(255, 215, 0, 0.6)); }
         }
 
-        #mission-list-container::-webkit-scrollbar {
-            width: 4px;
-        }
-        #mission-list-container::-webkit-scrollbar-track {
-            background: transparent;
-        }
-        #mission-list-container::-webkit-scrollbar-thumb {
-            background: rgba(92, 64, 51, 0.2);
-            border-radius: 10px;
+        .energy-shape {
+            fill: rgba(255, 223, 0, 0.5); stroke: #D4AF37; stroke-width: 2px;
+            animation: fillPulse 4s infinite ease-in-out; pointer-events: none;
         }
 
-        /* Toast Styling */
+        @keyframes starPulse {
+            0% { transform: scale(1); filter: drop-shadow(0 0 2px gold); }
+            50% { transform: scale(1.3); filter: drop-shadow(0 0 8px gold); }
+            100% { transform: scale(1); filter: drop-shadow(0 0 2px gold); }
+        }
+        
+        .star-point { fill: #FFF; transition: all 0.3s; cursor: pointer; }
+        .star-point:hover { transform: scale(1.5); fill: #FCD34D; }
+        .star-unlocked { fill: #D4AF37; animation: starPulse 2s infinite ease-in-out; transform-origin: center; transform-box: fill-box; }
+        
+        @keyframes wingFlap { 0%, 100% { transform: rotate(0deg) translateY(0); } 50% { transform: rotate(-5deg) translateY(-10px); } }
+        .animate-wings { animation: wingFlap 3s infinite ease-in-out; transform-origin: 40% 30%; }
+
+        @keyframes legGallop { 0%, 100% { transform: rotate(0deg); } 25% { transform: rotate(10deg); } 75% { transform: rotate(-10deg); } }
+        .animate-legs { animation: legGallop 1.5s infinite linear; transform-origin: center top; transform-box: fill-box; }
+
+        @keyframes pegasusGallopAcross {
+            0% { transform: translateX(-100%) scale(0.8); opacity: 0; }
+            20% { opacity: 1; }
+            80% { transform: translateX(0%) scale(1); opacity: 1; }
+            100% { transform: translateX(20%) scale(1.1); opacity: 0; }
+        }
+        .pegasus-finale-anim { animation: pegasusGallopAcross 4s forwards ease-in-out; }
+        
+        .pegasus-tooltip {
+            position: absolute; background: rgba(15, 23, 42, 0.9); border: 1px solid rgba(253, 224, 71, 0.3);
+            color: #F1F5F9; padding: 6px 10px; border-radius: 6px; font-size: 12px;
+            pointer-events: none; opacity: 0; transform: translateY(10px); transition: all 0.2s; z-index: 50;
+        }
+        .pegasus-tooltip.visible { opacity: 1; transform: translateY(0); }
+
         #bingo-toast {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            z-index: 100;
-            background: rgba(44, 24, 16, 0.95);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(212, 175, 55, 0.5);
-            padding: 1.5rem 3rem;
-            border-radius: 9999px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
-            transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
-            opacity: 0;
-            pointer-events: none;
+            position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 100;
+            background: rgba(44, 24, 16, 0.95); backdrop-filter: blur(10px);
+            border: 1px solid rgba(212, 175, 55, 0.5); padding: 1.5rem 3rem; border-radius: 9999px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5); transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+            opacity: 0; pointer-events: none;
         }
-        #bingo-toast.active {
-            opacity: 1;
-            transform: translate(-50%, -60%);
-        }
+        #bingo-toast.active { opacity: 1; transform: translate(-50%, -60%); }
     </style>
 </head>
 <body class="flex flex-col items-center p-4 overflow-x-hidden">
 
     <div class="bg-overlay"></div>
+    <audio id="bgm-audio" loop preload="auto" playsinline style="position:absolute; width:0; height:0; opacity:0; pointer-events:none;"></audio>
 
-    <!-- AUDIO SYSTEM -->
-    <audio id="bgm-audio" loop preload="auto" playsinline style="position:absolute; width:0; height:0; opacity:0; pointer-events:none;">
-    </audio>
-
-    <!-- SPLASH SCREEN -->
     <div id="splash-screen">
         <div class="text-center p-8 space-y-6 max-w-md animate-fade-in">
             <h1 class="text-5xl font-bold text-[#D4AF37] tracking-widest mb-2 font-serif drop-shadow-lg">愛上喜翁</h1>
@@ -616,7 +464,6 @@
         </div>
     </div>
 
-    <!-- Tutorial Overlay -->
     <div id="tutorial-overlay" class="tutorial-overlay"></div>
     <div id="tutorial-card" class="tutorial-card position-center">
         <h3 id="tut-title" class="text-xl font-bold text-[#2C3E50] mb-2 font-serif tracking-widest"></h3>
@@ -630,31 +477,25 @@
         </div>
     </div>
 
-    <!-- Scenic Mode Return Hint -->
     <div id="scenic-return-hint" class="fixed inset-0 z-[100] flex flex-col items-center justify-end pb-12 pointer-events-none">
         <button id="exit-scenic-btn" class="bg-white/20 backdrop-blur-md border border-white/40 text-white px-8 py-3 rounded-full text-sm tracking-[0.3em] shadow-2xl active:scale-95 transition-transform">
             點擊返回收集冊
         </button>
     </div>
 
-    <!-- Bonfire / Lucky Wheel Replacement Modal -->
     <div id="bonfire-modal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-black/90 backdrop-blur-lg transition-opacity duration-300 opacity-0">
         <div class="w-full max-w-sm flex flex-col items-center relative">
             <h3 class="text-3xl text-[#D4AF37] tracking-[0.3em] font-serif mb-2 drop-shadow-[0_0_10px_rgba(212,175,55,0.8)]">營火許願</h3>
             <p class="text-xs text-orange-200/70 tracking-wider mb-8 text-center">投入松果，讓火焰為你帶來山林的饋贈</p>
-            
             <div class="bonfire-container mb-8" id="bonfire-wrapper">
                 <div class="bonfire-glow"></div>
                 <div class="bonfire-logs"></div>
                 <div class="bonfire-flame"></div>
                 <div class="bonfire-flame"></div>
                 <div class="bonfire-flame"></div>
-                <!-- Projectile -->
                 <div id="pinecone-projectile" class="pinecone-projectile">🌲</div>
             </div>
-
             <div id="bonfire-result-msg" class="text-[#FFD700] font-bold text-xl h-12 mb-2 flex items-center justify-center text-center leading-tight drop-shadow-md opacity-0 transition-opacity duration-500"></div>
-
             <div class="flex gap-4 w-full mt-6">
                 <button id="close-bonfire-btn" class="flex-1 py-3 text-white/50 text-sm font-medium border border-white/10 rounded-full">稍後再來</button>
                 <button id="toss-pinecone-btn" class="flex-[2] bg-gradient-to-r from-[#D35400] to-[#E67E22] text-white py-3 rounded-full text-sm tracking-widest shadow-[0_0_20px_rgba(230,126,34,0.4)] active:scale-95 transition-all font-bold flex items-center justify-center gap-2">
@@ -673,31 +514,17 @@
         <header class="pt-8 pb-4 text-center relative game-ui">
             <div class="absolute top-8 right-0 flex gap-2">
                 <button id="music-menu-btn" class="header-btn" title="切換背景音樂">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                        <path d="M9 18V5l12-2v13" stroke-linecap="round" stroke-linejoin="round"/>
-                        <circle cx="6" cy="18" r="3" stroke-linecap="round" stroke-linejoin="round"/>
-                        <circle cx="18" cy="16" r="3" stroke-linecap="round" stroke-linejoin="round"/>
-                    </svg>
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 18V5l12-2v13" stroke-linecap="round" stroke-linejoin="round"/><circle cx="6" cy="18" r="3" stroke-linecap="round" stroke-linejoin="round"/><circle cx="18" cy="16" r="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
                 </button>
                 <button id="toggle-sound-btn" class="header-btn" title="音樂開關">
-                    <svg id="icon-sound-off" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                        <path d="M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" clip-rule="evenodd" />
-                        <path d="M17 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2" />
-                    </svg>
-                    <svg id="icon-sound-on" class="hidden" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                        <path d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
-                    </svg>
+                    <svg id="icon-sound-off" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" clip-rule="evenodd" /><path d="M17 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2" /></svg>
+                    <svg id="icon-sound-on" class="hidden" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" /></svg>
                 </button>
                 <button id="toggle-scenic-btn" class="header-btn" title="觀賞背景">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                        <path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                        <path d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                    </svg>
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>
                 </button>
                 <button id="help-btn" class="header-btn" title="遊戲說明">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                        <path d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
                 </button>
             </div>
             
@@ -748,9 +575,7 @@
         <div id="main-action-area" class="fixed bottom-8 left-0 right-0 z-30 px-6 flex justify-center fixed-action-btn">
             <button id="open-missions-btn" class="w-full max-w-md btn-gold-gradient rounded-full shadow-2xl active:scale-95 border-2 border-white/20">
                 <div class="relative py-4 flex items-center justify-center gap-3 text-[#2C3E50]">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
-                    </svg>
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
                     <span class="text-lg tracking-[0.2em] font-bold">開啟探險手冊</span>
                 </div>
             </button>
@@ -761,9 +586,7 @@
             <div class="bg-white/95 w-full max-w-xs rounded-2xl p-6 shadow-2xl border border-white/50 modal-enter">
                 <div class="flex justify-between items-center mb-4">
                     <h3 class="text-lg text-[#2C3E50] font-medium tracking-wide">選擇氛圍音樂</h3>
-                    <button id="close-music-btn" class="text-gray-400 p-1 hover:text-[#2C3E50]">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" x2="6" y1="6" y2="18"></line><line x1="6" x2="18" y1="6" y2="18"></line></svg>
-                    </button>
+                    <button id="close-music-btn" class="text-gray-400 p-1 hover:text-[#2C3E50]"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" x2="6" y1="6" y2="18"></line><line x1="6" x2="18" y1="6" y2="18"></line></svg></button>
                 </div>
                 <div id="track-list" class="space-y-3"></div>
             </div>
@@ -802,33 +625,54 @@
 
         <div id="mission-modal" class="fixed inset-0 z-40 hidden flex items-end sm:items-center justify-center sm:p-4 bg-[#2C3E50]/40 backdrop-blur-sm transition-all duration-300 opacity-0">
             <div id="mission-content" class="w-full max-w-sm h-[80vh] sm:h-auto sm:max-h-[85vh] sm:rounded-2xl rounded-t-3xl p-0 shadow-2xl modal-enter flex flex-col overflow-hidden relative">
-                <div class="p-6 pb-4 border-b border-[#E5E7EB] flex justify-between items-center shrink-0">
+                <div class="p-6 pb-4 border-b border-gray-700/50 flex justify-between items-center shrink-0">
                     <div>
-                        <h3 class="text-2xl text-[#5C4033] tracking-widest font-serif font-bold">我的山林拾光</h3>
-                        <p class="text-xs text-[#8B7355] mt-1 tracking-wider">Love Hsiung Collection</p>
+                        <h3 class="text-2xl text-[#FCD34D] tracking-widest font-serif font-bold mission-modal-title">我的山林拾光</h3>
+                        <p class="text-xs text-gray-400 mt-1 tracking-wider mission-modal-subtitle">Love Hsiung Collection</p>
                     </div>
-                    <button id="close-mission-btn" class="text-[#5C4033] p-2 bg-[#5C4033]/10 rounded-full hover:bg-[#5C4033]/20 transition-colors">
+                    <button id="close-mission-btn" class="text-gray-300 p-2 bg-gray-700/50 rounded-full hover:bg-gray-600 transition-colors">
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" x2="6" y1="6" y2="18"></line><line x1="6" x2="18" y1="6" y2="18"></line></svg>
                     </button>
                 </div>
-                <div class="flex border-b border-[#E5E7EB] shrink-0">
-                    <button id="tab-missions" class="flex-1 py-3 text-sm font-medium transition-all tab-btn active">當前任務</button>
-                    <button id="tab-guide" class="flex-1 py-3 text-sm font-medium transition-all tab-btn">收集圖鑑</button>
+                <div class="flex border-b border-gray-700/50 shrink-0">
+                    <button id="tab-missions" class="flex-1 py-3 text-sm font-medium transition-all tab-btn active">冒險任務</button>
+                    <button id="tab-guide" class="flex-1 py-3 text-sm font-medium transition-all tab-btn">天馬星圖</button>
                 </div>
-                <div class="px-4 py-3 overflow-x-auto no-scrollbar shrink-0">
-                    <div class="flex gap-2 min-w-max" id="category-filter-container">
-                        <button class="category-btn active px-4 py-2 rounded-full text-xs category-pill" data-category="all">全部</button>
-                        <button class="category-btn px-4 py-2 rounded-full text-xs category-pill" data-category="cloud">雲上生活</button>
-                        <button class="category-btn px-4 py-2 rounded-full text-xs category-pill" data-category="photo">山林寫真</button>
-                        <button class="category-btn px-4 py-2 rounded-full text-xs category-pill" data-category="social_share">雲端寄情</button>
-                        <button class="category-btn px-4 py-2 rounded-full text-xs category-pill" data-category="explore">秘密探索</button>
-                        <button class="category-btn px-4 py-2 rounded-full text-xs category-pill" data-category="social">營火微光</button>
-                        <button class="category-btn px-4 py-2 rounded-full text-xs category-pill" data-category="soul">靈魂對話</button>
-                        <button class="category-btn px-4 py-2 rounded-full text-xs category-pill" data-category="magic">奇蹟魔法</button>
+                
+                <div id="view-task-list" class="flex flex-col flex-1 overflow-hidden relative">
+                    <div class="px-4 py-3 overflow-x-auto no-scrollbar shrink-0 border-b border-gray-700/30">
+                        <div class="flex gap-2 min-w-max" id="category-filter-container">
+                            <button class="category-btn active px-4 py-2 rounded-full text-xs category-pill" data-category="all">全部</button>
+                            <button class="category-btn px-4 py-2 rounded-full text-xs category-pill" data-category="cloud">雲上生活</button>
+                            <button class="category-btn px-4 py-2 rounded-full text-xs category-pill" data-category="photo">山林寫真</button>
+                            <button class="category-btn px-4 py-2 rounded-full text-xs category-pill" data-category="social_share">雲端寄情</button>
+                            <button class="category-btn px-4 py-2 rounded-full text-xs category-pill" data-category="explore">秘密探索</button>
+                            <button class="category-btn px-4 py-2 rounded-full text-xs category-pill" data-category="social">營火微光</button>
+                            <button class="category-btn px-4 py-2 rounded-full text-xs category-pill" data-category="soul">靈魂對話</button>
+                            <button class="category-btn px-4 py-2 rounded-full text-xs category-pill" data-category="magic">奇蹟魔法</button>
+                        </div>
+                    </div>
+                    <div class="flex-1 overflow-y-auto p-4 no-scrollbar pb-16">
+                        <div id="mission-grid" class="grid grid-cols-2 gap-3"></div>
                     </div>
                 </div>
-                <div class="flex-1 overflow-y-auto p-4 no-scrollbar pb-16" id="mission-list-container"></div>
-                <div class="absolute bottom-2 right-4 text-[#5C4033]/20 font-['Dancing_Script'] text-xl pointer-events-none transform -rotate-6">Love Hsiung Glamping</div>
+
+                <div id="view-star-map" class="hidden flex-1 w-full h-full relative overflow-hidden bg-[#0B1026] select-none">
+                    <div id="pegasus-tooltip" class="pegasus-tooltip"></div>
+                    <div id="svg-map-wrapper" class="w-full h-full">
+                         <svg id="pegasus-svg" width="100%" height="100%" viewBox="0 0 400 400" preserveAspectRatio="xMidYMid meet" class="w-full h-full">
+                              <g id="bg-stars" opacity="0.3"></g>
+                              <g id="phantom-lines"></g>
+                              <g id="pegasus-body"></g>
+                         </svg>
+                         <div class="absolute bottom-6 left-0 right-0 text-center pointer-events-none">
+                             <p class="text-[#94A3B8] text-[10px] tracking-[0.3em] font-light opacity-80">完成分類任務 點亮星座</p>
+                         </div>
+                    </div>
+                    
+                    <!-- Container for dynamic certificate injection -->
+                    <div id="certificate-view" class="hidden w-full h-full"></div>
+                </div>
             </div>
         </div>
 
@@ -850,37 +694,25 @@
             </div>
         </div>
 
-        <!-- NEW RESULT MODAL (Luxurious Redesign) -->
         <div id="result-modal" class="fixed inset-0 z-50 hidden">
-             <!-- 1. Background Image -->
              <div class="absolute inset-0 bg-cover bg-center" style="background-image: url('https://images.unsplash.com/photo-1470252649378-9c29740c9fa8?q=80&w=2070&auto=format&fit=crop');"></div>
-             <!-- 2. Dark Overlay -->
              <div class="absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity duration-1000" id="result-bg-overlay"></div>
-             <!-- 3. Sunburst Container -->
              <div class="absolute inset-0 flex items-center justify-center overflow-hidden pointer-events-none">
                   <div id="burst-rays" class="sunburst-rays w-[200vmax] h-[200vmax] opacity-0 transition-opacity duration-700"></div> 
              </div>
-             <!-- 4. Main Content -->
              <div class="relative z-10 w-full h-full flex flex-col items-center justify-center p-6">
-                  <!-- The Card -->
                   <div id="result-card" class="paper-texture w-64 aspect-[3/4] p-6 shadow-2xl relative flex flex-col items-center justify-center text-center opacity-0 transform scale-90 transition-none animate-float rounded-sm">
-                       <!-- Inner decorative border -->
                        <div class="absolute inset-2 border border-[#D4AF37]/30 pointer-events-none"></div>
-                       <!-- Content Wrapper -->
                        <div class="z-10 flex flex-col items-center gap-6 w-full">
-                           <!-- Flavor Text -->
                            <div id="result-context-text" class="text-[#5C4033] text-sm font-serif italic font-medium leading-loose opacity-0 transition-opacity duration-700"></div>
-                           <!-- The Number -->
                            <div class="flex flex-col items-center w-full">
                                <span class="text-[#B8860B] text-[10px] uppercase tracking-[0.2em] mb-1 opacity-60">Memory No.</span>
                                <span id="result-number-display" class="text-2xl text-[#B8860B] font-serif font-bold opacity-0 transform scale-150 transition-none drop-shadow-md break-all leading-tight"></span>
                            </div>
                        </div>
-                       <!-- Decor Corner -->
                        <div class="absolute bottom-2 right-2 text-[#D4AF37]/20 text-4xl">❧</div>
                        <div class="absolute top-2 left-2 text-[#D4AF37]/20 text-4xl transform rotate-180">❧</div>
                   </div>
-                  <!-- Title & Button Container (Fade in last) -->
                   <div id="result-actions" class="mt-10 flex flex-col items-center opacity-0 transition-opacity duration-700">
                       <h2 class="text-white/90 text-sm tracking-[0.4em] uppercase mb-6 font-light drop-shadow-lg">尋獲拾光</h2>
                       <button id="close-result-btn" class="px-12 py-3 border border-[#D4AF37] text-[#D4AF37] hover:bg-[#D4AF37] hover:text-[#2C3E50] rounded-full text-sm transition-all duration-300 backdrop-blur-sm bg-black/20">
@@ -893,147 +725,60 @@
     </div>
 
     <script>
+        const svgNS = "http://www.w3.org/2000/svg";
         const SECURITY = { STAFF_PIN: '1688' };
 
-        // --- WUFENG TOWNSHIP LOCAL ELEMENTS MAPPING (1-30) ---
-        // Cultural & Natural Totems specific to Wufeng, Hsinchu
-        const WUFENG_ELEMENTS = {
-            1: { icon: '🦌', name: '山羌' },
-            2: { icon: '🐗', name: '山豬' },
-            3: { icon: '🦦', name: '黃猴貂' },
-            4: { icon: '⛰️', name: '五峰連稜' },
-            5: { icon: '🌸', name: '緋寒櫻' },
-            6: { icon: '🍁', name: '霞喀羅楓紅' },
-            7: { icon: '♨️', name: '清泉溫泉' },
-            8: { icon: '☁️', name: '山谷雲海' },
-            9: { icon: '🌾', name: '原民小米' },
-            10: { icon: '🍶', name: '小米酒' },
-            11: { icon: '🐻', name: '台灣黑熊' },
-            12: { icon: '🎋', name: '桂竹筍' },
-            13: { icon: '🍄', name: '段木香菇' },
-            14: { icon: '✨', name: '高山星空' },
-            15: { icon: '🌫️', name: '山林迷霧' },
-            16: { icon: '🌳', name: '肖楠巨木' },
-            17: { icon: '🦉', name: '貓頭鷹' },
-            18: { icon: '🌿', name: '馬告' },
-            19: { icon: '🏞️', name: '上坪溪流' },
-            20: { icon: '🐾', name: '穿山甲足跡' },
-            21: { icon: '🐦', name: '藍腹鷴' },
-            22: { icon: '🔥', name: '祖靈之火' },
-            23: { icon: '🧶', name: '泰雅織布' },
-            24: { icon: '🔔', name: '賽夏臀鈴' },
-            25: { icon: '🌉', name: '清泉吊橋' },
-            26: { icon: '💡', name: '夏夜螢火蟲' },
-            27: { icon: '🛖', name: '傳統竹屋' },
-            28: { icon: '👣', name: '古道遺跡' },
-            29: { icon: '🍵', name: '高山冷茶' },
-            30: { icon: '🌄', name: '觀霧日出' }
+        const PEGASUS_MAP = {
+            photo: { label: '山林寫真', points: [{x:85, y:18}, {x:92, y:25}, {x:85, y:30}, {x:80, y:25}] },
+            soul: { label: '靈魂對話', points: [{x:78, y:32}, {x:72, y:40}, {x:68, y:45}] },
+            magic: { label: '奇蹟與魔法', points: [{x:55, y:40}, {x:45, y:25}, {x:35, y:15}, {x:25, y:20}, {x:35, y:30}] },
+            cloud: { label: '雲上生活', points: [{x:65, y:48}, {x:50, y:50}, {x:45, y:60}, {x:60, y:62}] },
+            explore: { label: '秘密探索', points: [{x:68, y:65}, {x:75, y:75}, {x:85, y:70}, {x:82, y:80}] },
+            social: { label: '營火微光', points: [{x:40, y:65}, {x:30, y:75}, {x:35, y:85}, {x:25, y:82}] },
+            social_share: { label: '雲端寄情', points: [{x:35, y:55}, {x:25, y:52}, {x:15, y:58}, {x:20, y:68}] }
         };
 
-        // --- Sound Manager Class ---
+        const WUFENG_ELEMENTS = {
+            1: { icon: '🦌', name: '山羌' }, 2: { icon: '🐗', name: '山豬' }, 3: { icon: '🦦', name: '黃猴貂' },
+            4: { icon: '⛰️', name: '五峰連稜' }, 5: { icon: '🌸', name: '緋寒櫻' }, 6: { icon: '🍁', name: '霞喀羅楓紅' },
+            7: { icon: '♨️', name: '清泉溫泉' }, 8: { icon: '☁️', name: '山谷雲海' }, 9: { icon: '🌾', name: '原民小米' },
+            10: { icon: '🍶', name: '小米酒' }, 11: { icon: '🐻', name: '台灣黑熊' }, 12: { icon: '🎋', name: '桂竹筍' },
+            13: { icon: '🍄', name: '段木香菇' }, 14: { icon: '✨', name: '高山星空' }, 15: { icon: '🌫️', name: '山林迷霧' },
+            16: { icon: '🌳', name: '肖楠巨木' }, 17: { icon: '🦉', name: '貓頭鷹' }, 18: { icon: '🌿', name: '馬告' },
+            19: { icon: '🏞️', name: '上坪溪流' }, 20: { icon: '🐾', name: '穿山甲足跡' }, 21: { icon: '🐦', name: '藍腹鷴' },
+            22: { icon: '🔥', name: '祖靈之火' }, 23: { icon: '🧶', name: '泰雅織布' }, 24: { icon: '🔔', name: '賽夏臀鈴' },
+            25: { icon: '🌉', name: '清泉吊橋' }, 26: { icon: '💡', name: '夏夜螢火蟲' }, 27: { icon: '🛖', name: '傳統竹屋' },
+            28: { icon: '👣', name: '古道遺跡' }, 29: { icon: '🍵', name: '高山冷茶' }, 30: { icon: '🌄', name: '觀霧日出' }
+        };
+
         class SoundManager {
             constructor() {
                 this.bgmAudio = document.getElementById('bgm-audio');
                 this.bgmAudio.volume = 0.5;
                 this.isEnabled = false;
                 this.ctx = new (window.AudioContext || window.webkitAudioContext)();
-                
-                this.playlist = [
-                    { id: 'forest', name: '晨間森林', icon: '🌲', url: 'https://cdn.pixabay.com/audio/2022/05/27/audio_1808fbf07a.mp3' }
-                ];
-                
+                this.playlist = [{ id: 'forest', name: '晨間森林', icon: '🌲', url: 'https://cdn.pixabay.com/audio/2022/05/27/audio_1808fbf07a.mp3' }];
                 const savedTrack = localStorage.getItem('love_hsiung_track_index');
                 this.currentTrackIndex = savedTrack ? parseInt(savedTrack) : 0;
                 if (this.currentTrackIndex >= this.playlist.length) this.currentTrackIndex = 0;
-                
                 this.bgmAudio.src = this.playlist[this.currentTrackIndex].url;
             }
-
-            enable() {
-                this.isEnabled = true;
-                this.bgmAudio.muted = false;
-                this.bgmAudio.volume = 0.5;
-                const playPromise = this.bgmAudio.play();
-                if (playPromise !== undefined) {
-                    playPromise.catch(error => console.warn("BGM Play failed.", error));
-                }
-            }
-
-            disable() {
-                this.isEnabled = false;
-                this.bgmAudio.pause();
-            }
-
-            toggle() {
-                if (this.isEnabled) this.disable();
-                else this.enable();
-                return this.isEnabled;
-            }
-            
+            enable() { this.isEnabled = true; this.bgmAudio.muted = false; this.bgmAudio.play().catch(()=>{}); }
+            disable() { this.isEnabled = false; this.bgmAudio.pause(); }
+            toggle() { if (this.isEnabled) this.disable(); else this.enable(); return this.isEnabled; }
             setTrack(index) {
                 if (index < 0 || index >= this.playlist.length) return;
                 this.currentTrackIndex = index;
                 localStorage.setItem('love_hsiung_track_index', index);
                 this.bgmAudio.src = this.playlist[index].url;
-                if (this.isEnabled) this.bgmAudio.play().catch(e => console.log(e));
+                if (this.isEnabled) this.bgmAudio.play().catch(()=>{});
                 document.dispatchEvent(new CustomEvent('trackChanged', { detail: { index: index } }));
             }
-
-            playClick() {
-                if (!this.isEnabled) return;
-                try {
-                    if (this.ctx.state === 'suspended') this.ctx.resume();
-                    const osc = this.ctx.createOscillator();
-                    const gain = this.ctx.createGain();
-                    osc.connect(gain);
-                    gain.connect(this.ctx.destination);
-                    osc.frequency.setValueAtTime(800, this.ctx.currentTime);
-                    gain.gain.setValueAtTime(0.05, this.ctx.currentTime);
-                    gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + 0.1);
-                    osc.start();
-                    osc.stop(this.ctx.currentTime + 0.1);
-                } catch(e) {}
-            }
-
-            playSuccess() {
-                if (!this.isEnabled) return;
-                try {
-                    const now = this.ctx.currentTime;
-                    [523.25, 659.25, 783.99, 1046.50].forEach((freq, i) => {
-                        const osc = this.ctx.createOscillator();
-                        const gain = this.ctx.createGain();
-                        osc.connect(gain);
-                        gain.connect(this.ctx.destination);
-                        osc.frequency.value = freq;
-                        const delay = i * 0.08;
-                        gain.gain.setValueAtTime(0, now + delay);
-                        gain.gain.linearRampToValueAtTime(0.1, now + delay + 0.05);
-                        gain.gain.exponentialRampToValueAtTime(0.001, now + delay + 1.2);
-                        osc.start(now + delay);
-                        osc.stop(now + delay + 1.2);
-                    });
-                } catch(e) {}
-            }
-
-            playReveal() {
-                if (!this.isEnabled) return;
-                try {
-                    const osc = this.ctx.createOscillator();
-                    const gain = this.ctx.createGain();
-                    osc.connect(gain);
-                    gain.connect(this.ctx.destination);
-                    const now = this.ctx.currentTime;
-                    osc.frequency.setValueAtTime(400, now);
-                    osc.frequency.exponentialRampToValueAtTime(1200, now + 0.6);
-                    gain.gain.setValueAtTime(0.05, now);
-                    gain.gain.linearRampToValueAtTime(0, now + 0.6);
-                    osc.start();
-                    osc.stop(now + 0.6);
-                } catch(e) {}
-            }
+            playClick() { if (this.isEnabled && this.ctx.state !== 'suspended') { const o=this.ctx.createOscillator(),g=this.ctx.createGain();o.connect(g);g.connect(this.ctx.destination);o.frequency.setValueAtTime(800,this.ctx.currentTime);g.gain.setValueAtTime(0.05,this.ctx.currentTime);g.gain.exponentialRampToValueAtTime(0.001,this.ctx.currentTime+0.1);o.start();o.stop(this.ctx.currentTime+0.1); } else if(this.isEnabled) this.ctx.resume(); }
+            playSuccess() { if (this.isEnabled) { const now=this.ctx.currentTime;[523.25,659.25,783.99,1046.50].forEach((f,i)=>{const o=this.ctx.createOscillator(),g=this.ctx.createGain();o.connect(g);g.connect(this.ctx.destination);o.frequency.value=f;g.gain.setValueAtTime(0,now+i*0.08);g.gain.linearRampToValueAtTime(0.1,now+i*0.08+0.05);g.gain.exponentialRampToValueAtTime(0.001,now+i*0.08+1.2);o.start(now+i*0.08);o.stop(now+i*0.08+1.2);}); } }
+            playReveal() { if (this.isEnabled) { const o=this.ctx.createOscillator(),g=this.ctx.createGain();o.connect(g);g.connect(this.ctx.destination);const n=this.ctx.currentTime;o.frequency.setValueAtTime(400,n);o.frequency.exponentialRampToValueAtTime(1200,n+0.6);g.gain.setValueAtTime(0.05,n);g.gain.linearRampToValueAtTime(0,n+0.6);o.start();o.stop(n+0.6); } }
         }
 
-        // --- Tutorial Manager Class ---
         class TutorialManager {
             constructor() {
                 this.steps = [
@@ -1043,167 +788,80 @@
                     { id: 'music', target: 'music-menu-btn', title: '森林樂章', desc: '點擊此處可切換背景音樂，包含蟲鳴、營火等大自然聲音，提升露營氛圍。', pos: 'bottom' },
                     { id: 'scenic', target: 'toggle-scenic-btn', title: '靜享山林', desc: '想專心欣賞風景嗎？點擊眼睛圖示可暫時隱藏所有介面。', pos: 'bottom' }
                 ];
-                this.currentStep = 0;
-                this.isActive = false;
-                
-                this.overlay = document.getElementById('tutorial-overlay');
+                this.currentStep = 0; this.isActive = false;
                 this.card = document.getElementById('tutorial-card');
                 this.title = document.getElementById('tut-title');
                 this.desc = document.getElementById('tut-desc');
-                this.dotsContainer = document.getElementById('tut-dots');
-                this.btnNext = document.getElementById('tut-next');
-                this.btnSkip = document.getElementById('tut-skip');
-
-                this.btnNext.onclick = () => this.next();
-                this.btnSkip.onclick = () => this.end();
+                this.dots = document.getElementById('tut-dots');
+                document.getElementById('tut-next').onclick = () => this.next();
+                document.getElementById('tut-skip').onclick = () => this.end();
             }
-
-            start() {
-                this.isActive = true;
-                this.currentStep = 0;
-                document.body.classList.add('tutorial-active');
-                this.renderStep();
-                soundManager.playClick();
-            }
-
-            end() {
-                this.isActive = false;
-                document.body.classList.remove('tutorial-active');
-                this.clearHighlight();
-                localStorage.setItem('love_hsiung_tutorial_seen', 'true');
-                soundManager.playClick();
-            }
-
-            next() {
-                soundManager.playClick();
-                if (this.currentStep < this.steps.length - 1) {
-                    this.currentStep++;
-                    this.renderStep();
-                } else {
-                    this.end();
-                }
-            }
-
-            clearHighlight() {
-                document.querySelectorAll('.tutorial-highlight').forEach(el => {
-                    el.classList.remove('tutorial-highlight');
-                });
-                const actionArea = document.getElementById('main-action-area');
-                if (actionArea) actionArea.style.zIndex = '';
-            }
-
+            start() { this.isActive=true; this.currentStep=0; document.body.classList.add('tutorial-active'); this.renderStep(); soundManager.playClick(); }
+            end() { this.isActive=false; document.body.classList.remove('tutorial-active'); this.clearHighlight(); localStorage.setItem('love_hsiung_tutorial_seen','true'); soundManager.playClick(); }
+            next() { soundManager.playClick(); if (this.currentStep < this.steps.length - 1) { this.currentStep++; this.renderStep(); } else this.end(); }
+            clearHighlight() { document.querySelectorAll('.tutorial-highlight').forEach(el=>el.classList.remove('tutorial-highlight')); document.getElementById('main-action-area').style.zIndex=''; }
             renderStep() {
-                this.clearHighlight();
-                const step = this.steps[this.currentStep];
-                this.title.innerText = step.title;
-                this.desc.innerText = step.desc;
-                this.btnNext.innerText = this.currentStep === this.steps.length - 1 ? '開始探險' : '下一步';
+                this.clearHighlight(); const step = this.steps[this.currentStep];
+                this.title.innerText = step.title; this.desc.innerText = step.desc;
+                document.getElementById('tut-next').innerText = this.currentStep === this.steps.length - 1 ? '開始探險' : '下一步';
                 this.card.className = `tutorial-card position-${step.pos}`;
-
-                if (step.target) {
-                    const el = document.getElementById(step.target);
-                    if (el) {
-                        el.classList.add('tutorial-highlight');
-                        if (step.target === 'open-missions-btn') {
-                             document.getElementById('main-action-area').style.zIndex = '70';
-                        }
-                        el.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                    }
-                }
-                this.dotsContainer.innerHTML = this.steps.map((_, i) => 
-                    `<div class="dot-indicator ${i === this.currentStep ? 'active' : ''}"></div>`
-                ).join('');
+                if (step.target) { const el = document.getElementById(step.target); if(el) { el.classList.add('tutorial-highlight'); if(step.target==='open-missions-btn') document.getElementById('main-action-area').style.zIndex='70'; el.scrollIntoView({behavior:'smooth',block:'center'}); } }
+                this.dots.innerHTML = this.steps.map((_, i) => `<div class="dot-indicator ${i === this.currentStep ? 'active' : ''}"></div>`).join('');
             }
-
-            checkFirstTime() {
-                if (!localStorage.getItem('love_hsiung_tutorial_seen')) {
-                    setTimeout(() => this.start(), 800);
-                }
-            }
+            checkFirstTime() { if (!localStorage.getItem('love_hsiung_tutorial_seen')) setTimeout(() => this.start(), 800); }
         }
 
         const soundManager = new SoundManager();
         const tutorialManager = new TutorialManager();
 
         const CATEGORIES = {
-            cloud: { label: '雲上生活', icon: '☁️', color: 'text-sky-400', border: 'border-sky-400/20' },
-            photo: { label: '山林寫真', icon: '📸', color: 'text-indigo-400', border: 'border-indigo-400/20' },
-            social_share: { label: '雲端寄情', icon: '💌', color: 'text-pink-400', border: 'border-pink-400/20' },
-            explore: { label: '秘密探索', icon: '🗺️', color: 'text-emerald-400', border: 'border-emerald-400/20' },
-            social: { label: '營火微光', icon: '🔥', color: 'text-orange-400', border: 'border-orange-400/20' },
-            soul: { label: '靈魂對話', icon: '🌲', color: 'text-purple-400', border: 'border-purple-400/20' },
-            magic: { label: '奇蹟魔法', icon: '✨', color: 'text-amber-400', border: 'border-amber-400/20' }
-        };
-        
-        // Define Pastel Themes for Daylight Scrapbook
-        const PASTEL_THEMES = {
-            cloud: 'from-sky-100 to-sky-200 border-sky-300 text-sky-800',
-            photo: 'from-rose-100 to-rose-200 border-rose-300 text-rose-800',
-            social_share: 'from-pink-100 to-pink-200 border-pink-300 text-pink-800',
-            explore: 'from-emerald-100 to-emerald-200 border-emerald-300 text-emerald-800',
-            social: 'from-orange-100 to-orange-200 border-orange-300 text-orange-800',
-            soul: 'from-indigo-100 to-indigo-200 border-indigo-300 text-indigo-800',
-            magic: 'from-purple-100 to-purple-200 border-purple-300 text-purple-800'
+            cloud: { label: '雲上生活', icon: '☁️' }, photo: { label: '山林寫真', icon: '📸' },
+            social_share: { label: '雲端寄情', icon: '💌' }, explore: { label: '秘密探索', icon: '🗺️' },
+            social: { label: '營火微光', icon: '🔥' }, soul: { label: '靈魂對話', icon: '🌲' },
+            magic: { label: '奇蹟魔法', icon: '✨' }
         };
 
         const MEMORY_LIST = [
-            { id: 'food_dinner', category: 'cloud', title: '🍽️ 晚餐：光盤行動 (★★)', type: 'staff_number', difficulty: 2, success_text: '感謝你對大地的溫柔，這份珍惜化為了...' },
-            { id: 'food_breakfast', category: 'cloud', title: '🥣 早餐：活力滿滿 (★)', type: 'staff_number', difficulty: 1, success_text: '晨光喚醒了味蕾，這份活力化為了...' },
-            { id: 'activity_archery', category: 'cloud', title: '🏹 獵人射箭體驗 (★★★)', type: 'staff_number', difficulty: 3, success_text: '如鷹一般的專注眼神，被山林銘記為...' },
-            { id: 'gold_boss', category: 'cloud', title: '🌟 黃金任務：營主大挑戰 (★★★)', type: 'user_choice', difficulty: 3, success_text: '你觸動了山神的奇蹟，這份榮耀化為了...' },
-            { id: 'life_chill', category: 'cloud', title: '🍹 在天幕下喝杯茶 (★)', type: 'code_draw', difficulty: 1, success_text: '茶香與風共舞，這份悠閒化為了...' },
-            { id: 'view_cloud', category: 'photo', title: '📸 雲海觀景台合照 (★★)', type: 'code_draw', difficulty: 2, success_text: '你收藏了雲海的呼吸，這片刻永恆化為了...' },
-            { id: 'photo_flower', category: 'photo', title: '🌸 拍下營區最美的花 (★)', type: 'code_draw', difficulty: 1, success_text: '花朵因你的注視而綻放，這份美麗化為了...' },
-            { id: 'photo_smile', category: 'photo', title: '😊 拍一張最燦爛的笑容 (★)', type: 'code_draw', difficulty: 1, success_text: '笑容是世界上最美的風景，這份快樂化為了...' },
-            { id: 'photo_group', category: 'photo', title: '👥 邀請路人幫拍合照 (★★)', type: 'code_draw', difficulty: 2, success_text: '定格了相聚的緣分，這張照片化為了...' },
-            
-            // 💌 第五章：雲端寄情 (Cloud Sentiment)
-            { id: 'share_story', category: 'social_share', title: '📱 寄出一張雲端明信片 (IG/FB限動) (★)', type: 'user_choice', difficulty: 1, success_text: '訊號穿越了雲層，這份分享化為了...' },
-            { id: 'share_checkin', category: 'social_share', title: '📍 在雲端地圖留下足跡 (打卡) (★)', type: 'user_choice', difficulty: 1, success_text: '足跡刻畫在數位地圖，這份紀錄化為了...' },
-            { id: 'share_review', category: 'social_share', title: '🌟 點亮夜空中的第五顆星 (Google好評) (★★★)', type: 'user_choice', difficulty: 3, success_text: '你的文字是最好的推薦，這份肯定化為了...' },
-            { id: 'share_tag', category: 'social_share', title: '🏷️ 寄送一份雲端邀約 (標記好友) (★★)', type: 'user_choice', difficulty: 2, success_text: '遺憾是為了下次的相遇，這份邀約化為了...' },
-            { id: 'share_line', category: 'social_share', title: '💬 傳送來自高山的問候 (傳照片給家人) (★)', type: 'user_choice', difficulty: 1, success_text: '遠方的牽掛收到了平安，這份報信化為了...' },
-            
-            { id: 'explore_star', category: 'explore', title: '🌌 找到夜空中最亮那顆星 (★)', type: 'code_draw', difficulty: 1, success_text: '星光穿越光年而來，只為點亮你的...' },
-            { id: 'explore_bird', category: 'explore', title: '🐦 錄下一段鳥叫聲 (★)', type: 'code_draw', difficulty: 1, success_text: '森林歌手為你獻唱，這首旋律化為了...' },
-            { id: 'explore_barefoot', category: 'explore', title: '🦶 赤腳踩在草地上 (★)', type: 'code_draw', difficulty: 1, success_text: '大地電流穿透腳心，這份連結化為了...' },
-            { id: 'explore_tree', category: 'explore', title: '🌳 擁抱一棵大樹 10 秒 (★★★)', type: 'code_draw', difficulty: 3, success_text: '老樹傳遞了百年的智慧，這份力量化為了...' },
-            { id: 'explore_insect', category: 'explore', title: '🐞 觀察一隻小昆蟲 (★)', type: 'code_draw', difficulty: 1, success_text: '微小的生命也有大大的世界，這份觀察化為了...' },
-            { id: 'social_hi', category: 'social', title: '👋 跟隔壁帳篷打招呼 (★)', type: 'user_choice', difficulty: 1, success_text: '微笑是最好的語言，這份友誼化為了...' },
-            { id: 'social_staff', category: 'social', title: '❤️ 跟工作人員說聲辛苦了 (★★)', type: 'staff_number', difficulty: 2, success_text: '你的體貼溫暖了人心，這份善意化為了...' },
-            { id: 'social_snack', category: 'social', title: '🍪 分享零食給新朋友 (★★)', type: 'user_choice', difficulty: 2, success_text: '分享讓快樂加倍，這份慷慨化為了...' },
-            { id: 'social_highfive', category: 'social', title: '✋ 跟管家擊掌 High Five (★)', type: 'staff_number', difficulty: 1, success_text: '清脆的掌聲響徹山林，這份熱情化為了...' },
-            { id: 'social_cheers', category: 'social', title: '🍻 舉杯慶祝這一刻 (★)', type: 'user_choice', difficulty: 1, success_text: '乾杯的聲音是快樂的樂章，這份慶祝化為了...' },
-            { id: 'deep_shout', category: 'soul', title: '🌲 對著大山喊出煩惱 (★★)', type: 'code_draw', difficulty: 2, success_text: '山谷接納了你的秘密，回音化為了祝福...' },
-            { id: 'deep_letter', category: 'soul', title: '✍️ 寫給明年自己的一句話 (★★★)', type: 'user_choice', difficulty: 3, success_text: '時光膠囊已封存，這份期許化為了...' },
-            { id: 'deep_meditate', category: 'soul', title: '🧘 在樹下閉眼發呆 (★)', type: 'code_draw', difficulty: 1, success_text: '在寧靜中找回了頻率，這份平靜化為了...' },
-            { id: 'deep_secret', category: 'soul', title: '🤫 跟旅伴分享一個秘密 (★★★)', type: 'user_choice', difficulty: 3, success_text: '信任是靈魂的擁抱，這份親密化為了...' },
-            { id: 'deep_thank', category: 'soul', title: '🙏 在心裡感謝一個人 (★)', type: 'code_draw', difficulty: 1, success_text: '感恩的心會發光，這份謝意化為了...' },
-            { id: 'magic_potion', category: 'magic', title: '🍷 品嚐一瓶魔法藥水 (購買紅/白酒) (★★★★)', type: 'staff_number', difficulty: 4, success_text: '微醺是通往魔法世界的鑰匙，這份陶醉化為了...' },
-            { id: 'magic_alchemy', category: 'magic', title: '💎 發動山林煉金術 (營本部消費滿500) (★★★★)', type: 'staff_number', difficulty: 4, success_text: '能量交換產生了奇蹟，這份豪氣化為了...' },
-            { id: 'magic_bard', category: 'magic', title: '🎤 吟唱古老的歌謠 (在櫃檯高歌一曲) (★★★★)', type: 'staff_number', difficulty: 4, success_text: '歌聲喚醒了沉睡的精靈，這份勇氣化為了...' },
-            { id: 'magic_dance', category: 'magic', title: '💃 獻上一支精靈之舞 (跳舞給管家看) (★★★)', type: 'staff_number', difficulty: 3, success_text: '舞姿擾動了風的流向，這份動感化為了...' },
-            { id: 'magic_spell', category: 'magic', title: '💖 唸出愛的召喚咒 (大喊老闆我愛你) (★★★)', type: 'staff_number', difficulty: 3, success_text: '強大的咒語震動了山谷，這份告白化為了...' }
+            { id: 'food_dinner', category: 'cloud', title: '🍽️ 晚餐：光盤行動 (★★)', type: 'staff_number', difficulty: 2, success_text: '感謝你對大地的溫柔...' },
+            { id: 'food_breakfast', category: 'cloud', title: '🥣 早餐：活力滿滿 (★)', type: 'staff_number', difficulty: 1, success_text: '晨光喚醒了味蕾...' },
+            { id: 'activity_archery', category: 'cloud', title: '🏹 獵人射箭體驗 (★★★)', type: 'staff_number', difficulty: 3, success_text: '如鷹一般的專注眼神...' },
+            { id: 'gold_boss', category: 'cloud', title: '🌟 黃金任務：營主大挑戰 (★★★)', type: 'user_choice', difficulty: 3, success_text: '你觸動了山神的奇蹟...' },
+            { id: 'life_chill', category: 'cloud', title: '🍹 在天幕下喝杯茶 (★)', type: 'code_draw', difficulty: 1, success_text: '茶香與風共舞...' },
+            { id: 'view_cloud', category: 'photo', title: '📸 雲海觀景台合照 (★★)', type: 'code_draw', difficulty: 2, success_text: '你收藏了雲海的呼吸...' },
+            { id: 'photo_flower', category: 'photo', title: '🌸 拍下營區最美的花 (★)', type: 'code_draw', difficulty: 1, success_text: '花朵因你的注視而綻放...' },
+            { id: 'photo_smile', category: 'photo', title: '😊 拍一張最燦爛的笑容 (★)', type: 'code_draw', difficulty: 1, success_text: '笑容是世界上最美的風景...' },
+            { id: 'photo_group', category: 'photo', title: '👥 邀請路人幫拍合照 (★★)', type: 'code_draw', difficulty: 2, success_text: '定格了相聚的緣分...' },
+            { id: 'share_story', category: 'social_share', title: '📱 寄出一張雲端明信片 (IG/FB限動) (★)', type: 'user_choice', difficulty: 1, success_text: '訊號穿越了雲層...' },
+            { id: 'share_checkin', category: 'social_share', title: '📍 在雲端地圖留下足跡 (打卡) (★)', type: 'user_choice', difficulty: 1, success_text: '足跡刻畫在數位地圖...' },
+            { id: 'share_review', category: 'social_share', title: '🌟 點亮夜空中的第五顆星 (Google好評) (★★★)', type: 'user_choice', difficulty: 3, success_text: '你的文字是最好的推薦...' },
+            { id: 'share_tag', category: 'social_share', title: '🏷️ 寄送一份雲端邀約 (標記好友) (★★)', type: 'user_choice', difficulty: 2, success_text: '遺憾是為了下次的相遇...' },
+            { id: 'share_line', category: 'social_share', title: '💬 傳送來自高山的問候 (傳照片給家人) (★)', type: 'user_choice', difficulty: 1, success_text: '遠方的牽掛收到了平安...' },
+            { id: 'explore_star', category: 'explore', title: '🌌 找到夜空中最亮那顆星 (★)', type: 'code_draw', difficulty: 1, success_text: '星光穿越光年而來...' },
+            { id: 'explore_bird', category: 'explore', title: '🐦 錄下一段鳥叫聲 (★)', type: 'code_draw', difficulty: 1, success_text: '森林歌手為你獻唱...' },
+            { id: 'explore_barefoot', category: 'explore', title: '🦶 赤腳踩在草地上 (★)', type: 'code_draw', difficulty: 1, success_text: '大地電流穿透腳心...' },
+            { id: 'explore_tree', category: 'explore', title: '🌳 擁抱一棵大樹 10 秒 (★★★)', type: 'code_draw', difficulty: 3, success_text: '老樹傳遞了百年的智慧...' },
+            { id: 'explore_insect', category: 'explore', title: '🐞 觀察一隻小昆蟲 (★)', type: 'code_draw', difficulty: 1, success_text: '微小的生命也有大大的世界...' },
+            { id: 'social_hi', category: 'social', title: '👋 跟隔壁帳篷打招呼 (★)', type: 'user_choice', difficulty: 1, success_text: '微笑是最好的語言...' },
+            { id: 'social_staff', category: 'social', title: '❤️ 跟工作人員說聲辛苦了 (★★)', type: 'staff_number', difficulty: 2, success_text: '你的體貼溫暖了人心...' },
+            { id: 'social_snack', category: 'social', title: '🍪 分享零食給新朋友 (★★)', type: 'user_choice', difficulty: 2, success_text: '分享讓快樂加倍...' },
+            { id: 'social_highfive', category: 'social', title: '✋ 跟管家擊掌 High Five (★)', type: 'staff_number', difficulty: 1, success_text: '清脆的掌聲響徹山林...' },
+            { id: 'social_cheers', category: 'social', title: '🍻 舉杯慶祝這一刻 (★)', type: 'user_choice', difficulty: 1, success_text: '乾杯的聲音是快樂的樂章...' },
+            { id: 'deep_shout', category: 'soul', title: '🌲 對著大山喊出煩惱 (★★)', type: 'code_draw', difficulty: 2, success_text: '山谷接納了你的秘密...' },
+            { id: 'deep_letter', category: 'soul', title: '✍️ 寫給明年自己的一句話 (★★★)', type: 'user_choice', difficulty: 3, success_text: '時光膠囊已封存...' },
+            { id: 'deep_meditate', category: 'soul', title: '🧘 在樹下閉眼發呆 (★)', type: 'code_draw', difficulty: 1, success_text: '在寧靜中找回了頻率...' },
+            { id: 'deep_secret', category: 'soul', title: '🤫 跟旅伴分享一個秘密 (★★★)', type: 'user_choice', difficulty: 3, success_text: '信任是靈魂的擁抱...' },
+            { id: 'deep_thank', category: 'soul', title: '🙏 在心裡感謝一個人 (★)', type: 'code_draw', difficulty: 1, success_text: '感恩的心會發光...' },
+            { id: 'magic_potion', category: 'magic', title: '🍷 品嚐一瓶魔法藥水 (購買紅/白酒) (★★★★)', type: 'staff_number', difficulty: 4, success_text: '微醺是通往魔法世界的鑰匙...' },
+            { id: 'magic_alchemy', category: 'magic', title: '💎 發動山林煉金術 (營本部消費滿500) (★★★★)', type: 'staff_number', difficulty: 4, success_text: '能量交換產生了奇蹟...' },
+            { id: 'magic_bard', category: 'magic', title: '🎤 吟唱古老的歌謠 (在櫃檯高歌一曲) (★★★★)', type: 'staff_number', difficulty: 4, success_text: '歌聲喚醒了沉睡的精靈...' },
+            { id: 'magic_dance', category: 'magic', title: '💃 獻上一支精靈之舞 (跳舞給管家看) (★★★)', type: 'staff_number', difficulty: 3, success_text: '舞姿擾動了風的流向...' },
+            { id: 'magic_spell', category: 'magic', title: '💖 唸出愛的召喚咒 (大喊老闆我愛你) (★★★)', type: 'staff_number', difficulty: 3, success_text: '強大的咒語震動了山谷...' }
         ];
 
         const CONFIG = { gridSize: 25, numberRange: 30, storageKey: 'love_hsiung_bingo_v11_final' };
+        const BINGO_PATTERNS = [ [0,1,2,3,4], [5,6,7,8,9], [10,11,12,13,14], [15,16,17,18,19], [20,21,22,23,24], [0,5,10,15,20], [1,6,11,16,21], [2,7,12,17,22], [3,8,13,18,23], [4,9,14,19,24], [0,6,12,18,24], [4,8,12,16,20] ];
 
-        const BINGO_PATTERNS = [
-            [0,1,2,3,4], [5,6,7,8,9], [10,11,12,13,14], [15,16,17,18,19], [20,21,22,23,24], // Rows
-            [0,5,10,15,20], [1,6,11,16,21], [2,7,12,17,22], [3,8,13,18,23], [4,9,14,19,24], // Cols
-            [0,6,12,18,24], [4,8,12,16,20] // Diagonals
-        ];
-
-        let state = { 
-            grid: [], 
-            markedIndices: [], 
-            completedMissions: [], 
-            isSelectionMode: false, 
-            claimedLines: 0, 
-            currentFilter: 'all', 
-            currentView: 'missions',
-            completedLinePatterns: [] // Indices of BINGO_PATTERNS already completed
-        };
+        let state = { grid: [], markedIndices: [], completedMissions: [], isSelectionMode: false, claimedLines: 0, currentFilter: 'all', currentView: 'list', completedLinePatterns: [] };
         let currentMission = null;
 
         const els = {
@@ -1212,7 +870,7 @@
             totalLines: document.getElementById('total-lines'),
             modalMissions: document.getElementById('mission-modal'),
             missionContent: document.getElementById('mission-content'),
-            missionList: document.getElementById('mission-list-container'),
+            missionList: document.getElementById('mission-grid'),
             categoryFilter: document.getElementById('category-filter-container'),
             modalInput: document.getElementById('input-modal'),
             modalResult: document.getElementById('result-modal'),
@@ -1232,7 +890,6 @@
             exitScenic: document.getElementById('exit-scenic-btn'),
             splashScreen: document.getElementById('splash-screen'),
             splashStartBtn: document.getElementById('splash-start-btn'),
-            audioStatus: document.getElementById('audio-status'),
             musicMenuBtn: document.getElementById('music-menu-btn'),
             modalMusic: document.getElementById('music-modal'),
             closeMusicBtn: document.getElementById('close-music-btn'),
@@ -1244,84 +901,59 @@
             bonfireWrapper: document.getElementById('bonfire-wrapper'),
             projectile: document.getElementById('pinecone-projectile'),
             bonfireResultMsg: document.getElementById('bonfire-result-msg'),
-            toast: document.getElementById('bingo-toast')
+            toast: document.getElementById('bingo-toast'),
+            tabMissions: document.getElementById('tab-missions'),
+            tabGuide: document.getElementById('tab-guide'),
+            viewTaskList: document.getElementById('view-task-list'),
+            viewStarMap: document.getElementById('view-star-map'),
+            pegasusTooltip: document.getElementById('pegasus-tooltip'),
+            svgMapWrapper: document.getElementById('svg-map-wrapper'),
+            certificateView: document.getElementById('certificate-view')
         };
 
         function saveState() { localStorage.setItem(CONFIG.storageKey, JSON.stringify(state)); }
-        
         function loadState() {
             const saved = localStorage.getItem(CONFIG.storageKey);
             if (saved) {
                 state = JSON.parse(saved);
                 if (!state.completedLinePatterns) state.completedLinePatterns = [];
-                renderGrid();
-                updateStats();
+                if (!state.currentView) state.currentView = 'list';
+                renderGrid(); updateStats();
             }
         }
 
-        // --- NEW: JS Particle System for Stars ---
         function generateStarParticles(container) {
-            const starCount = 20 + Math.floor(Math.random() * 15); // 20 to 35 stars for density
+            const starCount = 20 + Math.floor(Math.random() * 15);
             for (let i = 0; i < starCount; i++) {
                 const star = document.createElement('div');
                 star.classList.add('particle-star');
-                
-                // Randomize attributes
-                const size = 1 + Math.random() * 2.5; // 1px to 3.5px
-                const left = Math.random() * 100;
-                const top = Math.random() * 80; // Keep mostly in upper 80% (sky)
-                const duration = 1.5 + Math.random() * 2.5; // 1.5s to 4s
-                const delay = Math.random() * 3; // 0s to 3s delay
-
-                star.style.width = `${size}px`;
-                star.style.height = `${size}px`;
-                star.style.left = `${left}%`;
-                star.style.top = `${top}%`;
-                star.style.animationDuration = `${duration}s`;
-                star.style.animationDelay = `${delay}s`;
-
+                const size = 1 + Math.random() * 2.5;
+                const left = Math.random() * 100; const top = Math.random() * 80;
+                star.style.width = `${size}px`; star.style.height = `${size}px`;
+                star.style.left = `${left}%`; star.style.top = `${top}%`;
+                star.style.animationDuration = `${1.5 + Math.random() * 2.5}s`;
+                star.style.animationDelay = `${Math.random() * 3}s`;
                 container.appendChild(star);
             }
         }
 
         function renderGrid() {
             els.grid.innerHTML = '';
-            
-            // Collect all indices that are part of completed patterns
             const glowIndices = new Set();
-            state.completedLinePatterns.forEach(idx => {
-                BINGO_PATTERNS[idx].forEach(cellIdx => glowIndices.add(cellIdx));
-            });
+            state.completedLinePatterns.forEach(idx => BINGO_PATTERNS[idx].forEach(cellIdx => glowIndices.add(cellIdx)));
 
             state.grid.forEach((num, index) => {
                 const isMarked = state.markedIndices.includes(index);
                 const isGlow = glowIndices.has(index);
-                
                 const div = document.createElement('div');
                 div.className = `memory-frame flex flex-col items-center justify-center relative select-none ${isMarked ? 'collected' : ''} ${isGlow ? 'bingo-line-glow' : ''}`;
-                
-                const contentHtml = `
-                    <div class="cell-content flex items-center justify-center w-full h-full z-10">
-                        <span class="bingo-number text-4xl font-bold font-serif transition-all duration-300">${num}</span>
-                    </div>
-                `;
-
-                div.innerHTML = contentHtml;
-                
-                // If collected, generate dynamic stars layer
+                div.innerHTML = `<div class="cell-content flex items-center justify-center w-full h-full z-10"><span class="bingo-number text-4xl font-bold font-serif transition-all duration-300">${num}</span></div>`;
                 if (isMarked) {
                     const starLayer = document.createElement('div');
-                    starLayer.style.position = 'absolute';
-                    starLayer.style.inset = '0';
-                    starLayer.style.zIndex = '1'; // Behind mountains (z=2) but above bg
-                    starLayer.style.pointerEvents = 'none';
-                    generateStarParticles(starLayer);
-                    div.appendChild(starLayer);
+                    starLayer.style.position = 'absolute'; starLayer.style.inset = '0'; starLayer.style.zIndex = '1'; starLayer.style.pointerEvents = 'none';
+                    generateStarParticles(starLayer); div.appendChild(starLayer);
                 }
-                
-                if (!isMarked && state.isSelectionMode) {
-                    div.onclick = () => handleUserSelection(index);
-                }
+                if (!isMarked && state.isSelectionMode) div.onclick = () => handleUserSelection(index);
                 els.grid.appendChild(div);
             });
             document.getElementById('selection-banner').classList.toggle('hidden', !state.isSelectionMode);
@@ -1332,205 +964,208 @@
             BINGO_PATTERNS.forEach((pattern, idx) => {
                 if (!state.completedLinePatterns.includes(idx)) {
                     if (pattern.every(cellIdx => state.markedIndices.includes(cellIdx))) {
-                        state.completedLinePatterns.push(idx);
-                        newLinesFound = true;
+                        state.completedLinePatterns.push(idx); newLinesFound = true;
                     }
                 }
             });
-
-            if (newLinesFound) {
-                fireConfetti();
-                showBingoToast();
-                renderGrid(); // Redraw to show the glow effects
-                saveState();
-                updateStats();
-            }
+            if (newLinesFound) { fireConfetti(); showBingoToast(); renderGrid(); saveState(); updateStats(); }
         }
 
-        function fireConfetti() {
-            confetti({
-                particleCount: 150,
-                spread: 70,
-                origin: { y: 0.6 },
-                colors: ['#FFD700', '#FFFFFF', '#1E3A8A'],
-                zIndex: 9999
-            });
-            soundManager.playSuccess();
-        }
-
-        function showBingoToast() {
-            els.toast.classList.add('active');
-            setTimeout(() => {
-                els.toast.classList.remove('active');
-            }, 3000);
-        }
-
+        function fireConfetti() { confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 }, colors: ['#FFD700', '#FFFFFF', '#1E3A8A'], zIndex: 9999 }); soundManager.playSuccess(); }
+        function showBingoToast() { els.toast.classList.add('active'); setTimeout(() => els.toast.classList.remove('active'), 3000); }
         function updateStats() {
             els.progress.innerText = state.markedIndices.length;
-            const lines = state.completedLinePatterns.length;
-            els.totalLines.innerText = lines;
-            const pinecones = Math.max(0, lines - (state.claimedLines || 0));
+            els.totalLines.innerText = state.completedLinePatterns.length;
+            const pinecones = Math.max(0, state.completedLinePatterns.length - (state.claimedLines || 0));
             document.getElementById('pinecones-available').innerText = pinecones;
             document.getElementById('enter-bonfire-btn').classList.toggle('hidden', pinecones <= 0);
         }
 
-        // --- Rest of UI Rendering & Logic ---
-        function renderMissionList() {
-            els.missionList.innerHTML = '';
-            const isGuide = state.currentView === 'guide';
-            const tabMissions = document.getElementById('tab-missions');
-            const tabGuide = document.getElementById('tab-guide');
+        function switchView(viewName) {
+            state.currentView = viewName;
+            const isMap = viewName === 'map';
+            els.tabMissions.classList.toggle('active', !isMap);
+            els.tabGuide.classList.toggle('active', isMap);
+            els.viewTaskList.classList.toggle('hidden', isMap);
+            els.viewStarMap.classList.toggle('hidden', !isMap);
+            els.missionContent.classList.toggle('map-mode', isMap);
             
-            if (tabMissions && tabGuide) {
-                tabMissions.classList.toggle('active', !isGuide);
-                tabGuide.classList.toggle('active', isGuide);
-            }
+            const titleEl = document.querySelector('.mission-modal-title');
+            const subTitleEl = document.querySelector('.mission-modal-subtitle');
             
-            els.categoryFilter.querySelectorAll('.category-btn').forEach(btn => {
-                btn.classList.toggle('active', btn.dataset.category == state.currentFilter);
-            });
-            
-            const filtered = state.currentFilter === 'all' 
-                ? MEMORY_LIST 
-                : MEMORY_LIST.filter(m => m.category == state.currentFilter);
-
-            if (filtered.length === 0) {
-                els.missionList.innerHTML = `<div class="flex flex-col items-center justify-center py-12 text-slate-400"><p class="text-sm font-medium italic">此區域目前無可進行的任務</p></div>`;
-                return;
-            }
-
-            if (isGuide) {
-                // --- NEW DAYLIGHT SCRAPBOOK GUIDE ---
-                const totalCollected = state.completedMissions.length;
-                const totalMissions = MEMORY_LIST.length;
-                
-                // 1. Progress Dashboard (Light Theme)
-                const progressDiv = document.createElement('div');
-                progressDiv.className = 'bg-white rounded-xl p-4 mb-6 border-2 border-gray-100 flex items-center gap-4 shadow-sm';
-                progressDiv.innerHTML = `
-                    <div class="relative w-12 h-12 flex items-center justify-center">
-                        <svg class="absolute inset-0 w-full h-full -rotate-90" viewBox="0 0 36 36">
-                            <path class="text-gray-100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-width="3" />
-                            <path class="text-[#D4AF37]" stroke-dasharray="${(totalCollected/totalMissions)*100}, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-width="3" />
-                        </svg>
-                        <span class="text-xs font-bold text-[#5C4033]">${totalCollected}</span>
-                    </div>
-                    <div class="flex-1">
-                        <h4 class="text-[#5C4033] text-sm font-serif font-bold tracking-widest">山林手帳</h4>
-                        <p class="text-[10px] text-gray-500 mt-1">收集美好瞬間，貼滿您的旅程。</p>
-                    </div>
-                `;
-                els.missionList.appendChild(progressDiv);
-
-                // 2. Grid Layout
-                const grid = document.createElement('div');
-                grid.className = 'grid grid-cols-2 gap-3 pb-8';
-                
-                let lastCategory = '';
-                filtered.forEach(m => {
-                    // Category Header
-                    if (state.currentFilter === 'all' && m.category !== lastCategory) {
-                        lastCategory = m.category;
-                        const catConfig = CATEGORIES[m.category];
-                        const header = document.createElement('div');
-                        header.className = 'col-span-full mt-4 mb-1 flex items-center gap-3';
-                        header.innerHTML = `
-                            <div class="h-[1px] flex-1 bg-gray-200"></div>
-                            <h3 class="text-[#8B7355] font-serif font-bold text-xs tracking-[0.2em] uppercase flex items-center gap-2">
-                                <span class="text-lg opacity-80">${catConfig.icon}</span>
-                                <span>${catConfig.label}</span>
-                            </h3>
-                            <div class="h-[1px] flex-1 bg-gray-200"></div>
-                        `;
-                        grid.appendChild(header);
-                    }
-                    
-                    const isCollected = state.completedMissions.includes(m.id);
-                    const item = document.createElement('div');
-                    
-                    if (isCollected) {
-                        // UNLOCKED: Vivid Pastel Ticket
-                        const pastelClass = PASTEL_THEMES[m.category] || 'from-gray-100 to-gray-200 border-gray-300 text-gray-800';
-                        item.className = `rounded-lg p-3 flex flex-col items-center justify-center text-center bg-gradient-to-br ${pastelClass} border shadow-md relative overflow-hidden transition-transform hover:scale-105`;
-                        item.innerHTML = `
-                            <div class="absolute -bottom-2 -right-2 text-4xl opacity-10 rotate-12 pointer-events-none">✨</div>
-                            <div class="absolute top-1 right-1 text-[#2C3E50]/20 text-[10px] font-mono">#${m.id.split('_')[1].substring(0,3).toUpperCase()}</div>
-                            
-                            <div class="text-2xl mb-1 filter drop-shadow-sm">✅</div>
-                            <h4 class="font-bold text-[11px] leading-tight line-clamp-2 w-full mb-1">${m.title}</h4>
-                            <div class="flex gap-0.5 opacity-60 text-[8px]">${'★'.repeat(m.difficulty)}</div>
-                        `;
-                    } else {
-                        // LOCKED: Dashed "Empty Slot"
-                        item.className = `rounded-lg p-3 flex flex-col items-center justify-center text-center h-24 bg-gray-50 border-2 border-dashed border-gray-300`;
-                        item.innerHTML = `
-                            <div class="text-2xl mb-2 text-gray-300">🔒</div>
-                            <span class="text-gray-400 text-[10px] tracking-widest font-light">待收集</span>
-                        `;
-                    }
-                    grid.appendChild(item);
-                });
-                els.missionList.appendChild(grid);
-
+            if(isMap) {
+                titleEl.innerText = "天馬星圖";
+                subTitleEl.innerText = "PEGASUS CONSTELLATION";
+                if (els.svgMapWrapper.classList.contains('hidden')) { 
+                    // If certificate is shown, do nothing or handle re-render if needed
+                } else {
+                    renderPegasusMap(); 
+                }
             } else {
-                // --- CURRENT MISSIONS (Light Theme) ---
-                let lastCategory = '';
-                filtered.forEach(m => {
-                    if (state.currentFilter === 'all' && m.category !== lastCategory) {
-                        lastCategory = m.category;
-                        const catConfig = CATEGORIES[m.category];
-                        const header = document.createElement('div');
-                        header.className = 'mt-6 mb-3 first:mt-2';
-                        header.innerHTML = `<h3 class="text-[#8B7355] font-bold text-xs tracking-[0.2em] border-b border-[#E5E7EB] pb-2 flex items-center gap-2 uppercase"><span>${catConfig.icon}</span><span>${catConfig.label}</span></h3>`;
-                        els.missionList.appendChild(header);
-                    }
-                    const isDone = state.completedMissions.includes(m.id);
-                    const stars = '★'.repeat(m.difficulty);
-                    const cat = CATEGORIES[m.category];
-                    const card = document.createElement('div');
-                    
-                    // Card Style: Clean White with Shadow
-                    card.className = `p-4 mb-3 rounded-xl border transition-all relative overflow-hidden shadow-sm ${isDone ? 'bg-gray-100 border-gray-200 opacity-60 grayscale' : 'bg-white border-gray-100 hover:shadow-md hover:border-[#D4AF37]/30 active:scale-95'}`;
-                    
-                    card.dataset.missionId = m.id;
-                    card.innerHTML = `
-                        <div class="flex flex-col gap-3 pointer-events-none">
-                            <div class="flex justify-between items-start">
-                                <span class="px-2 py-0.5 rounded-full text-[10px] font-bold tracking-widest bg-gray-100 text-gray-600 border border-gray-200 uppercase flex items-center gap-1">
-                                    ${cat.label}
-                                </span>
-                                <span class="text-[#D4AF37] text-[10px]">${stars}</span>
-                            </div>
-                            <div class="flex items-center gap-4">
-                                <div class="w-10 h-10 flex items-center justify-center bg-[#FFFBF0] rounded-full text-xl shrink-0 border border-[#E5E7EB]">🌟</div>
-                                <div class="flex-1 min-w-0">
-                                    <h4 class="text-[#2C3E50] font-serif font-bold text-sm tracking-wide leading-relaxed">${m.title}</h4>
-                                </div>
-                                <div class="px-4 py-2 rounded-full text-[11px] font-bold shrink-0 tracking-widest shadow-md ${isDone ? 'bg-emerald-100 text-emerald-600 border border-emerald-200' : 'bg-gradient-to-r from-[#BF953F] to-[#FBF5B7] text-[#2c1810] hover:scale-105 transition-transform'}">
-                                    ${isDone ? '✓ 完成' : '驗證'}
-                                </div>
-                            </div>
-                        </div>`;
-                        
-                    if (!isDone) {
-                        card.classList.remove('pointer-events-none');
-                        card.onclick = (e) => { e.stopPropagation(); soundManager.playClick(); openInputModal(m); };
-                    }
-                    els.missionList.appendChild(card);
-                });
+                titleEl.innerText = "我的山林拾光";
+                subTitleEl.innerText = "Love Hsiung Collection";
+                renderMissionGrid();
             }
+        }
+
+        els.tabMissions.onclick = () => switchView('list');
+        els.tabGuide.onclick = () => switchView('map');
+
+        function renderMissionGrid() {
+            els.missionList.innerHTML = '';
+            els.categoryFilter.querySelectorAll('.category-btn').forEach(btn => btn.classList.toggle('active', btn.dataset.category == state.currentFilter));
+            const filtered = state.currentFilter === 'all' ? MEMORY_LIST : MEMORY_LIST.filter(m => m.category == state.currentFilter);
+            if (filtered.length === 0) { els.missionList.innerHTML = `<div class="col-span-2 flex flex-col items-center justify-center py-12 text-slate-400"><p class="text-sm font-medium italic">此區域目前無可進行的任務</p></div>`; return; }
+            filtered.forEach(m => {
+                const isDone = state.completedMissions.includes(m.id);
+                const stars = '★'.repeat(m.difficulty);
+                const cat = CATEGORIES[m.category];
+                const card = document.createElement('div');
+                card.className = `p-3 rounded-xl border flex flex-col justify-between h-32 relative overflow-hidden transition-all ${isDone ? 'bg-slate-800/50 border-slate-700 opacity-60 grayscale' : 'bg-slate-800/80 border-slate-600/50 hover:bg-slate-700 active:scale-95'}`;
+                card.dataset.missionId = m.id;
+                card.innerHTML = `<div class="flex justify-between items-start mb-1"><span class="text-xl">${cat.icon}</span><span class="text-[#D4AF37] text-[10px] tracking-tight">${stars}</span></div><h4 class="text-gray-100 font-bold text-xs leading-snug line-clamp-2 mb-2">${m.title.replace(/^[^ ]+ /, '')}</h4><div class="mt-auto"><span class="block w-full text-center py-1.5 rounded-lg text-[10px] font-bold tracking-widest ${isDone ? 'bg-emerald-900/30 text-emerald-400 border border-emerald-800' : 'bg-[#D4AF37] text-[#1a202c] shadow-lg'}">${isDone ? '✓ 完成' : '驗證'}</span></div>`;
+                if (!isDone) card.onclick = (e) => { e.stopPropagation(); soundManager.playClick(); openInputModal(m); };
+                els.missionList.appendChild(card);
+            });
+        }
+
+        function getCategoryCompletion(categoryKey) {
+             const missions = MEMORY_LIST.filter(m => m.category === categoryKey);
+             const total = missions.length;
+             const completed = missions.filter(m => state.completedMissions.includes(m.id)).length;
+             return { total, completed, isFull: total > 0 && completed === total };
+        }
+
+        function renderPegasusMap() {
+            const bgStars = document.getElementById('bg-stars');
+            const phantomGroup = document.getElementById('phantom-lines');
+            const pegasusBody = document.getElementById('pegasus-body');
+            bgStars.innerHTML = ''; phantomGroup.innerHTML = ''; pegasusBody.innerHTML = '';
+            
+            for(let i=0; i<40; i++) {
+                const c = document.createElementNS(svgNS, "circle");
+                c.setAttribute("cx", Math.random()*400); c.setAttribute("cy", Math.random()*400); c.setAttribute("r", Math.random()*1.5);
+                c.setAttribute("fill", "#FFF"); c.setAttribute("opacity", Math.random()*0.6);
+                bgStars.appendChild(c);
+            }
+
+            let allCategoriesComplete = true;
+            const SCALE = 4;
+
+            Object.keys(PEGASUS_MAP).forEach(key => {
+                const part = PEGASUS_MAP[key];
+                const points = part.points;
+                const { total, completed, isFull } = getCategoryCompletion(key);
+                if (!isFull) allCategoriesComplete = false;
+
+                if (points.length > 1) {
+                    let d = `M ${points[0].x * SCALE} ${points[0].y * SCALE}`;
+                    for(let i=1; i<points.length; i++) d += ` L ${points[i].x * SCALE} ${points[i].y * SCALE}`;
+                    const path = document.createElementNS(svgNS, "path");
+                    path.setAttribute("d", d); path.setAttribute("class", "phantom-line");
+                    phantomGroup.appendChild(path);
+                }
+
+                const partGroup = document.createElementNS(svgNS, "g");
+                partGroup.setAttribute("id", `pegasus-${key}`);
+                
+                if (isFull && points.length >= 3) {
+                     const pointString = points.map(p => `${p.x * SCALE},${p.y * SCALE}`).join(" ");
+                     const poly = document.createElementNS(svgNS, "polygon");
+                     poly.setAttribute("points", pointString); poly.setAttribute("class", "energy-shape");
+                     partGroup.appendChild(poly);
+                }
+
+                if (isFull && points.length > 1) {
+                     let d = `M ${points[0].x * SCALE} ${points[0].y * SCALE}`;
+                     for(let i=1; i<points.length; i++) d += ` L ${points[i].x * SCALE} ${points[i].y * SCALE}`;
+                     const activePath = document.createElementNS(svgNS, "path");
+                     activePath.setAttribute("d", d); activePath.setAttribute("class", "active-line");
+                     partGroup.appendChild(activePath);
+                     if (key === 'magic') partGroup.setAttribute("class", "animate-wings");
+                     if (key === 'explore' || key === 'social') partGroup.setAttribute("class", "animate-legs");
+                }
+
+                const ratio = total > 0 ? (completed / total) : 0;
+                const starsToShowCount = isFull ? points.length : Math.ceil(ratio * points.length);
+
+                points.forEach((pt, idx) => {
+                     const isUnlocked = idx < starsToShowCount;
+                     if (isUnlocked) {
+                         const circle = document.createElementNS(svgNS, "circle");
+                         circle.setAttribute("cx", pt.x * SCALE); circle.setAttribute("cy", pt.y * SCALE);
+                         circle.setAttribute("r", isFull ? 5 : 3.5);
+                         circle.setAttribute("class", "star-point star-unlocked");
+                         if (!isFull) circle.style.fill = "#FFF";
+                         circle.addEventListener('mouseenter', () => showPegasusTooltip(part.label, pt.x * SCALE, pt.y * SCALE, isFull));
+                         circle.addEventListener('mouseleave', () => els.pegasusTooltip.classList.remove('visible'));
+                         circle.addEventListener('click', (e) => { e.stopPropagation(); showPegasusTooltip(part.label, pt.x * SCALE, pt.y * SCALE, isFull); });
+                         partGroup.appendChild(circle);
+                     }
+                });
+                pegasusBody.appendChild(partGroup);
+            });
+
+            if (allCategoriesComplete) {
+                if (!pegasusBody.classList.contains('pegasus-finale-anim')) {
+                     setTimeout(() => {
+                         pegasusBody.classList.add('pegasus-finale-anim');
+                         setTimeout(() => { showCertificateView(); }, 3800);
+                     }, 500);
+                }
+            }
+        }
+        
+        function showCertificateView() {
+            els.svgMapWrapper.classList.add('hidden');
+            els.certificateView.classList.remove('hidden');
+            
+            const certificateHTML = `
+                <div class="flex flex-col items-center justify-center h-full text-center p-8 animate-fade-in bg-cover bg-center" style="background-image: url('https://images.unsplash.com/photo-1519681393784-d120267933ba?q=80&w=2070&auto=format&fit=crop');">
+                    <div class="bg-slate-900/90 backdrop-blur-xl p-8 rounded-3xl border-2 border-[#D4AF37] shadow-[0_0_50px_rgba(212,175,55,0.3)] max-w-md mx-auto">
+                        <div class="text-5xl mb-4">✨</div>
+                        <h2 class="text-3xl font-bold text-[#D4AF37] mb-2 font-serif tracking-widest">天馬騎士證書</h2>
+                        <p class="text-gray-300 text-sm mb-6 uppercase tracking-widest">2026 Love Hsiung Glamping</p>
+                        
+                        <img src="https://cdn.pixabay.com/photo/2018/03/30/17/31/pegasus-3275998_1280.png" 
+                             alt="Golden Pegasus" 
+                             class="w-64 h-auto mx-auto mb-6 filter drop-shadow-[0_0_30px_rgba(255,215,0,0.6)] hover:scale-105 transition-transform duration-700">
+                        
+                        <p class="text-indigo-200 italic mb-8 text-sm leading-relaxed">
+                            "你用星光點亮了整片山林，<br>願這份奇蹟永遠伴隨你的旅程。"
+                        </p>
+                        <button onclick="alert('📸 請截圖保存您的傳說證書！')" class="bg-gradient-to-r from-[#BF953F] to-[#FBF5B7] text-slate-900 font-bold px-8 py-3 rounded-full shadow-lg hover:shadow-[0_0_20px_gold] transition-all transform hover:-translate-y-1">
+                            📸 下載傳說
+                        </button>
+                    </div>
+                </div>
+            `;
+            
+            els.certificateView.innerHTML = certificateHTML;
+            fireConfetti();
+        }
+        
+        function showPegasusTooltip(label, cx, cy, isComplete) {
+            const container = els.viewStarMap;
+            const rect = container.getBoundingClientRect();
+            const scaleX = rect.width / 400; const scaleY = rect.height / 400;
+            const screenX = cx * scaleX; const screenY = cy * scaleY;
+            
+            els.pegasusTooltip.innerHTML = `<strong style="color:${isComplete ? '#FCD34D' : '#FFF'}">${label}</strong><br/><span class="text-[10px] text-gray-400">${isComplete ? '✨ 星座已點亮' : '🔒 收集進度中'}</span>`;
+            els.pegasusTooltip.style.left = `${screenX}px`; els.pegasusTooltip.style.top = `${screenY - 45}px`;
+            els.pegasusTooltip.style.transform = `translateX(-50%)`; els.pegasusTooltip.classList.add('visible');
         }
 
         function openModal(modal) {
             modal.classList.remove('hidden');
             const content = modal.querySelector('.modal-enter');
             setTimeout(() => { modal.classList.remove('opacity-0'); if (content) content.classList.add('modal-enter-active'); }, 10);
+            if(modal === els.modalMissions) switchView('list');
         }
 
         function closeModal(modal) {
             const content = modal.querySelector('.modal-enter');
-            modal.classList.add('opacity-0');
-            if (content) content.classList.remove('modal-enter-active');
+            modal.classList.add('opacity-0'); if (content) content.classList.remove('modal-enter-active');
             setTimeout(() => modal.classList.add('hidden'), 300);
         }
         
@@ -1551,254 +1186,120 @@
 
         function openInputModal(m) {
             currentMission = m;
-            els.inputIcon.innerText = '🌟';
-            els.inputTitle.innerText = m.title;
+            els.inputIcon.innerText = '🌟'; els.inputTitle.innerText = m.title;
             els.inputHint.innerText = '完成任務後，請工作人員輸入通行碼，或自行驗證。';
-            els.staffPinField.value = '';
-            els.staffPinContainer.classList.toggle('hidden', m.type !== 'staff_number');
+            els.staffPinField.value = ''; els.staffPinContainer.classList.toggle('hidden', m.type !== 'staff_number');
             openModal(els.modalInput);
         }
 
-        // --- BONFIRE LOGIC ---
-        els.enterBonfireBtn.onclick = () => {
-            soundManager.playClick();
-            if (Math.max(0, state.completedLinePatterns.length - (state.claimedLines || 0)) > 0) openModal(els.modalBonfire);
-        };
-        els.closeBonfireBtn.onclick = () => {
-            closeModal(els.modalBonfire);
-            // Reset states
-            els.bonfireWrapper.classList.remove('bonfire-flare');
-            els.projectile.classList.remove('animate-toss');
-            els.bonfireResultMsg.style.opacity = '0';
-        };
+        els.enterBonfireBtn.onclick = () => { soundManager.playClick(); if (Math.max(0, state.completedLinePatterns.length - (state.claimedLines || 0)) > 0) openModal(els.modalBonfire); };
+        els.closeBonfireBtn.onclick = () => { closeModal(els.modalBonfire); els.bonfireWrapper.classList.remove('bonfire-flare'); els.projectile.classList.remove('animate-toss'); els.bonfireResultMsg.style.opacity = '0'; };
 
         let isTossing = false;
         els.tossPineconeBtn.onclick = () => {
             if(isTossing) return;
             const pinecones = Math.max(0, state.completedLinePatterns.length - (state.claimedLines || 0));
             if (pinecones <= 0) return;
-            
-            isTossing = true;
-            els.tossPineconeBtn.disabled = true;
-            els.tossPineconeBtn.classList.add('opacity-50', 'cursor-not-allowed');
-            soundManager.playClick();
-
-            // 1. Toss Animation
-            els.projectile.classList.add('animate-toss');
-
-            // 2. Flare Up & Boom Effect
-            setTimeout(() => {
-                els.bonfireWrapper.classList.add('bonfire-flare');
-                soundManager.playReveal(); // Use reveal sound for boom
-            }, 600); // Sync with projectile hitting fire
-
-            // 3. Reveal Prize
+            isTossing = true; els.tossPineconeBtn.disabled = true; els.tossPineconeBtn.classList.add('opacity-50', 'cursor-not-allowed');
+            soundManager.playClick(); els.projectile.classList.add('animate-toss');
+            setTimeout(() => { els.bonfireWrapper.classList.add('bonfire-flare'); soundManager.playReveal(); }, 600);
             const prizes = ['神秘小禮物', '飲品兌換券', '營火棉花糖', '拍立得一張', '晚餐加菜', '下次住宿9折'];
             const prize = prizes[Math.floor(Math.random() * prizes.length)];
 
             setTimeout(() => {
                 state.claimedLines = (state.claimedLines || 0) + 1;
-                saveState();
-                updateStats();
-                
-                els.bonfireResultMsg.innerText = `🎁 獲得：${prize}`;
-                els.bonfireResultMsg.style.opacity = '1';
-                fireConfetti();
-                
-                // Cleanup
-                isTossing = false;
-                els.tossPineconeBtn.disabled = false;
-                els.tossPineconeBtn.classList.remove('opacity-50', 'cursor-not-allowed');
-                
-                setTimeout(() => {
-                     els.projectile.classList.remove('animate-toss');
-                     els.bonfireWrapper.classList.remove('bonfire-flare');
-                }, 1000);
-
+                saveState(); updateStats();
+                els.bonfireResultMsg.innerText = `🎁 獲得：${prize}`; els.bonfireResultMsg.style.opacity = '1'; fireConfetti();
+                isTossing = false; els.tossPineconeBtn.disabled = false; els.tossPineconeBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+                setTimeout(() => { els.projectile.classList.remove('animate-toss'); els.bonfireWrapper.classList.remove('bonfire-flare'); }, 1000);
             }, 1200);
         };
 
-        els.splashStartBtn.onclick = () => {
-            soundManager.enable();
-            els.splashScreen.style.opacity = '0';
-            setTimeout(() => {
-                els.splashScreen.remove();
-                const saved = localStorage.getItem(CONFIG.storageKey);
-                if (!saved) openModal(els.modalSetup);
-                else tutorialManager.checkFirstTime();
-            }, 800);
-        };
+        els.splashStartBtn.onclick = () => { soundManager.enable(); els.splashScreen.style.opacity = '0'; setTimeout(() => { els.splashScreen.remove(); const saved = localStorage.getItem(CONFIG.storageKey); if (!saved) openModal(els.modalSetup); else tutorialManager.checkFirstTime(); }, 800); };
+        document.getElementById('btn-setup-random').onclick = () => { state.grid = Array.from({length: CONFIG.numberRange}, (_, i) => i + 1).sort(() => Math.random() - 0.5).slice(0, 25); completeSetup(); };
+        document.getElementById('btn-setup-manual').onclick = () => { closeModal(els.modalSetup); initManualGrid(); openModal(els.modalManual); };
 
-        document.getElementById('btn-setup-random').onclick = () => {
-            const pool = Array.from({length: CONFIG.numberRange}, (_, i) => i + 1);
-            state.grid = pool.sort(() => Math.random() - 0.5).slice(0, 25);
-            completeSetup();
-        };
-
-        document.getElementById('btn-setup-manual').onclick = () => {
-            closeModal(els.modalSetup);
-            initManualGrid();
-            openModal(els.modalManual);
-        };
-
-        function completeSetup() {
-            state.markedIndices = [];
-            state.completedMissions = [];
-            state.claimedLines = 0;
-            state.completedLinePatterns = [];
-            saveState(); renderGrid(); updateStats();
-            closeModal(els.modalSetup); closeModal(els.modalManual);
-            soundManager.playSuccess(); tutorialManager.checkFirstTime();
-        }
+        function completeSetup() { state.markedIndices = []; state.completedMissions = []; state.claimedLines = 0; state.completedLinePatterns = []; saveState(); renderGrid(); updateStats(); closeModal(els.modalSetup); closeModal(els.modalManual); soundManager.playSuccess(); tutorialManager.checkFirstTime(); }
 
         function initManualGrid() {
             els.manualGrid.innerHTML = '';
             for (let i = 0; i < 25; i++) {
-                const input = document.createElement('input');
-                input.type = 'number'; input.inputMode = 'numeric'; input.className = 'manual-input-cell';
-                input.placeholder = '-'; input.dataset.index = i;
-                input.oninput = (e) => handleManualInput(e.target);
-                els.manualGrid.appendChild(input);
+                const input = document.createElement('input'); input.type = 'number'; input.inputMode = 'numeric'; input.className = 'manual-input-cell'; input.placeholder = '-'; input.dataset.index = i; input.oninput = (e) => handleManualInput(e.target); els.manualGrid.appendChild(input);
             }
             validateManualGrid();
         }
 
-        function handleManualInput(input) {
-            if (input.value.length > 2) input.value = input.value.slice(0, 2);
-            validateManualGrid();
-        }
-
+        function handleManualInput(input) { if (input.value.length > 2) input.value = input.value.slice(0, 2); validateManualGrid(); }
         function validateManualGrid() {
-            const inputs = Array.from(els.manualGrid.querySelectorAll('input'));
-            const values = inputs.map(i => i.value ? parseInt(i.value) : null);
+            const inputs = Array.from(els.manualGrid.querySelectorAll('input')); const values = inputs.map(i => i.value ? parseInt(i.value) : null);
             let duplicates = []; let outOfRange = false;
-            values.forEach((v, idx) => {
-                inputs[idx].classList.remove('duplicate');
-                if (v !== null) {
-                    if (v < 1 || v > CONFIG.numberRange) outOfRange = true;
-                    if (values.filter(x => x === v).length > 1) { duplicates.push(v); inputs[idx].classList.add('duplicate'); }
-                }
-            });
+            values.forEach((v, idx) => { inputs[idx].classList.remove('duplicate'); if (v !== null) { if (v < 1 || v > CONFIG.numberRange) outOfRange = true; if (values.filter(x => x === v).length > 1) { duplicates.push(v); inputs[idx].classList.add('duplicate'); } } });
             const uniqueValues = new Set(values.filter(v => v !== null));
             els.manualConfirm.disabled = uniqueValues.size !== 25 || outOfRange;
-            if (duplicates.length > 0) els.manualValidation.innerText = '數字不能重複！';
-            else if (outOfRange) els.manualValidation.innerText = `數字必須在 1-${CONFIG.numberRange} 之間`;
-            else els.manualValidation.innerText = '';
+            if (duplicates.length > 0) els.manualValidation.innerText = '數字不能重複！'; else if (outOfRange) els.manualValidation.innerText = `數字必須在 1-${CONFIG.numberRange} 之間`; else els.manualValidation.innerText = '';
         }
 
         document.getElementById('btn-manual-autofill').onclick = () => {
-            const inputs = Array.from(els.manualGrid.querySelectorAll('input'));
-            const currentValues = new Set(inputs.map(i => i.value ? parseInt(i.value) : null).filter(v => v !== null));
-            const available = Array.from({length: CONFIG.numberRange}, (_, i) => i + 1).filter(v => !currentValues.has(v));
-            available.sort(() => Math.random() - 0.5);
+            const inputs = Array.from(els.manualGrid.querySelectorAll('input')); const currentValues = new Set(inputs.map(i => i.value ? parseInt(i.value) : null).filter(v => v !== null));
+            const available = Array.from({length: CONFIG.numberRange}, (_, i) => i + 1).filter(v => !currentValues.has(v)); available.sort(() => Math.random() - 0.5);
             inputs.forEach(input => { if (!input.value || input.classList.contains('duplicate')) if (available.length > 0) input.value = available.pop(); });
             validateManualGrid();
         };
 
-        document.getElementById('btn-manual-clear').onclick = () => {
-            els.manualGrid.querySelectorAll('input').forEach(i => i.value = '');
-            validateManualGrid();
-        };
-
-        els.manualConfirm.onclick = () => {
-            state.grid = Array.from(els.manualGrid.querySelectorAll('input')).map(i => parseInt(i.value));
-            completeSetup();
-        };
-
+        document.getElementById('btn-manual-clear').onclick = () => { els.manualGrid.querySelectorAll('input').forEach(i => i.value = ''); validateManualGrid(); };
+        els.manualConfirm.onclick = () => { state.grid = Array.from(els.manualGrid.querySelectorAll('input')).map(i => parseInt(i.value)); completeSetup(); };
         els.toggleScenic.onclick = () => document.body.classList.add('scenic-mode');
         els.exitScenic.onclick = () => document.body.classList.remove('scenic-mode');
-        els.toggleSound.onclick = () => {
-            const isEnabled = soundManager.toggle();
-            document.getElementById('icon-sound-off').classList.toggle('hidden', isEnabled);
-            document.getElementById('icon-sound-on').classList.toggle('hidden', !isEnabled);
-        };
+        els.toggleSound.onclick = () => { const isEnabled = soundManager.toggle(); document.getElementById('icon-sound-off').classList.toggle('hidden', isEnabled); document.getElementById('icon-sound-on').classList.toggle('hidden', !isEnabled); };
         els.btnHelp.onclick = () => tutorialManager.start();
-        document.getElementById('open-missions-btn').onclick = () => { renderMissionList(); openModal(els.modalMissions); };
-        document.getElementById('tab-missions').onclick = () => { state.currentView = 'missions'; renderMissionList(); };
-        document.getElementById('tab-guide').onclick = () => { state.currentView = 'guide'; renderMissionList(); };
-        els.categoryFilter.onclick = (e) => { const btn = e.target.closest('.category-btn'); if (btn) { state.currentFilter = btn.dataset.category; renderMissionList(); } };
+        document.getElementById('open-missions-btn').onclick = () => { openModal(els.modalMissions); };
+        els.categoryFilter.onclick = (e) => { const btn = e.target.closest('.category-btn'); if (btn) { state.currentFilter = btn.dataset.category; renderMissionGrid(); } };
         document.getElementById('close-mission-btn').onclick = () => closeModal(els.modalMissions);
         document.getElementById('cancel-input-btn').onclick = () => closeModal(els.modalInput);
 
         document.getElementById('submit-input-btn').onclick = () => {
-            if (currentMission.type === 'staff_number' && els.staffPinField.value !== SECURITY.STAFF_PIN) {
-                alert("通行碼錯誤！"); return;
-            }
+            if (currentMission.type === 'staff_number' && els.staffPinField.value !== SECURITY.STAFF_PIN) { alert("通行碼錯誤！"); return; }
             const count = currentMission.difficulty || 1;
-            const drawnNumbers = [];
-            const pool = Array.from({length: CONFIG.numberRange}, (_, i) => i + 1).sort(() => Math.random() - 0.5);
+            const drawnNumbers = []; const pool = Array.from({length: CONFIG.numberRange}, (_, i) => i + 1).sort(() => Math.random() - 0.5);
             for (let i = 0; i < count; i++) drawnNumbers.push(pool[i]);
             closeModal(els.modalInput);
-            const card = document.querySelector(`[data-mission-id="${currentMission.id}"]`);
-            if (card) card.classList.add('mission-complete-anim');
+            const card = document.querySelector(`[data-mission-id="${currentMission.id}"]`); if (card) card.classList.add('mission-complete-anim');
             setTimeout(() => { closeModal(els.modalMissions); showResultModal(drawnNumbers); }, 500);
         };
 
         function showResultModal(numbers) {
-            const resultCard = document.getElementById('result-card');
-            const resultText = document.getElementById('result-context-text');
-            const resultNumber = document.getElementById('result-number-display');
-            const resultActions = document.getElementById('result-actions');
-            const burstRays = document.getElementById('burst-rays');
-            const closeBtn = document.getElementById('close-result-btn');
+            const resultCard = document.getElementById('result-card'); const resultText = document.getElementById('result-context-text');
+            const resultNumber = document.getElementById('result-number-display'); const resultActions = document.getElementById('result-actions');
+            const burstRays = document.getElementById('burst-rays'); const closeBtn = document.getElementById('close-result-btn');
 
-            resultCard.classList.remove('card-enter-anim', 'animate-float');
-            resultNumber.classList.remove('stamp-reveal');
-            burstRays.style.opacity = '0';
-            resultCard.style.opacity = '0';
-            resultCard.style.transform = 'scale(0.8)';
-            resultText.style.opacity = '0';
-            resultNumber.style.opacity = '0';
-            resultActions.style.opacity = '0';
-            closeBtn.style.pointerEvents = 'none';
+            resultCard.classList.remove('card-enter-anim', 'animate-float'); resultNumber.classList.remove('stamp-reveal');
+            burstRays.style.opacity = '0'; resultCard.style.opacity = '0'; resultCard.style.transform = 'scale(0.8)';
+            resultText.style.opacity = '0'; resultNumber.style.opacity = '0'; resultActions.style.opacity = '0'; closeBtn.style.pointerEvents = 'none';
 
             resultText.innerText = currentMission.success_text || "一段美好的山林記憶，已悄悄收藏...";
-            if (numbers.length > 1) {
-                resultNumber.style.fontSize = numbers.length >= 4 ? '2rem' : (numbers.length === 3 ? '2.5rem' : '3.5rem');
-                resultNumber.innerText = numbers.map(n => `NO.${n}`).join("\n");
-            } else {
-                resultNumber.style.fontSize = '2.5rem';
-                // Lookup Totem Info for Wufeng
-                const element = WUFENG_ELEMENTS[numbers[0]] || { name: '未知', icon: '❓' };
-                resultNumber.innerHTML = `<div class="text-4xl mb-2">${element.icon}</div>NO.${numbers[0]}<div class="text-xl mt-2 text-[#5C4033] font-medium">${element.name}</div>`;
-            }
+            if (numbers.length > 1) { resultNumber.style.fontSize = numbers.length >= 4 ? '2rem' : '3.5rem'; resultNumber.innerText = numbers.map(n => `NO.${n}`).join("\n"); }
+            else { resultNumber.style.fontSize = '2.5rem'; const element = WUFENG_ELEMENTS[numbers[0]] || { name: '未知', icon: '❓' }; resultNumber.innerHTML = `<div class="text-4xl mb-2">${element.icon}</div>NO.${numbers[0]}<div class="text-xl mt-2 text-[#5C4033] font-medium">${element.name}</div>`; }
             
-            openModal(els.modalResult);
-            soundManager.playReveal();
-            
+            openModal(els.modalResult); soundManager.playReveal();
             setTimeout(() => burstRays.style.opacity = '1', 100);
             setTimeout(() => { resultCard.classList.add('card-enter-anim'); setTimeout(() => resultCard.classList.add('animate-float'), 800); }, 500);
             setTimeout(() => resultText.style.opacity = '1', 800);
-            
             setTimeout(() => {
-                resultNumber.style.opacity = '1';
-                resultNumber.classList.add('stamp-reveal');
-                numbers.forEach(num => {
-                    const idx = state.grid.indexOf(num);
-                    if (idx !== -1 && !state.markedIndices.includes(idx)) state.markedIndices.push(idx);
-                });
+                resultNumber.style.opacity = '1'; resultNumber.classList.add('stamp-reveal');
+                numbers.forEach(num => { const idx = state.grid.indexOf(num); if (idx !== -1 && !state.markedIndices.includes(idx)) state.markedIndices.push(idx); });
                 if (!state.completedMissions.includes(currentMission.id)) state.completedMissions.push(currentMission.id);
-                
-                saveState(); renderGrid(); updateStats();
-                checkBingoLines(); // CRITICAL: Check for lines after collection
+                saveState(); renderGrid(); updateStats(); checkBingoLines();
+                if(state.currentView === 'list') renderMissionGrid();
             }, 1500);
-
             setTimeout(() => { resultActions.style.opacity = '1'; closeBtn.style.pointerEvents = 'auto'; }, 2200);
         }
 
-        document.getElementById('close-result-btn').onclick = () => {
-            soundManager.playClick(); closeModal(els.modalResult);
-        };
-
+        document.getElementById('close-result-btn').onclick = () => { soundManager.playClick(); closeModal(els.modalResult); };
         function handleUserSelection(idx) {
             const num = state.grid[idx];
             if (confirm(`確定在位置 ${idx+1} 填入號碼 ${num} 嗎？`)) {
-                state.markedIndices.push(idx);
-                state.completedMissions.push(currentMission.id);
-                state.isSelectionMode = false;
-                saveState(); renderGrid(); updateStats();
-                fireConfetti();
-                checkBingoLines();
+                state.markedIndices.push(idx); state.completedMissions.push(currentMission.id); state.isSelectionMode = false;
+                saveState(); renderGrid(); updateStats(); fireConfetti(); checkBingoLines();
             }
         }
 
