@@ -384,57 +384,6 @@
         #mission-grid::-webkit-scrollbar-track { background: transparent; }
         #mission-grid::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.2); border-radius: 10px; }
         
-        .phantom-line { stroke: rgba(255, 255, 255, 0.2); stroke-width: 1; fill: none; stroke-dasharray: 4; }
-        
-        .active-line {
-            stroke: #D4AF37; stroke-width: 2; fill: none;
-            filter: drop-shadow(0 0 3px rgba(253, 224, 71, 0.5));
-            animation: draw-line 1.5s ease-out forwards;
-        }
-        @keyframes draw-line { from { stroke-dashoffset: 1000; stroke-dasharray: 1000; } to { stroke-dashoffset: 0; stroke-dasharray: 1000; } }
-
-        @keyframes fillPulse {
-            0% { opacity: 0.6; filter: drop-shadow(0 0 10px rgba(255, 215, 0, 0.6)); }
-            50% { opacity: 0.9; filter: drop-shadow(0 0 25px rgba(255, 215, 0, 0.9)); }
-            100% { opacity: 0.6; filter: drop-shadow(0 0 10px rgba(255, 215, 0, 0.6)); }
-        }
-
-        .energy-shape {
-            fill: rgba(255, 223, 0, 0.5); stroke: #D4AF37; stroke-width: 2px;
-            animation: fillPulse 4s infinite ease-in-out; pointer-events: none;
-        }
-
-        @keyframes starPulse {
-            0% { transform: scale(1); filter: drop-shadow(0 0 2px gold); }
-            50% { transform: scale(1.3); filter: drop-shadow(0 0 8px gold); }
-            100% { transform: scale(1); filter: drop-shadow(0 0 2px gold); }
-        }
-        
-        .star-point { fill: #FFF; transition: all 0.3s; cursor: pointer; }
-        .star-point:hover { transform: scale(1.5); fill: #FCD34D; }
-        .star-unlocked { fill: #D4AF37; animation: starPulse 2s infinite ease-in-out; transform-origin: center; transform-box: fill-box; }
-        
-        @keyframes wingFlap { 0%, 100% { transform: rotate(0deg) translateY(0); } 50% { transform: rotate(-5deg) translateY(-10px); } }
-        .animate-wings { animation: wingFlap 3s infinite ease-in-out; transform-origin: 40% 30%; }
-
-        @keyframes legGallop { 0%, 100% { transform: rotate(0deg); } 25% { transform: rotate(10deg); } 75% { transform: rotate(-10deg); } }
-        .animate-legs { animation: legGallop 1.5s infinite linear; transform-origin: center top; transform-box: fill-box; }
-
-        @keyframes pegasusGallopAcross {
-            0% { transform: translateX(-100%) scale(0.8); opacity: 0; }
-            20% { opacity: 1; }
-            80% { transform: translateX(0%) scale(1); opacity: 1; }
-            100% { transform: translateX(20%) scale(1.1); opacity: 0; }
-        }
-        .pegasus-finale-anim { animation: pegasusGallopAcross 4s forwards ease-in-out; }
-        
-        .pegasus-tooltip {
-            position: absolute; background: rgba(15, 23, 42, 0.9); border: 1px solid rgba(253, 224, 71, 0.3);
-            color: #F1F5F9; padding: 6px 10px; border-radius: 6px; font-size: 12px;
-            pointer-events: none; opacity: 0; transform: translateY(10px); transition: all 0.2s; z-index: 50;
-        }
-        .pegasus-tooltip.visible { opacity: 1; transform: translateY(0); }
-
         #bingo-toast {
             position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 100;
             background: rgba(44, 24, 16, 0.95); backdrop-filter: blur(10px);
@@ -443,6 +392,42 @@
             opacity: 0; pointer-events: none;
         }
         #bingo-toast.active { opacity: 1; transform: translate(-50%, -60%); }
+
+        .puzzle-tile {
+            position: relative;
+            background: rgba(15, 23, 42, 0.9);
+            backdrop-filter: blur(12px);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: opacity 1.5s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 10;
+        }
+        .puzzle-tile.unlocked {
+            opacity: 0;
+            pointer-events: none;
+        }
+        .puzzle-tile .lock-icon {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            color: #94A3B8;
+        }
+        .puzzle-tile .label {
+            font-size: 0.875rem;
+            color: #E2E8F0;
+            font-weight: bold;
+            letter-spacing: 0.1em;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+        }
+        .puzzle-tile .progress {
+            margin-top: 0.25rem;
+            font-size: 0.75rem;
+            color: #94A3B8;
+        }
+        
     </style>
 </head>
 <body class="flex flex-col items-center p-4 overflow-x-hidden">
@@ -657,22 +642,24 @@
                     </div>
                 </div>
 
-                <div id="view-star-map" class="hidden flex-1 w-full h-full relative overflow-hidden bg-[#0B1026] select-none">
-                    <div id="pegasus-tooltip" class="pegasus-tooltip"></div>
-                    <div id="svg-map-wrapper" class="w-full h-full">
-                         <svg id="pegasus-svg" width="100%" height="100%" viewBox="0 0 400 400" preserveAspectRatio="xMidYMid meet" class="w-full h-full">
-                              <g id="bg-stars" opacity="0.3"></g>
-                              <g id="phantom-lines"></g>
-                              <g id="pegasus-body"></g>
-                         </svg>
-                         <div class="absolute bottom-6 left-0 right-0 text-center pointer-events-none">
-                             <p class="text-[#94A3B8] text-[10px] tracking-[0.3em] font-light opacity-80">完成分類任務 點亮星座</p>
-                         </div>
-                    </div>
-                    
-                    <!-- Container for dynamic certificate injection -->
-                    <div id="certificate-view" class="hidden w-full h-full"></div>
-                </div>
+                <div id="view-puzzle-map" class="hidden flex-1 w-full h-full relative overflow-hidden bg-slate-900 select-none">
+                     <!-- Background Image: The Prize -->
+                     <div class="absolute inset-0 bg-cover bg-center transition-transform duration-1000"
+                          style="background-image: url('https://images.unsplash.com/photo-1553284965-83fd3e82fa5a?q=80&w=1000&auto=format&fit=crop'); transform: scale(1.05);">
+                     </div>
+                     
+                     <!-- Puzzle Grid Overlay -->
+                     <div id="puzzle-grid" class="absolute inset-0 grid grid-cols-2 grid-rows-4 gap-0.5 z-10">
+                         <!-- Dynamic Tiles Injected Here -->
+                     </div>
+                 
+                     <!-- Final Victory Button (Hidden by default) -->
+                     <div id="puzzle-victory-container" class="absolute inset-0 z-20 flex items-center justify-center pointer-events-none opacity-0 transition-opacity duration-1000 bg-black/40 backdrop-blur-[2px]">
+                         <button id="download-certificate-btn" class="pointer-events-auto bg-[#D4AF37] text-[#1a202c] px-8 py-3 rounded-full font-bold shadow-[0_0_30px_rgba(255,215,0,0.6)] animate-bounce tracking-widest transform scale-125">
+                              ✨ 下載我的天馬傳說 ✨
+                         </button>
+                     </div>
+                 </div>
             </div>
         </div>
 
@@ -721,22 +708,34 @@
                   </div>
              </div>
         </div>
+        
+        <!-- Certificate Modal (Simple Full Image) -->
+        <div id="certificate-modal" class="fixed inset-0 z-[60] hidden flex items-center justify-center bg-black/95 backdrop-blur-xl animate-fade-in p-4">
+            <button id="close-cert-btn" class="absolute top-4 right-4 text-white/50 hover:text-white p-2">
+                 <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" x2="6" y1="6" y2="18"></line><line x1="6" x2="18" y1="6" y2="18"></line></svg>
+            </button>
+            <div class="flex flex-col items-center max-w-lg w-full">
+                 <img src="https://images.unsplash.com/photo-1553284965-83fd3e82fa5a?q=80&w=1000&auto=format&fit=crop" class="w-full h-auto rounded-lg shadow-2xl border-2 border-[#D4AF37] mb-6">
+                 <h2 class="text-2xl text-[#D4AF37] font-serif font-bold tracking-[0.2em] mb-2 text-center">2026 愛上喜翁．全制霸</h2>
+                 <p class="text-gray-400 text-sm tracking-wider text-center">請長按圖片保存您的傳說</p>
+            </div>
+        </div>
 
     </div>
 
     <script>
-        const svgNS = "http://www.w3.org/2000/svg";
         const SECURITY = { STAFF_PIN: '1688' };
 
-        const PEGASUS_MAP = {
-            photo: { label: '山林寫真', points: [{x:85, y:18}, {x:92, y:25}, {x:85, y:30}, {x:80, y:25}] },
-            soul: { label: '靈魂對話', points: [{x:78, y:32}, {x:72, y:40}, {x:68, y:45}] },
-            magic: { label: '奇蹟與魔法', points: [{x:55, y:40}, {x:45, y:25}, {x:35, y:15}, {x:25, y:20}, {x:35, y:30}] },
-            cloud: { label: '雲上生活', points: [{x:65, y:48}, {x:50, y:50}, {x:45, y:60}, {x:60, y:62}] },
-            explore: { label: '秘密探索', points: [{x:68, y:65}, {x:75, y:75}, {x:85, y:70}, {x:82, y:80}] },
-            social: { label: '營火微光', points: [{x:40, y:65}, {x:30, y:75}, {x:35, y:85}, {x:25, y:82}] },
-            social_share: { label: '雲端寄情', points: [{x:35, y:55}, {x:25, y:52}, {x:15, y:58}, {x:20, y:68}] }
-        };
+        // Configuration for the 7 puzzle tiles mapping to grid positions
+        const PUZZLE_CONFIG = [
+            { key: 'magic', label: '奇蹟魔法', icon: '✨', area: 'col-start-1 row-start-1' },
+            { key: 'photo', label: '山林寫真', icon: '📸', area: 'col-start-2 row-start-1' },
+            { key: 'explore', label: '秘密探索', icon: '🗺️', area: 'col-start-1 row-start-2' },
+            { key: 'soul', label: '靈魂對話', icon: '🌲', area: 'col-start-2 row-start-2' },
+            { key: 'cloud', label: '雲上生活', icon: '☁️', area: 'col-span-2 row-start-3' }, // Center Span
+            { key: 'social', label: '營火微光', icon: '🔥', area: 'col-start-1 row-start-4' },
+            { key: 'social_share', label: '雲端寄情', icon: '💌', area: 'col-start-2 row-start-4' }
+        ];
 
         const WUFENG_ELEMENTS = {
             1: { icon: '🦌', name: '山羌' }, 2: { icon: '🐗', name: '山豬' }, 3: { icon: '🦦', name: '黃猴貂' },
@@ -905,10 +904,12 @@
             tabMissions: document.getElementById('tab-missions'),
             tabGuide: document.getElementById('tab-guide'),
             viewTaskList: document.getElementById('view-task-list'),
-            viewStarMap: document.getElementById('view-star-map'),
-            pegasusTooltip: document.getElementById('pegasus-tooltip'),
-            svgMapWrapper: document.getElementById('svg-map-wrapper'),
-            certificateView: document.getElementById('certificate-view')
+            viewPuzzleMap: document.getElementById('view-puzzle-map'),
+            puzzleGrid: document.getElementById('puzzle-grid'),
+            puzzleVictoryContainer: document.getElementById('puzzle-victory-container'),
+            downloadCertBtn: document.getElementById('download-certificate-btn'),
+            modalCert: document.getElementById('certificate-modal'),
+            closeCertBtn: document.getElementById('close-cert-btn')
         };
 
         function saveState() { localStorage.setItem(CONFIG.storageKey, JSON.stringify(state)); }
@@ -987,7 +988,7 @@
             els.tabMissions.classList.toggle('active', !isMap);
             els.tabGuide.classList.toggle('active', isMap);
             els.viewTaskList.classList.toggle('hidden', isMap);
-            els.viewStarMap.classList.toggle('hidden', !isMap);
+            els.viewPuzzleMap.classList.toggle('hidden', !isMap);
             els.missionContent.classList.toggle('map-mode', isMap);
             
             const titleEl = document.querySelector('.mission-modal-title');
@@ -995,12 +996,8 @@
             
             if(isMap) {
                 titleEl.innerText = "天馬星圖";
-                subTitleEl.innerText = "PEGASUS CONSTELLATION";
-                if (els.svgMapWrapper.classList.contains('hidden')) { 
-                    // If certificate is shown, do nothing or handle re-render if needed
-                } else {
-                    renderPegasusMap(); 
-                }
+                subTitleEl.innerText = "PEGASUS LEGEND";
+                renderPuzzleView();
             } else {
                 titleEl.innerText = "我的山林拾光";
                 subTitleEl.innerText = "Love Hsiung Collection";
@@ -1036,125 +1033,45 @@
              return { total, completed, isFull: total > 0 && completed === total };
         }
 
-        function renderPegasusMap() {
-            const bgStars = document.getElementById('bg-stars');
-            const phantomGroup = document.getElementById('phantom-lines');
-            const pegasusBody = document.getElementById('pegasus-body');
-            bgStars.innerHTML = ''; phantomGroup.innerHTML = ''; pegasusBody.innerHTML = '';
-            
-            for(let i=0; i<40; i++) {
-                const c = document.createElementNS(svgNS, "circle");
-                c.setAttribute("cx", Math.random()*400); c.setAttribute("cy", Math.random()*400); c.setAttribute("r", Math.random()*1.5);
-                c.setAttribute("fill", "#FFF"); c.setAttribute("opacity", Math.random()*0.6);
-                bgStars.appendChild(c);
-            }
+        function renderPuzzleView() {
+            els.puzzleGrid.innerHTML = '';
+            let allComplete = true;
 
-            let allCategoriesComplete = true;
-            const SCALE = 4;
+            PUZZLE_CONFIG.forEach(tile => {
+                const { total, completed, isFull } = getCategoryCompletion(tile.key);
+                if (!isFull) allComplete = false;
 
-            Object.keys(PEGASUS_MAP).forEach(key => {
-                const part = PEGASUS_MAP[key];
-                const points = part.points;
-                const { total, completed, isFull } = getCategoryCompletion(key);
-                if (!isFull) allCategoriesComplete = false;
-
-                if (points.length > 1) {
-                    let d = `M ${points[0].x * SCALE} ${points[0].y * SCALE}`;
-                    for(let i=1; i<points.length; i++) d += ` L ${points[i].x * SCALE} ${points[i].y * SCALE}`;
-                    const path = document.createElementNS(svgNS, "path");
-                    path.setAttribute("d", d); path.setAttribute("class", "phantom-line");
-                    phantomGroup.appendChild(path);
-                }
-
-                const partGroup = document.createElementNS(svgNS, "g");
-                partGroup.setAttribute("id", `pegasus-${key}`);
+                const tileEl = document.createElement('div');
+                tileEl.className = `puzzle-tile ${tile.area} ${isFull ? 'unlocked' : 'locked'}`;
                 
-                if (isFull && points.length >= 3) {
-                     const pointString = points.map(p => `${p.x * SCALE},${p.y * SCALE}`).join(" ");
-                     const poly = document.createElementNS(svgNS, "polygon");
-                     poly.setAttribute("points", pointString); poly.setAttribute("class", "energy-shape");
-                     partGroup.appendChild(poly);
-                }
-
-                if (isFull && points.length > 1) {
-                     let d = `M ${points[0].x * SCALE} ${points[0].y * SCALE}`;
-                     for(let i=1; i<points.length; i++) d += ` L ${points[i].x * SCALE} ${points[i].y * SCALE}`;
-                     const activePath = document.createElementNS(svgNS, "path");
-                     activePath.setAttribute("d", d); activePath.setAttribute("class", "active-line");
-                     partGroup.appendChild(activePath);
-                     if (key === 'magic') partGroup.setAttribute("class", "animate-wings");
-                     if (key === 'explore' || key === 'social') partGroup.setAttribute("class", "animate-legs");
-                }
-
-                const ratio = total > 0 ? (completed / total) : 0;
-                const starsToShowCount = isFull ? points.length : Math.ceil(ratio * points.length);
-
-                points.forEach((pt, idx) => {
-                     const isUnlocked = idx < starsToShowCount;
-                     if (isUnlocked) {
-                         const circle = document.createElementNS(svgNS, "circle");
-                         circle.setAttribute("cx", pt.x * SCALE); circle.setAttribute("cy", pt.y * SCALE);
-                         circle.setAttribute("r", isFull ? 5 : 3.5);
-                         circle.setAttribute("class", "star-point star-unlocked");
-                         if (!isFull) circle.style.fill = "#FFF";
-                         circle.addEventListener('mouseenter', () => showPegasusTooltip(part.label, pt.x * SCALE, pt.y * SCALE, isFull));
-                         circle.addEventListener('mouseleave', () => els.pegasusTooltip.classList.remove('visible'));
-                         circle.addEventListener('click', (e) => { e.stopPropagation(); showPegasusTooltip(part.label, pt.x * SCALE, pt.y * SCALE, isFull); });
-                         partGroup.appendChild(circle);
-                     }
-                });
-                pegasusBody.appendChild(partGroup);
+                // Content for locked tile
+                tileEl.innerHTML = `
+                    <div class="lock-icon">${tile.icon}</div>
+                    <div class="label">${tile.label}</div>
+                    <div class="progress">${completed}/${total}</div>
+                `;
+                
+                els.puzzleGrid.appendChild(tileEl);
             });
 
-            if (allCategoriesComplete) {
-                if (!pegasusBody.classList.contains('pegasus-finale-anim')) {
-                     setTimeout(() => {
-                         pegasusBody.classList.add('pegasus-finale-anim');
-                         setTimeout(() => { showCertificateView(); }, 3800);
-                     }, 500);
-                }
+            if (allComplete) {
+                els.puzzleVictoryContainer.classList.remove('opacity-0');
+                els.puzzleVictoryContainer.classList.add('opacity-100');
+                els.puzzleVictoryContainer.style.pointerEvents = 'auto';
+            } else {
+                els.puzzleVictoryContainer.classList.add('opacity-0');
+                els.puzzleVictoryContainer.style.pointerEvents = 'none';
             }
         }
         
-        function showCertificateView() {
-            els.svgMapWrapper.classList.add('hidden');
-            els.certificateView.classList.remove('hidden');
-            
-            const certificateHTML = `
-                <div class="flex flex-col items-center justify-center h-full text-center p-8 animate-fade-in bg-cover bg-center" style="background-image: url('https://images.unsplash.com/photo-1519681393784-d120267933ba?q=80&w=2070&auto=format&fit=crop');">
-                    <div class="bg-slate-900/90 backdrop-blur-xl p-8 rounded-3xl border-2 border-[#D4AF37] shadow-[0_0_50px_rgba(212,175,55,0.3)] max-w-md mx-auto">
-                        <div class="text-5xl mb-4">✨</div>
-                        <h2 class="text-3xl font-bold text-[#D4AF37] mb-2 font-serif tracking-widest">天馬騎士證書</h2>
-                        <p class="text-gray-300 text-sm mb-6 uppercase tracking-widest">2026 Love Hsiung Glamping</p>
-                        
-                        <img src="https://cdn.pixabay.com/photo/2018/03/30/17/31/pegasus-3275998_1280.png" 
-                             alt="Golden Pegasus" 
-                             class="w-64 h-auto mx-auto mb-6 filter drop-shadow-[0_0_30px_rgba(255,215,0,0.6)] hover:scale-105 transition-transform duration-700">
-                        
-                        <p class="text-indigo-200 italic mb-8 text-sm leading-relaxed">
-                            "你用星光點亮了整片山林，<br>願這份奇蹟永遠伴隨你的旅程。"
-                        </p>
-                        <button onclick="alert('📸 請截圖保存您的傳說證書！')" class="bg-gradient-to-r from-[#BF953F] to-[#FBF5B7] text-slate-900 font-bold px-8 py-3 rounded-full shadow-lg hover:shadow-[0_0_20px_gold] transition-all transform hover:-translate-y-1">
-                            📸 下載傳說
-                        </button>
-                    </div>
-                </div>
-            `;
-            
-            els.certificateView.innerHTML = certificateHTML;
-            fireConfetti();
-        }
+        els.downloadCertBtn.onclick = () => {
+             soundManager.playSuccess();
+             els.modalCert.classList.remove('hidden');
+        };
         
-        function showPegasusTooltip(label, cx, cy, isComplete) {
-            const container = els.viewStarMap;
-            const rect = container.getBoundingClientRect();
-            const scaleX = rect.width / 400; const scaleY = rect.height / 400;
-            const screenX = cx * scaleX; const screenY = cy * scaleY;
-            
-            els.pegasusTooltip.innerHTML = `<strong style="color:${isComplete ? '#FCD34D' : '#FFF'}">${label}</strong><br/><span class="text-[10px] text-gray-400">${isComplete ? '✨ 星座已點亮' : '🔒 收集進度中'}</span>`;
-            els.pegasusTooltip.style.left = `${screenX}px`; els.pegasusTooltip.style.top = `${screenY - 45}px`;
-            els.pegasusTooltip.style.transform = `translateX(-50%)`; els.pegasusTooltip.classList.add('visible');
-        }
+        els.closeCertBtn.onclick = () => {
+             els.modalCert.classList.add('hidden');
+        };
 
         function openModal(modal) {
             modal.classList.remove('hidden');
